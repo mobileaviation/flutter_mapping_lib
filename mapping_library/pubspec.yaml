@@ -1,8 +1,8 @@
 name: mapping_library
 description: Flutter Chart Mapping Widget Library
 version: 0.0.1
-author: Mobile Aviation Tools
-homepage: www.mobileaviationtools.com
+author: Mobile Aviation Tools <info@mobileaviationtools.com>
+homepage: http://www.mobileaviationtools.com
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
