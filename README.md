@@ -2,7 +2,11 @@
 This library supplies a basic implementation of a tiled mapping engine for flutter. There is a basic openstreetmap widget available which can be set on a specific geographic location. Basic gestures are implemented to pan and zoom this map.
 More advanced options are available for adding markers and vector based object like lines and circles.
 
-- Version: 0.0.1
+- Version: 0.0.1 
+
+***Disclaimer**: This version is far from finished. Most of the options
+just supply very basic functionality which might still holds many bugs.
+We are continuesly adding and improving options. Use at your own risk*
 
 ## Installation
 
@@ -11,36 +15,47 @@ More advanced options are available for adding markers and vector based object l
 
 ## Examples
 
-**Basic Example**
+**Basic Example** 
+
+Create an instance of the OsmMap object in the contructor of your App
+widget as the map needs to be in persistent memory. Add this instance to
+the Build function..
 ```
-    
+        
     import 'package:mapping_library/Widgets/OsmMap.dart';
     import 'package:mapping_library/utils/geopoint.dart';
     import 'package:mapping_library/utils/mapposition.dart';
-    
-    // Build a stateless widget 
-    // and add the OsmMap widget to the build function like this
-    // This Geopoint is a location in the middle of the Netherlands
-    
-    
-    @override  
-    Widget build(BuildContext context) {  
-        return MaterialApp(  
-            title: 'Flutter Demo',  
-            theme: ThemeData(  
-                primarySwatch: Colors.blue,  
-            ),  
-            home: Container(   
-                child: OsmMap(  
-                    mapPosition: new MapPosition.Create(  
-                    geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),  
-                    scale: 11,  
-                    )  
+        
+    class MyApp extends StatelessWidget {
+      MyApp() : super() {
+        _osmMap = _createOsmMapWidget();
+      }
+        
+        OsmMap _osmMap;
+        
+        Widget _createOsmMapWidget() {
+            return OsmMap(
+                mapPosition: new MapPosition.Create(
+                  geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
+                  zoomLevel: 11,
+                )
+            );
+        }
+        
+        @override  
+        Widget build(BuildContext context) {  
+            return MaterialApp(  
+                title: 'Flutter Demo',  
+                theme: ThemeData(  
+                    primarySwatch: Colors.blue,  
                 ),  
-            )  
-        );  
+                home: Container(   
+                    child: _osmMap,
+                )  
+            );  
+        }
     }
-    
+        
 ```
 
 There are three callback methods:

@@ -26,9 +26,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   MyApp() : super() {
     _mapView = new mapview.MapView(_mapReady);
+    _osmMap = _createOsmMapWidget();
   }
 
   mapview.MapView _mapView;
+  OsmMap _osmMap;
 
   _mapReady(mapview.MapView mapView) {
     GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
@@ -40,47 +42,56 @@ class MyApp extends StatelessWidget {
     TileLayer tileLayer = new TileLayer(osmTileSource);
     _mapView.AddLayer(tileLayer);
 
-    SimpleMarkerRenderer drawer = new SimpleMarkerRenderer();
-    SimpleMarker marker = new SimpleMarker(drawer, new Size(100,100), s);
-    marker.Name = "Marker1";
-    MarkersLayer makersLayer = new MarkersLayer();
+//    SimpleMarkerRenderer drawer = new SimpleMarkerRenderer();
+//    SimpleMarker marker = new SimpleMarker(drawer, new Size(100,100), s);
+//    marker.Name = "Marker1";
+//    MarkersLayer makersLayer = new MarkersLayer();
+//
+//    makersLayer.MarkerSelected = (MarkerBase marker) {
+//      log("Marker selected: " + marker.Name);
+//    };
+//
+//    makersLayer.AddMarker(marker);
+//
+//    _mapView.AddLayer(makersLayer);
+//
+//    Line line = new Line(s, e);
+//    Circle circle = new Circle(t, 1000);
+//
+//    VectorLayer vectorLayer = new VectorLayer();
+//    vectorLayer.AddVectors(line);
+//    vectorLayer.AddVectors(circle);
+//    _mapView.AddLayer(vectorLayer);
 
-    makersLayer.MarkerSelected = (MarkerBase marker) {
-      log("Marker selected: " + marker.Name);
-    };
 
-    makersLayer.AddMarker(marker);
-
-    _mapView.AddLayer(makersLayer);
-
-    Line line = new Line(s, e);
-    Circle circle = new Circle(t, 1000);
-
-    VectorLayer vectorLayer = new VectorLayer();
-    vectorLayer.AddVectors(line);
-    vectorLayer.AddVectors(circle);
-    _mapView.AddLayer(vectorLayer);
-
-
-    MapPosition _initialPosition = MapPosition.fromGeopointScale(s, 11);
+    MapPosition _initialPosition = MapPosition.fromGeopointZoom(s, 11);
     //MapPosition _initialPosition = MapPosition.fromDegZoom(52.45657243868931, 5.52041338863477, 11);
     _mapView.SetMapPosition(_initialPosition);
 
-    DefaultMarkerRenderer defaultMarkerRenderer = new DefaultMarkerRenderer();
-    defaultMarkerRenderer.markerType = DefaultMarkerType.Red;
-    DefaultMarker marker2 = new DefaultMarker(defaultMarkerRenderer, new Size(35,50), t);
-    marker2.Name = "Marker2";
-    makersLayer.AddMarker(marker2);
-
-    GeoPoint harderwijk = e;
-    Timer(Duration(seconds: 5), (() {
-      marker2.Location = harderwijk;
-    }));
+//    DefaultMarkerRenderer defaultMarkerRenderer = new DefaultMarkerRenderer();
+//    defaultMarkerRenderer.markerType = DefaultMarkerType.Red;
+//    DefaultMarker marker2 = new DefaultMarker(defaultMarkerRenderer, new Size(35,50), t);
+//    marker2.Name = "Marker2";
+//    makersLayer.AddMarker(marker2);
+//
+//    GeoPoint harderwijk = e;
+//    Timer(Duration(seconds: 5), (() {
+//      marker2.Location = harderwijk;
+//    }));
 
   }
 
   void _markerUpdated(MarkerBase marker) {
     _mapView.UpdateMap();
+  }
+
+  Widget _createOsmMapWidget() {
+    return OsmMap(
+        mapPosition: new MapPosition.Create(
+          geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
+          zoomLevel: 11,
+        )
+    );
   }
 
   @override
@@ -91,13 +102,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Container(
-        //child: _mapView
-        child: OsmMap(
-          mapPosition: new MapPosition.Create(
-            geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
-            scale: 11,
-          )
-        ),
+        child: _osmMap,
+//        child: _mapView
+//        child: OsmMap(
+//          mapPosition: new MapPosition.Create(
+//            geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
+//            scale: 11,
+//          )
+//        ),
       )
     );
   }

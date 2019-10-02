@@ -27,9 +27,9 @@ class MapPosition {
     this.roll = 0;
   }
 
-  MapPosition.Create({Key key, GeoPoint geoPoint, double scale}) {
+  MapPosition.Create({Key key, GeoPoint geoPoint, int zoomLevel}) {
     setPositionDeg(geoPoint.getLatitude(), geoPoint.getLongitude());
-    setScale(scale);
+    setZoomLevel(zoomLevel);
   }
 
   MapPosition.fromDegScale(double latitude, double longitude, double scale) {
@@ -40,6 +40,11 @@ class MapPosition {
   MapPosition.fromGeopointScale(GeoPoint geoPoint, double scale) {
     setPositionDeg(geoPoint.getLatitude(), geoPoint.getLongitude());
     setScale(scale);
+  }
+
+  MapPosition.fromGeopointZoom(GeoPoint geoPoint, int zoomLevel) {
+    setPositionDeg(geoPoint.getLatitude(), geoPoint.getLongitude());
+    setZoomLevel(zoomLevel);
   }
 
   MapPosition.fromDegZoom(double latitude, double longitude, int zoomLevel)

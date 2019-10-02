@@ -9,9 +9,10 @@ import '../core/viewport.dart' as mapViewport;
 class OsmMap extends StatelessWidget {
   OsmMap({Key key, MapPosition mapPosition}) : super(key: key) {
     _mapPosition = mapPosition;
-    _mapView = new MapView(_mapReady);
+    _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
     _mapView.mapPositionChanged = _mapPositionChanged;
+
   }
 
   MapView _mapView;
@@ -38,6 +39,7 @@ class OsmMap extends StatelessWidget {
   void _mapReady(MapView mapView) {
     _createTileLayer();
     _mapView.SetMapPosition(_mapPosition);
+
     if (mapReady != null) {
       mapReady(mapView);
     }
@@ -51,6 +53,6 @@ class OsmMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return _mapView;
   }
 }
