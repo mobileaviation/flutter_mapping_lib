@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-
 num abs(num value) {
   return value < 0 ? -value : value;
 }
@@ -20,10 +19,8 @@ num clamp(num value, num min, num max) {
 }
 
 num clampDegree(num degree) {
-  while (degree > 180)
-    degree -= 360;
-  while (degree < -180)
-    degree += 360;
+  while (degree > 180) degree -= 360;
+  while (degree < -180) degree += 360;
   return degree;
 }
 
@@ -32,10 +29,8 @@ num clampN(num value) {
 }
 
 num clampRadian(num radian) {
-  while (radian > math.pi)
-    radian -= 2 * math.pi;
-  while (radian < -math.pi)
-    radian += 2 * math.pi;
+  while (radian > math.pi) radian -= 2 * math.pi;
+  while (radian < -math.pi) radian += 2 * math.pi;
   return radian;
 }
 
@@ -69,8 +64,7 @@ int log2(int x) {
 }
 
 double pow(int x) {
-  if (x == 0)
-    return 1;
+  if (x == 0) return 1;
 
   return (x > 0 ? (1 << x) : (1.0 / (1 << -x)));
 }
@@ -83,8 +77,7 @@ bool withinSquaredDist(num dx, num dy, num distance) {
   return dx * dx + dy * dy < distance;
 }
 
-double hypot(double a, double b)
-{
+double hypot(double a, double b) {
   double x = math.max(abs(a), abs(b));
   double y = math.min(abs(a), abs(b));
 

@@ -7,12 +7,11 @@ import '../tiles/httptilesource.dart';
 import '../core/viewport.dart' as mapViewport;
 
 class OsmMap extends StatelessWidget {
-  OsmMap({Key key, MapPosition mapPosition}) : super(key: key) {
+  OsmMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
     _mapPosition = mapPosition;
     _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
     _mapView.mapPositionChanged = _mapPositionChanged;
-
   }
 
   MapView _mapView;

@@ -33,14 +33,14 @@ class MyApp extends StatelessWidget {
   OsmMap _osmMap;
 
   _mapReady(mapview.MapView mapView) {
-    GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
-    GeoPoint t = new GeoPoint(52.383063, 5.556776);
-    GeoPoint e = new GeoPoint(52.349690, 5.634789);
-
-    final _url = "http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png";
-    HttpTileSource osmTileSource = new HttpTileSource(_url);
-    TileLayer tileLayer = new TileLayer(osmTileSource);
-    _mapView.AddLayer(tileLayer);
+//    GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
+//    GeoPoint t = new GeoPoint(52.383063, 5.556776);
+//    GeoPoint e = new GeoPoint(52.349690, 5.634789);
+//
+//    final _url = "http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png";
+//    HttpTileSource osmTileSource = new HttpTileSource(_url);
+//    TileLayer tileLayer = new TileLayer(osmTileSource);
+//    _mapView.AddLayer(tileLayer);
 
 //    SimpleMarkerRenderer drawer = new SimpleMarkerRenderer();
 //    SimpleMarker marker = new SimpleMarker(drawer, new Size(100,100), s);
@@ -64,9 +64,9 @@ class MyApp extends StatelessWidget {
 //    _mapView.AddLayer(vectorLayer);
 
 
-    MapPosition _initialPosition = MapPosition.fromGeopointZoom(s, 11);
+//    MapPosition _initialPosition = MapPosition.fromGeopointZoom(s, 11);
     //MapPosition _initialPosition = MapPosition.fromDegZoom(52.45657243868931, 5.52041338863477, 11);
-    _mapView.SetMapPosition(_initialPosition);
+//    _mapView.SetMapPosition(_initialPosition);
 
 //    DefaultMarkerRenderer defaultMarkerRenderer = new DefaultMarkerRenderer();
 //    defaultMarkerRenderer.markerType = DefaultMarkerType.Red;
@@ -90,7 +90,8 @@ class MyApp extends StatelessWidget {
         mapPosition: new MapPosition.Create(
           geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
           zoomLevel: 11,
-        )
+        ),
+        mapReady: _mapReady,
     );
   }
 

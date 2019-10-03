@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 import 'dart:math' as math;
 import '../../utils/boundingbox.dart' as utils;
@@ -14,21 +13,19 @@ class MarkerBase {
     MarkerSize = size;
     _pivotPoint = new math.Point(size.width/2, size.height/2);
     _location = location;
-    _name = _location.toString();
+    Name = _location.toString();
   }
 
   void paint(Canvas canvas) {
     if (MarkerImage != null) {
-      Offset drawPoint = new Offset(DrawPoint.x - PivotPoint.x, DrawPoint.y - PivotPoint.y);
+      Offset drawPoint = new Offset(DrawPoint._x - PivotPoint._x, DrawPoint._y - PivotPoint._y);
       canvas.drawImage(MarkerImage, drawPoint, new Paint());
     }
   }
 
-  Future<Image> doDraw() async {}
+  Future<Image> doDraw() async { return null; }
 
-  String _name;
-  get Name { return _name; }
-  set Name(String value) { _name = value; }
+  String Name;
 
   GeoPoint _location;
   get Location { return _location; }
@@ -123,8 +120,8 @@ class MarkerBase {
   }
 
   bool MarkerSelectedByScreenPos(Offset screenPos) {
-    Offset drawPoint = new Offset(((DrawPoint.x - PivotPoint.x) + (MarkerSize.width/2)),
-        ((DrawPoint.y - PivotPoint.y) + (MarkerSize.height/2)));
+    Offset drawPoint = new Offset(((DrawPoint._x - PivotPoint._x) + (MarkerSize.width/2)),
+        ((DrawPoint._y - PivotPoint._y) + (MarkerSize.height/2)));
     Rect markerRect = Rect.fromCenter(center: drawPoint, width: MarkerSize.width, height: MarkerSize.height);
     return markerRect.contains(screenPos);
   }
