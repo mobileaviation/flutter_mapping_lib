@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../utils/boundingbox.dart';
 import '../../core/viewport.dart' as vp;
 import '../../utils/mapposition.dart';
 
 class GeomBase {
   Paint geomPaint;
+
+  BoundingBox boundingBox;
 
   void defaultPaint() {
     geomPaint = new Paint()
@@ -26,5 +29,10 @@ class GeomBase {
     if (_vectorUpdated != null) {
       _vectorUpdated(this);
     }
+  }
+
+  bool WithinViewport(vp.Viewport viewport) {
+    if (boundingBox == null) return true;
+    return boundingBox.intersects(viewport.GetBoundingBox());
   }
 }

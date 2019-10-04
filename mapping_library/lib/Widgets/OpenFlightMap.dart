@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/utils/geopoint.dart';
+import '../tiles/sources/openflightmapsource.dart';
+import '../utils/geopoint.dart';
 import '../core/mapview.dart';
 import '../utils/mapposition.dart';
 import '../layers/tilelayer.dart';
-import '../tiles/sources/httptilesource.dart';
 import '../core/viewport.dart' as mapViewport;
 
-class OsmMap extends StatelessWidget {
-  OsmMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
+class OpenFlightMap extends StatelessWidget {
+  OpenFlightMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
     _mapPosition = mapPosition;
     _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
@@ -15,7 +15,7 @@ class OsmMap extends StatelessWidget {
   }
 
   MapView _mapView;
-  final _osmUrl = "http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png";
+  final _openFlightMapsUrl = "https://snapshots.openflightmaps.org/live/##AIRAC##/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png";
 
   Function(MapView mapView) mapReady;
   Function(mapViewport.Viewport viewport) mapPositionChanged;
@@ -45,8 +45,8 @@ class OsmMap extends StatelessWidget {
   }
 
   void _createTileLayer() {
-    HttpTileSource osmTileSource = new HttpTileSource(_osmUrl);
-    TileLayer tileLayer = new TileLayer(osmTileSource);
+    OpenFlightMapsTileSource ofmTileSource = new OpenFlightMapsTileSource(_openFlightMapsUrl);
+    TileLayer tileLayer = new TileLayer(ofmTileSource);
     _mapView.AddLayer(tileLayer);
   }
 
@@ -55,3 +55,4 @@ class OsmMap extends StatelessWidget {
     return _mapView;
   }
 }
+

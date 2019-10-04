@@ -3,8 +3,8 @@ import 'dart:core';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
-import '../tiles/tilesource.dart';
-import 'tile.dart';
+import '../../tiles/tilesource.dart';
+import '../../tiles/tile.dart';
 
 class HttpTileSource extends TileSource
 {
@@ -14,6 +14,10 @@ class HttpTileSource extends TileSource
   }
 
   String _urlTemplate;
+
+  void SetUrlTemplate(String urlTemplate) {
+    _urlTemplate = urlTemplate;
+  }
 
   @override
   Future<ui.Image> GetTileImage(Tile tile) async
@@ -31,7 +35,7 @@ class HttpTileSource extends TileSource
     return completer.future;
   }
 
-    String _formatUrl(Tile tile)
+  String _formatUrl(Tile tile)
   {
     String _url = _urlTemplate.replaceAll('##X##', tile.tileX.toString());
     _url = _url.replaceAll("##Y##", tile.tileY.toString());

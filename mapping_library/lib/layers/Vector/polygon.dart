@@ -7,28 +7,24 @@ import 'dart:math' as math;
 import '../../utils/geopoint.dart';
 import '../../core/viewport.dart' as vp;
 import '../../utils/mercatorprojection.dart' as MercatorProjection;
+import '../../utils/geopoints.dart';
 
 class Polygon extends GeomBase {
-  Polygon(List<GeoPoint> points) {
+  Polygon(GeoPoints points) {
     _points = points;
+    boundingBox = points.BoundingBox;
     _drawPoints = new List();
     defaultPaint();
   }
 
-  List<GeoPoint> _points;
+  GeoPoints _points;
   List<Offset> _drawPoints;
 
   @override
   void paint(Canvas canvas) {
-    Offset p1, p2;
-    for (Offset p in _drawPoints) {
-      if (p1 == null) p1 = p;
-      if (p1 != null) {
-        p2 = p;
-        canvas.drawLine(p1, p2, geomPaint);
-        p1 = p;
-      }
-    }
+    Path p = new Path();
+    p.addPolygon(_drawPoints, false);
+    canvas.drawPath(p, geomPaint);
   }
 
   @override
@@ -46,6 +42,7 @@ class Polygon extends GeomBase {
     double cx = centerPixels.x - sw2;
     double cy = centerPixels.y - sh2;
 
+    _drawPoints.clear();
     for (GeoPoint p in _points) {
       math.Point pix = _getPixelsPosition(p, mapPosition.zoomLevel);
       double x = pix.x - cx;
