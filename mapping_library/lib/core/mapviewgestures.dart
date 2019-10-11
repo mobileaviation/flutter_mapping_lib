@@ -13,7 +13,6 @@ class MapViewGestures extends MapViewStateBase {
   double _scale;
 
   _mapScaleStart(ScaleStartDetails scaleStartDetails) {
-    log("ScaleStartDetails " + scaleStartDetails.toString());
     _touchedOffset = Offset(scaleStartDetails.localFocalPoint.dx,
         scaleStartDetails.localFocalPoint.dy);
     _dragViewport = viewPort.Viewport.fromViewport(widget.viewport);
@@ -34,11 +33,10 @@ class MapViewGestures extends MapViewStateBase {
   }
 
   _mapScaleEnd(ScaleEndDetails scaleEndDetails) {
-    log("ScaleEndDetails " + scaleEndDetails.toString());
+    //log("ScaleEndDetails " + scaleEndDetails.toString());
   }
 
   _mapTap(TapUpDetails tapUpDetails) {
-    log("MapTab " + tapUpDetails.toString());
     GeoPoint tp = widget.viewport.GetGeopointForScreenPosition(new math.Point(
         tapUpDetails.localPosition.dx, tapUpDetails.localPosition.dy));
     widget.layerPainter.doLayerTabCheck(tp, tapUpDetails.localPosition);

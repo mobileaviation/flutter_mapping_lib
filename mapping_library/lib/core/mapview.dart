@@ -49,8 +49,12 @@ class MapView extends StatefulWidget {
   MapPosition _mapCenterPosition;
   Size _widgetSize;
   mapViewport.Viewport viewport;
+  int zoomMin = 4;
+  int zoomMax = 20;
 
   void SetMapPosition(MapPosition mapPosition) {
+    if (mapPosition.getZoom()<zoomMin.toDouble() - 0.9) mapPosition.setZoom(zoomMin.toDouble() - 0.9);
+    if (mapPosition.getZoom()>zoomMax.toDouble() + 0.9) mapPosition.setZoom(zoomMax.toDouble() + 0.9);
     if (initialized) {
       _mapCenterPosition = mapPosition;
       setupViewPort(_widgetSize);

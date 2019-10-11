@@ -12,6 +12,8 @@ class OpenFlightMap extends StatelessWidget {
     _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
     _mapView.mapPositionChanged = _mapPositionChanged;
+    _mapView.zoomMax = 11;
+    _mapView.zoomMin = 7;
   }
 
   MapView _mapView;

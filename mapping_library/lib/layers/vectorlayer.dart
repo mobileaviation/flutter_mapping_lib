@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:ui';
+import '../layers/Vector/polygon.dart';
 import '../layers/Vector/geombase.dart';
 import '../utils/geopoint.dart';
 import '../core/viewport.dart';
@@ -21,7 +23,9 @@ class VectorLayer extends Layer {
 
   void paint(Canvas canvas, Size size) {
     for (GeomBase vector in _vectors) {
-      vector.paint(canvas);
+      if (vector.WithinViewport(_viewport)) {
+        vector.paint(canvas);
+      }
     }
   }
 
@@ -34,11 +38,18 @@ class VectorLayer extends Layer {
 
   @override
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
-
+    for (GeomBase vector in _vectors) {
+      if (vector.WithinViewport(_viewport)) {
+        if (vector.WithinPolygon(clickedPosition, screenPos)) {
+          _fireVectorSelected(vector, clickedPosition);
+        }
+      }
+    }
   }
 
   void _vectorUpdated(GeomBase vector) {
-
+    _setupVectorsForViewport();
+    fireUpdatedLayer();
   }
 
   void _setupVectorsForViewport() {
@@ -47,7 +58,15 @@ class VectorLayer extends Layer {
     }
   }
 
+  Function(GeomBase vector, GeoPoint clickedPosition) VectorSelected;
+  void _fireVectorSelected(GeomBase vector, GeoPoint clickedPosition) {
+    if (VectorSelected != null) {
+      VectorSelected(vector, clickedPosition);
+    }
+  }
+
   MapPosition _mapPosition;
   Viewport _viewport;
+
 
 }

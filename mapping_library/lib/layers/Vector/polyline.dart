@@ -10,22 +10,74 @@ import '../../utils/mercatorprojection.dart' as MercatorProjection;
 import '../../utils/geopoints.dart';
 import '../../utils/geomutils.dart' as geomutils;
 
-class Polygon extends GeomBase {
-  Polygon(GeoPoints points) {
-    _points = points;
-    boundingBox = points.BoundingBox;
+class Polyline extends GeomBase {
+  Polyline() {
+    _points = new GeoPoints();
     _drawPoints = new List();
     defaultPaint();
+    BorderColor = geomPaint2.color;
   }
 
   GeoPoints _points;
   List<Offset> _drawPoints;
 
-  get Closed { return (_points != null) ? _points.Closed : false; }
+  int _lineWidth = 5;
+  int _borderWidth = 0;
+  int _borderLineWidth = 5;
+  Color _borderColor;
+  get BorderColor { return _borderColor; }
+  set BorderColor(Color value) {
+    _borderColor = value;
+    _setupPaints();
+  }
+
+  get BorderWidth { return _borderWidth; }
+  set BorderWidth(int value) {
+    _borderWidth = value;
+    _setupPaints();
+  }
+
+  get LineWidth { return _lineWidth; }
+  set LineWidth(int value) {
+    _lineWidth = value;
+    _setupPaints();
+  }
+
+  void _setupPaints() {
+    _borderLineWidth = _lineWidth + (_borderWidth * 2);
+    geomPaint2.color = _borderColor;
+    geomPaint2.strokeWidth = _borderLineWidth.toDouble();
+    geomPaint.strokeWidth = _lineWidth.toDouble();
+  }
+
+  void AddPoints(List<GeoPoint> points) {
+    _points.addAll(points);
+    fireUpdatedVector();
+  }
+
+  void AddPoint(GeoPoint point) {
+    _points.add(point);
+    fireUpdatedVector();
+  }
+
+  void EditPoint(GeoPoint point, int index) {
+    _points.insert(index, point);
+    fireUpdatedVector();
+  }
+
+  void DeletePoint(int index) {
+    _points.removeAt(index);
+    fireUpdatedVector();
+  }
 
   @override
   void paint(Canvas canvas) {
     if (Visible) {
+      if (_borderWidth>0) {
+        Path p = new Path();
+        p.addPolygon(_drawPoints, false);
+        canvas.drawPath(p, geomPaint2);
+      }
       Path p = new Path();
       p.addPolygon(_drawPoints, false);
       canvas.drawPath(p, geomPaint);
@@ -65,17 +117,6 @@ class Polygon extends GeomBase {
 
   @override
   bool WithinPolygon(GeoPoint geoPoint, Offset screenPoint) {
-    if (!_points.Closed)
-      return super.WithinPolygon(geoPoint, screenPoint);
-    else {
-
-      int i = geomutils.wn_PnPoly(new math.Point(geoPoint.longitudeE6, geoPoint.latitudeE6)
-          , _points.MathPointsE6);
-
-      return (i==-1);
-
-      // check C++ code for intersection point with polygon
-      // http://geomalgorithms.com/a03-_inclusion.html
-    }
+    return super.WithinPolygon(geoPoint, screenPoint);
   }
 }

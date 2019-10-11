@@ -25,7 +25,7 @@ class MarkerBase {
 
   Future<Image> doDraw() async { return null; }
 
-  String Name;
+  String Name = "Marker";
 
   GeoPoint _location;
   get Location { return _location; }
