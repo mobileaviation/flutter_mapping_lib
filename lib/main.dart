@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mapping_library/layers/Vector/geombase.dart';
 import 'package:mapping_library/layers/markerslayer.dart';
@@ -25,7 +26,9 @@ import 'package:mapping_library/utils/mapposition.dart' as prefix1;
 import 'package:mapping_library/Widgets/utils/airac.dart';
 import 'package:mapping_library/utils/geopoints.dart';
 import 'package:mapping_library/layers/Vector/polyline.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart' as paths;
+import 'package:mapping_library/layers/Overlay/overlayimage.dart';
+import 'package:mapping_library/layers/overlaylayer.dart';
 
 void main() => runApp(MyApp());
 
@@ -111,6 +114,8 @@ class MyApp extends StatelessWidget {
     vectorLayer.VectorSelected = _vectorSelected;
 
     _testPolyLine(vectorLayer);
+
+    _setupTestOverlay(mapView);
   }
 
   void _testPolyLine(VectorLayer layer) {
@@ -148,8 +153,26 @@ class MyApp extends StatelessWidget {
         //l.Visible = false;
       }
     });
+  }
 
-    //l.AddPoints(points);
+  void _setupTestOverlay(mapview.MapView mapView){
+    double north = 52.58651688434567;
+    double south = 52.27448205017151;
+    double east = 5.717278709730119;
+    double west = 5.378079539513956;
+
+    paths.getExternalStorageDirectory().then((value) {
+      log("Apps Documents dir: " + value.path);
+      String fileEHLE = value.path + "/" + "EH-AD-2.EHLE-VAC.png";
+      OverlayImage ehleImage = OverlayImage(File(fileEHLE));
+      ehleImage.setImageBox(north, south, west, east);
+
+      OverlayLayer overlayLayer = OverlayLayer();
+      overlayLayer.AddImage(ehleImage);
+      mapView.AddLayer(overlayLayer);
+
+    });
+
   }
 
 
