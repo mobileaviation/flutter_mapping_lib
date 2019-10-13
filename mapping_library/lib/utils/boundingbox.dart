@@ -43,6 +43,16 @@ class BoundingBox {
     this.maxLongitudeE6 = maxLon;
   }
 
+  GeoPoint getNorthWestPoint()
+  {
+    return GeoPoint.fromE6(maxLatitudeE6, minLongitudeE6);
+  }
+
+  GeoPoint getSouthEastPoint()
+  {
+    return GeoPoint.fromE6(minLatitudeE6, maxLongitudeE6);
+  }
+
   bool contains(GeoPoint geoPoint) {
     return geoPoint.latitudeE6 <= maxLatitudeE6
         && geoPoint.latitudeE6 >= minLatitudeE6
