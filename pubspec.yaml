@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   mapping_library:
     path: ./mapping_library
+  mapping_library_extentions:
+    path: ./mapping_library_extentions
   path_provider: ^1.3.0
 
 dev_dependencies:

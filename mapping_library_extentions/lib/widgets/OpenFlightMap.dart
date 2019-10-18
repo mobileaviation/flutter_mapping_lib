@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import '../tiles/sources/openflightmapsource.dart';
-import '../utils/geopoint.dart';
-import '../core/mapview.dart';
-import '../utils/mapposition.dart';
-import '../layers/tilelayer.dart';
-import '../core/viewport.dart' as mapViewport;
+import 'package:mapping_library/utils/geopoint.dart';
+import 'package:mapping_library/core/mapview.dart';
+import 'package:mapping_library/utils/mapposition.dart';
+import 'package:mapping_library/layers/tilelayer.dart';
+import 'package:mapping_library/core/viewport.dart' as mapViewport;
 
 class OpenFlightMap extends StatelessWidget {
   OpenFlightMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
@@ -38,18 +38,18 @@ class OpenFlightMap extends StatelessWidget {
   }
 
   void _mapReady(MapView mapView) {
-    _createTileLayer();
+    _createTileLayer(mapView);
     _mapView.SetMapPosition(_mapPosition);
-
-    if (mapReady != null) {
-      mapReady(mapView);
-    }
   }
 
-  void _createTileLayer() {
-    OpenFlightMapsTileSource ofmTileSource = new OpenFlightMapsTileSource(_openFlightMapsUrl);
-    TileLayer tileLayer = new TileLayer(ofmTileSource);
-    _mapView.AddLayer(tileLayer);
+  void _createTileLayer(MapView mapView) {
+    OpenFlightMapsTileSource ofmTileSource = new OpenFlightMapsTileSource(_openFlightMapsUrl, 'openflightmaps');
+    ofmTileSource.OpenCachedTileSource((){
+      TileLayer tileLayer = new TileLayer(ofmTileSource);
+      _mapView.AddLayer(tileLayer);
+
+      if (mapReady != null) mapReady(mapView);
+    });
   }
 
   @override

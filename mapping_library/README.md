@@ -1,8 +1,19 @@
 # Basic Mapping engine for Flutter
-This library supplies a basic implementation of a tiled mapping engine for flutter. There is a basic openstreetmap widget available which can be set on a specific geographic location. Basic gestures are implemented to pan and zoom this map.
-More advanced options are available for adding markers and vector based object like lines and circles.
+This library supplies a basic implementation of a tiled mapping engine
+for flutter. There is a basic openstreetmap widget available which can
+be set on a specific geographic location. Basic gestures are implemented
+to pan and zoom this map. More advanced options are available for adding
+markers and vector based object like lines, polylines, circles and
+polygons. Also a basic Marker implementation is available.
 
-- Version: 0.0.1 
+This library actually consists of two project, mapping_library and
+mapping_library_extentions. For use on a IOS or Android device these
+both needs to be added to the dependencies. The
+mapping_library_extentions library adds extra IOS and Android specific
+code. When using Flutter-web only add the mapping_library to the
+dependencies (not tested yet!).
+
+- Version: 0.0.3
 
 ***Disclaimer**: This version is far from finished. Most of the options
 just supply very basic functionality which might still holds many bugs.
@@ -12,6 +23,7 @@ We are continuesly adding and improving options. Use at your own risk*
 
     dependencies:
          mapping_library: any
+         mapping_library_extentions: any
 
 ## Examples
 
@@ -22,7 +34,7 @@ widget as the map needs to be in persistent memory. Add this instance to
 the Build function..
 ```
         
-    import 'package:mapping_library/Widgets/OsmMap.dart';
+    import 'package:mapping_library_extentions/Widgets/OsmMap.dart';
     import 'package:mapping_library/utils/geopoint.dart';
     import 'package:mapping_library/utils/mapposition.dart';
         

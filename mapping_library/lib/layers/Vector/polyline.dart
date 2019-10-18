@@ -4,7 +4,7 @@ import '../../layers/Vector/geombase.dart';
 import '../../core/viewport.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
-import '../../utils/geopoint.dart';
+import '../../utils/geopoint.dart' as gp;
 import '../../core/viewport.dart' as vp;
 import '../../utils/mercatorprojection.dart' as MercatorProjection;
 import '../../utils/geopoints.dart';
@@ -50,17 +50,17 @@ class Polyline extends GeomBase {
     geomPaint.strokeWidth = _lineWidth.toDouble();
   }
 
-  void AddPoints(List<GeoPoint> points) {
+  void AddPoints(List<gp.GeoPoint> points) {
     _points.addAll(points);
     fireUpdatedVector();
   }
 
-  void AddPoint(GeoPoint point) {
+  void AddPoint(gp.GeoPoint point) {
     _points.add(point);
     fireUpdatedVector();
   }
 
-  void EditPoint(GeoPoint point, int index) {
+  void EditPoint(gp.GeoPoint point, int index) {
     _points.insert(index, point);
     fireUpdatedVector();
   }
@@ -100,7 +100,7 @@ class Polyline extends GeomBase {
     double cy = centerPixels.y - sh2;
 
     _drawPoints.clear();
-    for (GeoPoint p in _points) {
+    for (gp.GeoPoint p in _points) {
       math.Point pix = _getPixelsPosition(p, mapPosition.zoomLevel);
       double x = pix.x - cx;
       double y = pix.y - cy;
@@ -111,12 +111,12 @@ class Polyline extends GeomBase {
     }
   }
 
-  math.Point _getPixelsPosition(GeoPoint location, int zoomLevel) {
+  math.Point _getPixelsPosition(gp.GeoPoint location, int zoomLevel) {
     return MercatorProjection.GetPixelsPosition(location, zoomLevel);
   }
 
   @override
-  bool WithinPolygon(GeoPoint geoPoint, Offset screenPoint) {
+  bool WithinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
     return super.WithinPolygon(geoPoint, screenPoint);
   }
 }

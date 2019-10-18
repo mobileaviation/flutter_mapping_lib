@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/utils/geopoint.dart';
-import '../core/mapview.dart';
-import '../utils/mapposition.dart';
-import '../layers/tilelayer.dart';
-import '../tiles/sources/httptilesource.dart';
-import '../core/viewport.dart' as mapViewport;
+import 'package:mapping_library/core/mapview.dart';
+import 'package:mapping_library/utils/mapposition.dart';
+import 'package:mapping_library/layers/tilelayer.dart';
+import '../tiles/sources/cachedhttpsource.dart';
+import 'package:mapping_library/core/viewport.dart' as mapViewport;
 
 class OsmMap extends StatelessWidget {
   OsmMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
@@ -36,18 +36,18 @@ class OsmMap extends StatelessWidget {
   }
 
   void _mapReady(MapView mapView) {
-    _createTileLayer();
+    _createTileLayer(mapView);
     _mapView.SetMapPosition(_mapPosition);
-
-    if (mapReady != null) {
-      mapReady(mapView);
-    }
   }
 
-  void _createTileLayer() {
-    HttpTileSource osmTileSource = new HttpTileSource(_osmUrl);
-    TileLayer tileLayer = new TileLayer(osmTileSource);
-    _mapView.AddLayer(tileLayer);
+  void _createTileLayer(MapView mapView) {
+    CachedHttpTileSource osmTileSource = new CachedHttpTileSource(_osmUrl, 'openflightmaps');
+    osmTileSource.OpenCachedTileSource(() {
+      TileLayer tileLayer = new TileLayer(osmTileSource);
+      _mapView.AddLayer(tileLayer);
+
+      if (mapReady != null) mapReady(mapView);
+    });
   }
 
   @override

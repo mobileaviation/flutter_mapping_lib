@@ -20,19 +20,11 @@ class HttpTileSource extends TileSource
   }
 
   @override
-  Future<ui.Image> GetTileImage(Tile tile) async
+  Future<TileImage> GetTileImage(Tile tile) async
   {
     String _url = _formatUrl(tile);
     Uint8List imgData = await _downloadImage(_url);
-    return await _loadImage(imgData);
-  }
-
-  Future<ui.Image> _loadImage(List<int> imgData) async {
-    final Completer<ui.Image> completer = new Completer();
-    ui.decodeImageFromList(imgData, (ui.Image img) {
-      return completer.complete(img);
-    });
-    return completer.future;
+    return await getImageFromBytes(imgData);
   }
 
   String _formatUrl(Tile tile)

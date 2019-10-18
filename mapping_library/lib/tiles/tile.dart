@@ -31,8 +31,10 @@ class ScreenTile extends Tile {
   {
     if (!_retrieving) {
       _retrieving = (_tileImage == null);
-      if (_tileImage == null)
-        _tileImage = await source.GetTileImage(this);
+      if (_retrieving) {
+        TileImage tileImage = await source.GetTileImage(this);
+        _tileImage = (tileImage==null) ? null: tileImage.image;
+      }
     }
     _retrieving = (_tileImage == null);
     return await _tileImage;
