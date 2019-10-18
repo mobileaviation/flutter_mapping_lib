@@ -1,3 +1,4 @@
+import 'package:example/test_markers.dart';
 import 'package:example/test_mbtiles.dart';
 import 'package:example/test_overlay.dart';
 import 'package:example/test_vectors.dart';
@@ -7,7 +8,9 @@ import 'package:mapping_library/utils/mapposition.dart';
 import 'package:mapping_library/utils/geopoint.dart';
 import 'package:mapping_library/core/mapview.dart';
 import 'package:mapping_library/layers/vectorlayer.dart';
+import 'package:mapping_library/layers/markerslayer.dart';
 import 'package:mapping_library/layers/Vector/geombase.dart';
+import 'package:mapping_library/layers/Markers/markerbase.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer';
 
@@ -60,11 +63,21 @@ class _MyHomePageState extends State<MyHomePage> {
         SetupTestOverlay(mapView);
       }
 
-      VectorLayer vectorLayer = new VectorLayer();
+      VectorLayer vectorLayer = VectorLayer();
       mapView.AddLayer(vectorLayer);
       vectorLayer.VectorSelected = _vectorSelected;
 
+      MarkersLayer markersLayer = MarkersLayer();
+      mapView.AddLayer(markersLayer);
+      markersLayer.MarkerSelected = _markerSelected;
+
       TestPolyLineUpdate(vectorLayer);
+      DrawHoogeveenCircuit(vectorLayer);
+      DrawLelystadCircuit(vectorLayer);
+      DrawSchipholCtr(vectorLayer);
+
+      AddDefaultMarker(markersLayer);
+      AddSimpleMarker(markersLayer);
     });
 
     SetupTestMBTilesSource(mapView);
@@ -72,6 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _vectorSelected(GeomBase vector, GeoPoint clickedPosition) {
     log("Vector selected: " + vector.Name);
+  }
+
+  void _markerSelected(MarkerBase marker) {
+    log("Marker selected: " + marker.Name);
   }
 
   Future<PermissionStatus> _checkStorageAccess() async {

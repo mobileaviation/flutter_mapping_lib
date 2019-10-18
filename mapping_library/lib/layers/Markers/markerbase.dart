@@ -18,7 +18,7 @@ class MarkerBase {
 
   void paint(Canvas canvas) {
     if (MarkerImage != null) {
-      Offset drawPoint = new Offset(DrawPoint._x - PivotPoint._x, DrawPoint._y - PivotPoint._y);
+      Offset drawPoint = new Offset(DrawPoint.x - PivotPoint.x, DrawPoint.y - PivotPoint.y);
       canvas.drawImage(MarkerImage, drawPoint, new Paint());
     }
   }
@@ -120,8 +120,8 @@ class MarkerBase {
   }
 
   bool MarkerSelectedByScreenPos(Offset screenPos) {
-    Offset drawPoint = new Offset(((DrawPoint._x - PivotPoint._x) + (MarkerSize.width/2)),
-        ((DrawPoint._y - PivotPoint._y) + (MarkerSize.height/2)));
+    Offset drawPoint = new Offset(((DrawPoint.x - PivotPoint.x) + (MarkerSize.width/2)),
+        ((DrawPoint.y - PivotPoint.y) + (MarkerSize.height/2)));
     Rect markerRect = Rect.fromCenter(center: drawPoint, width: MarkerSize.width, height: MarkerSize.height);
     return markerRect.contains(screenPos);
   }
