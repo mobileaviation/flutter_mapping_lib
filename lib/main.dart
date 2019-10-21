@@ -2,49 +2,24 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/layers/Vector/geombase.dart';
-import 'package:mapping_library/layers/markerslayer.dart';
-import 'package:mapping_library/layers/tilelayer.dart';
-import 'package:mapping_library/layers/vectorlayer.dart';
-import 'package:mapping_library/tiles/sources/httptilesource.dart';
-import 'package:mapping_library/utils/geopoint.dart';
-import 'package:mapping_library/utils/geopoint.dart' as prefix0;
-import 'package:mapping_library/utils/mapposition.dart';
-import 'package:mapping_library/core/mapview.dart' as mapview;
-import 'package:mapping_library/layers/Markers/simplemarker.dart';
-import 'package:mapping_library/layers/Markers/defaultimagemarker.dart';
-import 'package:mapping_library/layers/Markers/markerbase.dart';
-import 'package:mapping_library/layers/Markers/Renderers/simplemarkerrenderer.dart';
-import 'package:mapping_library/layers/Markers/Renderers/defaultmarkerrenderer.dart';
-import 'package:mapping_library/layers/Markers/Renderers/defaultmarkers.dart';
-import 'package:mapping_library/layers/Vector/line.dart';
-import 'package:mapping_library/layers/Vector/circle.dart';
-import 'package:mapping_library/layers/Vector/polygon.dart';
-import 'package:mapping_library_extentions/widgets/OsmMap.dart';
-import 'package:mapping_library_extentions/Widgets/OpenFlightMap.dart';
-import 'package:mapping_library/utils/mapposition.dart' as prefix1;
-import 'package:mapping_library/utils/geopoints.dart';
-import 'package:mapping_library/layers/Vector/polyline.dart';
-import 'package:path_provider/path_provider.dart' as paths;
-import 'package:mapping_library/layers/Overlay/overlayimage.dart';
-import 'package:mapping_library/layers/overlaylayer.dart';
-import 'package:mapping_library_extentions/tiles/sources/mbtilessource.dart' as mbtiles;
+import 'package:mapping_library/mapping_library.dart';
+import 'package:mapping_library_extentions/extentions.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   MyApp() : super() {
-    _mapView = new mapview.MapView(_mapReady);
+    _mapView = new MapView(_mapReady);
     _osmMap = _createOsmMapWidget();
     _ofmMap = _createOfmMapWidget();
   }
 
-  mapview.MapView _mapView;
+  MapView _mapView;
   OsmMap _osmMap;
   OpenFlightMap _ofmMap;
 
-  _mapReady(mapview.MapView mapView) {
+  _mapReady(MapView mapView) {
     GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
     GeoPoint t = new GeoPoint(52.383063, 5.556776);
     GeoPoint e = new GeoPoint(52.349690, 5.634789);
@@ -68,13 +43,13 @@ class MyApp extends StatelessWidget {
 //    _mapView.AddLayer(makersLayer);
 //
     Line line = new Line(s, e);
-    line.Name = "Line";
+    line.name = "Line";
     Circle circle = new Circle(t, 1000);
-    circle.Name = "Circle";
+    circle.name = "Circle";
 
     VectorLayer vectorLayer = new VectorLayer();
-    vectorLayer.AddVectors(line);
-    vectorLayer.AddVectors(circle);
+    vectorLayer.addVectors(line);
+    vectorLayer.addVectors(circle);
 
 //    DefaultMarkerRenderer defaultMarkerRenderer = new DefaultMarkerRenderer();
 //    defaultMarkerRenderer.markerType = DefaultMarkerType.Red;
@@ -92,7 +67,7 @@ class MyApp extends StatelessWidget {
     GeoPoints trafficCircuitEHHOPoint = new GeoPoints();
     trafficCircuitEHHOPoint.addFromString(trafficCircuitEHHO);
     Polygon trafficCircuitEHHOpolygon = new Polygon(trafficCircuitEHHOPoint);
-    vectorLayer.AddVectors(trafficCircuitEHHOpolygon);
+    vectorLayer.addVectors(trafficCircuitEHHOpolygon);
 
     String trafficCircuitEHLE = "5.52458889125152,52.4587277800044 5.52484300122376,52.4588697791537 5.52484300122376,52.4588697791537 5.54633722695909,52.4708757305781 5.54832623653387,52.4719861738938 5.55154930110094,52.4719006434685 5.55337224570004,52.4706890423896 5.55352320408749,52.4705887939362 5.55352320408749,52.4705887939362 5.56509807329495,52.4629022054321 5.56692098087489,52.4616899250738 5.56677862836174,52.4597233868798 5.5647878156617,52.4586135658832 5.56418015742951,52.4582743515565 5.56418015742951,52.4582743515565 5.50773338212851,52.4267248611918 5.50574667251343,52.4256146779705 5.50252939869441,52.4256997528863 5.50070774734002,52.4269106412474 5.50055697047508,52.4270109291608 5.50055697047508,52.4270109291608 5.48898729553504,52.4347059744646 5.48716516802067,52.4359164763822 5.48730196588175,52.4378771762641 5.48928630300586,52.4389889449381 5.48950357500167,52.4391105196022 5.48950357500167,52.4391105196022 5.51101944002569,52.4511444400002";
     GeoPoints points = new GeoPoints();
@@ -103,20 +78,20 @@ class MyApp extends StatelessWidget {
     ctrEHAMpoints.addFromString(crtEHAM, true);
     Polygon crtEHAMpolygon = new Polygon(ctrEHAMpoints);
     crtEHAMpolygon.geomPaint.color = Colors.greenAccent;
-    crtEHAMpolygon.Name = "CTR EHAM";
-    vectorLayer.AddVectors(crtEHAMpolygon);
+    crtEHAMpolygon.name = "CTR EHAM";
+    vectorLayer.addVectors(crtEHAMpolygon);
 
 
     //VectorLayer vectorLayer = new VectorLayer();
     Polygon lelystadCircuit = new Polygon(points);
     lelystadCircuit.geomPaint.color = Colors.lightBlue;
     lelystadCircuit.geomPaint.maskFilter = MaskFilter.blur(BlurStyle.normal, 2);
-    lelystadCircuit.Name = "Traffic Circuit EHLE";
-    vectorLayer.AddVectors(lelystadCircuit);
+    lelystadCircuit.name = "Traffic Circuit EHLE";
+    vectorLayer.addVectors(lelystadCircuit);
 
-    mapView.AddLayer(vectorLayer);
+    mapView.addLayer(vectorLayer);
 
-    vectorLayer.VectorSelected = _vectorSelected;
+    vectorLayer.vectorSelected = _vectorSelected;
 
     _testPolyLine(vectorLayer);
 
@@ -147,13 +122,13 @@ class MyApp extends StatelessWidget {
 
     Polyline l = new Polyline();
     l.geomPaint.color = Colors.redAccent;
-    l.BorderColor = Colors.black;
-    l.BorderWidth = 2;
+    l.borderColor = Colors.black;
+    l.borderWidth = 2;
 
-    layer.AddVectors(l);
+    layer.addVectors(l);
 
     Timer.periodic(new Duration(seconds: 1), (Timer t) {
-      l.AddPoint(points[counter]);
+      l.addPoint(points[counter]);
       counter++;
       if (counter==points.length) {
         t.cancel();
@@ -162,7 +137,7 @@ class MyApp extends StatelessWidget {
     });
   }
 
-  void _setupTestOverlay(mapview.MapView mapView){
+  void _setupTestOverlay(MapView mapView){
     double north = 52.58651688434567;
     double south = 52.27448205017151;
     double east = 5.717278709730119;
@@ -175,28 +150,28 @@ class MyApp extends StatelessWidget {
     ehleImage.setImageBox(north, south, west, east);
 
     OverlayLayer overlayLayer = OverlayLayer();
-    overlayLayer.AddImage(ehleImage);
-    mapView.AddLayer(overlayLayer);
+    overlayLayer.addImage(ehleImage);
+    mapView.addLayer(overlayLayer);
   }
 
-  void _setupTestMBTilesSource(mapview.MapView mapView) {
+  void _setupTestMBTilesSource(MapView mapView) {
     String path = '/sdcard/Download';
     String mbtileFileEDWL = path + '/' + 'VAC-EDWL-Langeoog.mbtiles';
-    mbtiles.MBTilesSource mbTilesSource = mbtiles.MBTilesSource();
-    mbTilesSource.OpenMbTilesFile(mbtileFileEDWL).then((value) {
+    MBTilesSource mbTilesSource = MBTilesSource();
+    mbTilesSource.openMbTilesFile(mbtileFileEDWL).then((value) {
       log("Database isOpen: " + value.toString());
-      TileLayer tileLayer = TileLayer(mbTilesSource);
-      mapView.AddLayer(tileLayer);
+      TilesLayer tileLayer = TilesLayer(mbTilesSource);
+      mapView.addLayer(tileLayer);
     });
   }
 
   void _vectorSelected(GeomBase vector, GeoPoint clickedPosition) {
-    log("Vector selected: " + vector.Name);
+    log("Vector selected: " + vector.name);
   }
 
   Widget _createOsmMapWidget() {
     return OsmMap(
-        mapPosition: new MapPosition.Create(
+        mapPosition: new MapPosition.create(
           geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
           zoomLevel: 10,
         ),
@@ -206,7 +181,7 @@ class MyApp extends StatelessWidget {
 
   Widget _createOfmMapWidget() {
     return OpenFlightMap(
-      mapPosition: new MapPosition.Create(
+      mapPosition: new MapPosition.create(
         geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
         zoomLevel: 10,
       ),

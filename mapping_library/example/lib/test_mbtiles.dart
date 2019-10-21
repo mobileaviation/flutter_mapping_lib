@@ -1,13 +1,12 @@
-import 'package:mapping_library/core/mapview.dart';
-import 'package:mapping_library/layers/tilelayer.dart';
-import 'package:mapping_library_extentions/tiles/sources/mbtilessource.dart';
+import 'package:mapping_library/mapping_library.dart';
+import 'package:mapping_library_extentions/extentions.dart';
 
-void SetupTestMBTilesSource(MapView mapView) {
+void setupTestMBTilesSource(MapView mapView) {
   String path = '/sdcard/Download';
   String mbtileFileEDWL = path + '/' + 'VAC-EDWL-Langeoog.mbtiles';
   MBTilesSource mbTilesSource = MBTilesSource();
-  mbTilesSource.OpenMbTilesFile(mbtileFileEDWL).then((value) {
-    TileLayer tileLayer = TileLayer(mbTilesSource);
-    mapView.AddLayer(tileLayer);
+  mbTilesSource.openMbTilesFile(mbtileFileEDWL).then((value) {
+    TilesLayer tileLayer = TilesLayer(mbTilesSource);
+    mapView.addLayer(tileLayer);
   });
 }

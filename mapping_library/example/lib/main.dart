@@ -3,14 +3,8 @@ import 'package:example/test_mbtiles.dart';
 import 'package:example/test_overlay.dart';
 import 'package:example/test_vectors.dart';
 import 'package:flutter/material.dart';
-import 'package:mapping_library_extentions/widgets/OpenFlightMap.dart';
-import 'package:mapping_library/utils/mapposition.dart';
-import 'package:mapping_library/utils/geopoint.dart';
-import 'package:mapping_library/core/mapview.dart';
-import 'package:mapping_library/layers/vectorlayer.dart';
-import 'package:mapping_library/layers/markerslayer.dart';
-import 'package:mapping_library/layers/Vector/geombase.dart';
-import 'package:mapping_library/layers/Markers/markerbase.dart';
+import 'package:mapping_library_extentions/extentions.dart';
+import 'package:mapping_library/mapping_library.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer';
 
@@ -47,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _createOfmMapWidget() {
     return OpenFlightMap(
-      mapPosition: new MapPosition.Create(
+      mapPosition: new MapPosition.create(
         geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
         zoomLevel: 10,
       ),
@@ -60,35 +54,35 @@ class _MyHomePageState extends State<MyHomePage> {
       if (permission.value == 2) {
         // Permission for storage access is granded so display both the overlay
         // and mbtiles file.
-        SetupTestOverlay(mapView);
+        setupTestOverlay(mapView);
       }
 
       VectorLayer vectorLayer = VectorLayer();
-      mapView.AddLayer(vectorLayer);
-      vectorLayer.VectorSelected = _vectorSelected;
+      mapView.addLayer(vectorLayer);
+      vectorLayer.vectorSelected = _vectorSelected;
 
       MarkersLayer markersLayer = MarkersLayer();
-      mapView.AddLayer(markersLayer);
-      markersLayer.MarkerSelected = _markerSelected;
+      mapView.addLayer(markersLayer);
+      markersLayer.markerSelected = _markerSelected;
 
-      TestPolyLineUpdate(vectorLayer);
-      DrawHoogeveenCircuit(vectorLayer);
-      DrawLelystadCircuit(vectorLayer);
-      DrawSchipholCtr(vectorLayer);
+      testPolyLineUpdate(vectorLayer);
+      drawHoogeveenCircuit(vectorLayer);
+      drawLelystadCircuit(vectorLayer);
+      drawSchipholCtr(vectorLayer);
 
-      AddDefaultMarker(markersLayer);
-      AddSimpleMarker(markersLayer);
+      addDefaultMarker(markersLayer);
+      addSimpleMarker(markersLayer);
     });
 
-    SetupTestMBTilesSource(mapView);
+    setupTestMBTilesSource(mapView);
   }
 
   void _vectorSelected(GeomBase vector, GeoPoint clickedPosition) {
-    log("Vector selected: " + vector.Name);
+    log("Vector selected: " + vector.name);
   }
 
   void _markerSelected(MarkerBase marker) {
-    log("Marker selected: " + marker.Name);
+    log("Marker selected: " + marker.name);
   }
 
   Future<PermissionStatus> _checkStorageAccess() async {

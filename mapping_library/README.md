@@ -27,6 +27,9 @@ We are continuesly adding and improving options. Use at your own risk*
 
 ## Examples
 
+**Checkout the github repository for a full example off all the options
+and how to use them!!**!
+
 **Basic Example** 
 
 Create an instance of the OsmMap object in the contructor of your App
@@ -34,9 +37,7 @@ widget as the map needs to be in persistent memory. Add this instance to
 the Build function..
 ```
         
-    import 'package:mapping_library_extentions/Widgets/OsmMap.dart';
-    import 'package:mapping_library/utils/geopoint.dart';
-    import 'package:mapping_library/utils/mapposition.dart';
+    import 'package:mapping_library/mapping_library.dart';
         
     class MyApp extends StatelessWidget {
       MyApp() : super() {

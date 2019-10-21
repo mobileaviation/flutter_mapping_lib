@@ -1,9 +1,7 @@
-import 'package:mapping_library/core/mapview.dart';
-import 'package:mapping_library/layers/overlaylayer.dart';
-import 'package:mapping_library/layers/Overlay/overlayimage.dart';
+import 'package:mapping_library/mapping_library.dart';
 import 'dart:io';
 
-void SetupTestOverlay(MapView mapView){
+void setupTestOverlay(MapView mapView){
   double north = 52.58651688434567;
   double south = 52.27448205017151;
   double east = 5.717278709730119;
@@ -15,6 +13,6 @@ void SetupTestOverlay(MapView mapView){
   ehleImage.setImageBox(north, south, west, east);
 
   OverlayLayer overlayLayer = OverlayLayer();
-  overlayLayer.AddImage(ehleImage);
-  mapView.AddLayer(overlayLayer);
+  overlayLayer.addImage(ehleImage);
+  mapView.addLayer(overlayLayer);
 }

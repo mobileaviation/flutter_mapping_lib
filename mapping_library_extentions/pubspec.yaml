@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   mapping_library:
-    path: ../mapping_library
+    path: ../mapping_librarycd
   sqflite: ^1.1.7+1
 
 dev_dependencies:

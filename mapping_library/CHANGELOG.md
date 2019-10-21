@@ -1,3 +1,9 @@
+## [0.0.3] 21 Oktober 2019
+* Lots of changes and fixes
+* Added support library (extentions) for specific device support
+* Added Polyline
+* Updated example application
+
 ## [0.0.2] 3 Oktober 2019
 
 * Format changes
