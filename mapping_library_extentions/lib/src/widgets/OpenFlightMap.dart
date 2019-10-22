@@ -3,9 +3,10 @@ import '../tiles/sources/openflightmapsource.dart';
 import 'package:mapping_library/mapping_library.dart';
 
 class OpenFlightMap extends StatelessWidget {
-  OpenFlightMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
+  OpenFlightMap({Key key, MapPosition mapPosition, this.mapReady})
+      : super(key: key) {
     _mapPosition = mapPosition;
-    _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
+    _mapView = MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
     _mapView.mapPositionChanged = _mapPositionChanged;
     _mapView.zoomMax = 11;
@@ -13,7 +14,8 @@ class OpenFlightMap extends StatelessWidget {
   }
 
   MapView _mapView;
-  final _openFlightMapsUrl = "https://snapshots.openflightmaps.org/live/##AIRAC##/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png";
+  final _openFlightMapsUrl =
+      "https://snapshots.openflightmaps.org/live/##AIRAC##/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png";
 
   Function(MapView mapView) mapReady;
   Function(MapViewport viewport) mapPositionChanged;
@@ -39,9 +41,10 @@ class OpenFlightMap extends StatelessWidget {
   }
 
   void _createTileLayer(MapView mapView) {
-    OpenFlightMapsTileSource ofmTileSource = new OpenFlightMapsTileSource(_openFlightMapsUrl, 'openflightmaps');
-    ofmTileSource.openCachedTileSource((){
-      TilesLayer tileLayer = new TilesLayer(ofmTileSource);
+    OpenFlightMapsTileSource ofmTileSource =
+        OpenFlightMapsTileSource(_openFlightMapsUrl, 'openflightmaps');
+    ofmTileSource.openCachedTileSource(() {
+      TilesLayer tileLayer = TilesLayer(ofmTileSource);
       _mapView.addLayer(tileLayer);
 
       if (mapReady != null) mapReady(mapView);
@@ -53,4 +56,3 @@ class OpenFlightMap extends StatelessWidget {
     return _mapView;
   }
 }
-

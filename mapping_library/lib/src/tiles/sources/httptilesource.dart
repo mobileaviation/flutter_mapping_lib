@@ -5,10 +5,8 @@ import 'package:http/http.dart' as http;
 import '../../tiles/tilesource.dart';
 import '../../tiles/tile.dart';
 
-class HttpTileSource extends TileSource
-{
-  HttpTileSource(String urlTemplate)
-  {
+class HttpTileSource extends TileSource {
+  HttpTileSource(String urlTemplate) {
     _urlTemplate = urlTemplate;
   }
 
@@ -19,15 +17,13 @@ class HttpTileSource extends TileSource
   }
 
   @override
-  Future<TileImage> getTileImage(Tile tile) async
-  {
+  Future<TileImage> getTileImage(Tile tile) async {
     String _url = _formatUrl(tile);
     Uint8List imgData = await _downloadImage(_url);
     return await getImageFromBytes(imgData);
   }
 
-  String _formatUrl(Tile tile)
-  {
+  String _formatUrl(Tile tile) {
     String _url = _urlTemplate.replaceAll('##X##', tile.tileX.toString());
     _url = _url.replaceAll("##Y##", tile.tileY.toString());
     _url = _url.replaceAll('##Z##', tile.zoomLevel.floor().toString());
@@ -35,7 +31,7 @@ class HttpTileSource extends TileSource
   }
 
   Future<Uint8List> _downloadImage(String url) async {
-    http.Client client = new http.Client();
+    http.Client client = http.Client();
     var req = await client.get(Uri.parse(url));
     return req.bodyBytes;
   }

@@ -1,9 +1,9 @@
+import 'dart:developer';
+import 'dart:math' as math;
 import '../utils/geopoint.dart';
 import '../utils/mapposition.dart';
 import '../utils/mercatorprojection.dart' as MercatorProjection;
 import 'mapviewstatebase.dart';
-import 'dart:developer';
-import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'mapviewport.dart' as viewPort;
 

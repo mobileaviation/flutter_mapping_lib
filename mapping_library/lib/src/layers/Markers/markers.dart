@@ -1,9 +1,10 @@
 import 'dart:collection';
 
 class Markers<MarkerBase> extends ListBase<MarkerBase> {
-  List _innerList = new List();
+  List _innerList = [];
 
   get length => _innerList.length;
+
   set length(int length) {
     _innerList.length = length;
   }
@@ -20,5 +21,4 @@ class Markers<MarkerBase> extends ListBase<MarkerBase> {
   void add(MarkerBase marker) => _innerList.add(marker);
 
   void addAll(Iterable<MarkerBase> markers) => _innerList.addAll(markers);
-
 }

@@ -4,20 +4,29 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:math' as math;
 
 class MBTilesSource extends TileSource {
-  MBTilesSource() ;
+  MBTilesSource();
 
   int _minzoom;
-  get minZoom { return _minzoom; }
+
+  get minZoom {
+    return _minzoom;
+  }
+
   int _maxzoom;
-  get maxZoom {return _maxzoom; }
+
+  get maxZoom {
+    return _maxzoom;
+  }
 
   BoundingBox _boundingBox;
 
   Future<bool> _openMbTilesFile(String mbTilesFile) async {
     if (mbTilesDatabase == null) {
       mbTilesDatabase = await openDatabase(mbTilesFile, readOnly: true);
-      if (mbTilesDatabase != null) return mbTilesDatabase.isOpen;
-      else return false;
+      if (mbTilesDatabase != null)
+        return mbTilesDatabase.isOpen;
+      else
+        return false;
     } else
       return mbTilesDatabase.isOpen;
   }
@@ -27,7 +36,8 @@ class MBTilesSource extends TileSource {
       _calculateZoomContrains();
       _calculateBounds();
       return true;
-    } else return false;
+    } else
+      return false;
   }
 
   void closeMbTilesFile() {
@@ -62,22 +72,16 @@ class MBTilesSource extends TileSource {
 
   void _calculateZoomContrains() async {
     var minzoomResult = await mbTilesDatabase.query("metadata",
-        columns:['value'],
-        where: 'name = ?',
-        whereArgs: ['minzoom']);
+        columns: ['value'], where: 'name = ?', whereArgs: ['minzoom']);
     _minzoom = int.parse(minzoomResult.first['value'].toString());
     var maxzoomResult = await mbTilesDatabase.query("metadata",
-        columns:['value'],
-        where: 'name = ?',
-        whereArgs: ['maxzoom']);
+        columns: ['value'], where: 'name = ?', whereArgs: ['maxzoom']);
     _maxzoom = int.parse(maxzoomResult.first['value'].toString());
   }
 
   void _calculateBounds() async {
     var boundsResult = await mbTilesDatabase.query("metadata",
-        columns: ['value'],
-        where: "name = ?",
-        whereArgs: ['bounds']);
+        columns: ['value'], where: "name = ?", whereArgs: ['bounds']);
 
     List<String> bb = boundsResult.first["value"].toString().split(",");
 
@@ -92,7 +96,8 @@ class MBTilesSource extends TileSource {
 
 class MBTilesSourceTile {
   MBTilesSourceTile(Tile tile) {
-    tileRow = ((math.pow(2, tile.zoomLevel.toDouble()) - tile.tileY.toDouble()) - 1);
+    tileRow =
+        ((math.pow(2, tile.zoomLevel.toDouble()) - tile.tileY.toDouble()) - 1);
     tileColumn = tile.tileX.toDouble();
     zoomLevel = tile.zoomLevel.toDouble();
   }
@@ -100,5 +105,4 @@ class MBTilesSourceTile {
   double tileRow;
   double tileColumn;
   double zoomLevel;
-
 }

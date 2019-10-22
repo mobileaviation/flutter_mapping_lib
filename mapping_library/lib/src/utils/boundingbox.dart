@@ -43,21 +43,19 @@ class BoundingBox {
     this.maxLongitudeE6 = maxLon;
   }
 
-  GeoPoint getNorthWestPoint()
-  {
+  GeoPoint getNorthWestPoint() {
     return GeoPoint.fromE6(maxLatitudeE6, minLongitudeE6);
   }
 
-  GeoPoint getSouthEastPoint()
-  {
+  GeoPoint getSouthEastPoint() {
     return GeoPoint.fromE6(minLatitudeE6, maxLongitudeE6);
   }
 
   bool contains(GeoPoint geoPoint) {
-    return geoPoint.latitudeE6 <= maxLatitudeE6
-        && geoPoint.latitudeE6 >= minLatitudeE6
-        && geoPoint.longitudeE6 <= maxLongitudeE6
-        && geoPoint.longitudeE6 >= minLongitudeE6;
+    return geoPoint.latitudeE6 <= maxLatitudeE6 &&
+        geoPoint.latitudeE6 >= minLatitudeE6 &&
+        geoPoint.longitudeE6 <= maxLongitudeE6 &&
+        geoPoint.longitudeE6 >= minLongitudeE6;
   }
 
   BoundingBox extendBoundingBox(BoundingBox boundingBox) {
@@ -73,34 +71,34 @@ class BoundingBox {
       return this;
     }
 
-    double minLat = math.max(LATITUDE_MIN,
-        math.min(getMinLatitude(), geoPoint.getLatitude()));
-    double minLon = math.max(LONGITUDE_MIN,
-        math.min(getMinLongitude(), geoPoint.getLongitude()));
-    double maxLat = math.min(LATITUDE_MAX,
-        math.max(getMaxLatitude(), geoPoint.getLatitude()));
-    double maxLon = math.min(LONGITUDE_MAX,
-        math.max(getMaxLongitude(), geoPoint.getLongitude()));
+    double minLat = math.max(
+        LATITUDE_MIN, math.min(getMinLatitude(), geoPoint.getLatitude()));
+    double minLon = math.max(
+        LONGITUDE_MIN, math.min(getMinLongitude(), geoPoint.getLongitude()));
+    double maxLat = math.min(
+        LATITUDE_MAX, math.max(getMaxLatitude(), geoPoint.getLatitude()));
+    double maxLon = math.min(
+        LONGITUDE_MAX, math.max(getMaxLongitude(), geoPoint.getLongitude()));
 
-    return new BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
+    return BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
   }
 
-  BoundingBox extendDegrees(double verticalExpansion,
-      double horizontalExpansion) {
+  BoundingBox extendDegrees(
+      double verticalExpansion, double horizontalExpansion) {
     if (verticalExpansion == 0 && horizontalExpansion == 0) {
       return this;
     }
 
-    double minLat = math.max(
-        LATITUDE_MIN, getMinLatitude() - verticalExpansion);
-    double minLon = math.max(LONGITUDE_MIN,
-        getMinLongitude() - horizontalExpansion);
-    double maxLat = math.min(
-        LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
-    double maxLon = math.min(LONGITUDE_MAX,
-        getMaxLongitude() + horizontalExpansion);
+    double minLat =
+        math.max(LATITUDE_MIN, getMinLatitude() - verticalExpansion);
+    double minLon =
+        math.max(LONGITUDE_MIN, getMinLongitude() - horizontalExpansion);
+    double maxLat =
+        math.min(LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
+    double maxLon =
+        math.min(LONGITUDE_MAX, getMaxLongitude() + horizontalExpansion);
 
-    return new BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
+    return BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
   }
 
   BoundingBox extendMargin(double margin) {
@@ -108,21 +106,21 @@ class BoundingBox {
       return this;
     }
 
-    double verticalExpansion = (getLatitudeSpan() * margin -
-        getLatitudeSpan()) * 0.5;
-    double horizontalExpansion = (getLongitudeSpan() * margin -
-        getLongitudeSpan()) * 0.5;
+    double verticalExpansion =
+        (getLatitudeSpan() * margin - getLatitudeSpan()) * 0.5;
+    double horizontalExpansion =
+        (getLongitudeSpan() * margin - getLongitudeSpan()) * 0.5;
 
-    double minLat = math.max(
-        LATITUDE_MIN, getMinLatitude() - verticalExpansion);
-    double minLon = math.max(LONGITUDE_MIN,
-        getMinLongitude() - horizontalExpansion);
-    double maxLat = math.min(
-        LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
-    double maxLon = math.min(LONGITUDE_MAX,
-        getMaxLongitude() + horizontalExpansion);
+    double minLat =
+        math.max(LATITUDE_MIN, getMinLatitude() - verticalExpansion);
+    double minLon =
+        math.max(LONGITUDE_MIN, getMinLongitude() - horizontalExpansion);
+    double maxLat =
+        math.min(LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
+    double maxLon =
+        math.min(LONGITUDE_MAX, getMaxLongitude() + horizontalExpansion);
 
-    return new BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
+    return BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
   }
 
   BoundingBox extendMeters(int meters) {
@@ -131,21 +129,26 @@ class BoundingBox {
     }
 
     double verticalExpansion = latitudeDistance(meters);
-    double horizontalExpansion = longitudeDistance(meters, math.max(getMinLatitude().abs(), getMaxLatitude().abs()));
+    double horizontalExpansion = longitudeDistance(
+        meters, math.max(getMinLatitude().abs(), getMaxLatitude().abs()));
 
-    double minLat = math.max(LATITUDE_MIN, getMinLatitude() - verticalExpansion);
-    double minLon = math.max(LONGITUDE_MIN, getMinLongitude() - horizontalExpansion);
-    double maxLat = math.min(LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
-    double maxLon = math.min(LONGITUDE_MAX, getMaxLongitude() + horizontalExpansion);
+    double minLat =
+        math.max(LATITUDE_MIN, getMinLatitude() - verticalExpansion);
+    double minLon =
+        math.max(LONGITUDE_MIN, getMinLongitude() - horizontalExpansion);
+    double maxLat =
+        math.min(LATITUDE_MAX, getMaxLatitude() + verticalExpansion);
+    double maxLon =
+        math.min(LONGITUDE_MAX, getMaxLongitude() + horizontalExpansion);
 
-    return new BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
+    return BoundingBox.fromDeg(minLat, minLon, maxLat, maxLon);
   }
 
   GeoPoint getCenterPoint() {
     int latitudeOffset = ((maxLatitudeE6 - minLatitudeE6) / 2).round();
     int longitudeOffset = ((maxLongitudeE6 - minLongitudeE6) / 2).round();
-    return new GeoPoint.fromE6(minLatitudeE6 + latitudeOffset, minLongitudeE6
-        + longitudeOffset);
+    return GeoPoint.fromE6(
+        minLatitudeE6 + latitudeOffset, minLongitudeE6 + longitudeOffset);
   }
 
   double getLatitudeSpan() {
@@ -177,14 +180,16 @@ class BoundingBox {
       return true;
     }
 
-    return getMaxLatitude() >= boundingBox.getMinLatitude() && getMaxLongitude() >= boundingBox.getMinLongitude()
-        && getMinLatitude() <= boundingBox.getMaxLatitude() && getMinLongitude() <= boundingBox.getMaxLongitude();
+    return getMaxLatitude() >= boundingBox.getMinLatitude() &&
+        getMaxLongitude() >= boundingBox.getMinLongitude() &&
+        getMinLatitude() <= boundingBox.getMaxLatitude() &&
+        getMinLongitude() <= boundingBox.getMaxLongitude();
   }
 
   String toString() {
-    return "LeftTop.Lat: " + getMaxLatitude().toString() +
-      " LeftTop.Lon: " + getMinLongitude().toString() +
-      " BottomRight.Lat: " + getMinLatitude().toString() +
-      " BottomRight.lon: " + getMaxLongitude().toString();
+    return "LeftTop.Lat: $getMaxLatitude()" +
+        " LeftTop.Lon: $getMinLongitude()" +
+        " BottomRight.Lat: $getMinLatitude()" +
+        " BottomRight.lon: $getMaxLongitude()";
   }
 }

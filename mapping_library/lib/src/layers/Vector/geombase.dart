@@ -14,11 +14,15 @@ class GeomBase {
   String name = "Vector";
 
   bool _visible = true;
+
   set visible(bool value) {
     _visible = value;
     fireUpdatedVector();
   }
-  get visible { return _visible; }
+
+  get visible {
+    return _visible;
+  }
 
   void defaultPaint() {
     geomPaint = new Paint()
@@ -34,7 +38,9 @@ class GeomBase {
   }
 
   calculatePixelPosition(vp.MapViewport viewport, MapPosition mapPosition) {}
+
   paint(Canvas canvas) {}
+
   void setUpdateListener(Function listener) {
     _vectorUpdated = listener;
   }
@@ -52,5 +58,7 @@ class GeomBase {
     return boundingBox.intersects(viewport.getBoundingBox());
   }
 
-  bool withinPolygon(GeoPoint geoPoint, Offset screenPoint) { return false; }
+  bool withinPolygon(GeoPoint geoPoint, Offset screenPoint) {
+    return false;
+  }
 }

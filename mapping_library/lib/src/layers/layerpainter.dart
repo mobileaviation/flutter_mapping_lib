@@ -8,7 +8,7 @@ import 'layers.dart';
 
 class LayerPainter extends ChangeNotifier implements CustomPainter {
   LayerPainter() {
-    _layers = new Layers();
+    _layers = Layers();
     _startPaintFps();
   }
 
@@ -21,7 +21,6 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
   }
 
   void notifyLayers(MapPosition mapPosition, viewPort.MapViewport viewport) {
-    // TODO: implement notifyLayer
     for (Layer l in _layers) {
       l.notifyLayer(mapPosition, viewport);
     }
@@ -34,8 +33,6 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
   }
 
   void _layerUpdated(Layer layer) {
-    //if (_updateMapView != null) _updateMapView();
-    //notifyListeners();
     _repaint = true;
   }
 
@@ -52,7 +49,6 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
     for (Layer l in _layers) {
       l.paint(canvas, size);
     }
@@ -60,23 +56,19 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return true;
   }
 
   @override
   bool hitTest(Offset position) {
-    // TODO: implement hitTest
     return null;
   }
 
   @override
-  // TODO: implement semanticsBuilder
   get semanticsBuilder => null;
 
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) {
-    // TODO: implement shouldRebuildSemantics
     return true;
   }
 }

@@ -1,3 +1,9 @@
+## [0.0.4] 22 Oktober 2019
+* Some bugfixes
+* Code formatting
+* path naming changes in the lib
+* Comment and documentation additions and changes
+
 ## [0.0.3] 21 Oktober 2019
 * Lots of changes and fixes
 * Added support library (extentions) for specific device support

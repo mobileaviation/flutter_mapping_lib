@@ -12,18 +12,19 @@ class DefaultMarkerRenderer extends MarkerRenderer {
 
   @override
   Picture draw(Size size) {
-    PictureRecorder drawerRec = new PictureRecorder();
-    Canvas drawerCanvas = new Canvas(drawerRec);
+    PictureRecorder drawerRec = PictureRecorder();
+    Canvas drawerCanvas = Canvas(drawerRec);
 
-    List lt = DefaultMarkers[markerType];
+    List lt = defaultMarkers[markerType];
     double l = lt[0];
     double r = lt[1];
 
     double mwidth = image.width.toDouble() / _width;
     double mheight = image.height.toDouble() / _height;
 
-    Rect s = Rect.fromLTWH(mwidth*l, mheight*r, mwidth, mheight);
-    drawerCanvas.drawImageRect(image, s, new Rect.fromLTWH(0, 0 , size.width, size.height), new Paint());
+    Rect s = Rect.fromLTWH(mwidth * l, mheight * r, mwidth, mheight);
+    drawerCanvas.drawImageRect(image, s,
+        new Rect.fromLTWH(0, 0, size.width, size.height), new Paint());
 
     return drawerRec.endRecording();
   }

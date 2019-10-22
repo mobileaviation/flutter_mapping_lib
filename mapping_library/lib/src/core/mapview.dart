@@ -18,7 +18,8 @@ class MapView extends StatefulWidget {
     this._mapCenterPosition = mapPosition;
   }
 
-  MapView.create(Key key, this.mapReady, MapPosition mapPosition) : super(key: key){
+  MapView.create(Key key, this.mapReady, MapPosition mapPosition)
+      : super(key: key) {
     this._createLayerPainter();
     this._mapCenterPosition = mapPosition;
   }
@@ -31,7 +32,7 @@ class MapView extends StatefulWidget {
   void Function(mapViewport.MapViewport viewport) mapPositionChanged;
 
   _createLayerPainter() {
-    layerPainter = new LayerPainter();
+    layerPainter = LayerPainter();
   }
 
   setupViewPort(Size size) {
@@ -53,8 +54,10 @@ class MapView extends StatefulWidget {
   int zoomMax = 20;
 
   void setMapPosition(MapPosition mapPosition) {
-    if (mapPosition.getZoom()<zoomMin.toDouble() - 0.9) mapPosition.setZoom(zoomMin.toDouble() - 0.9);
-    if (mapPosition.getZoom()>zoomMax.toDouble() + 0.9) mapPosition.setZoom(zoomMax.toDouble() + 0.9);
+    if (mapPosition.getZoom() < zoomMin.toDouble() - 0.9)
+      mapPosition.setZoom(zoomMin.toDouble() - 0.9);
+    if (mapPosition.getZoom() > zoomMax.toDouble() + 0.9)
+      mapPosition.setZoom(zoomMax.toDouble() + 0.9);
     if (initialized) {
       _mapCenterPosition = mapPosition;
       setupViewPort(_widgetSize);
@@ -62,9 +65,8 @@ class MapView extends StatefulWidget {
       if (mapPositionChanged != null) {
         mapPositionChanged(viewport);
       }
-    }
-    else
-      throw new Exception("Map is not initialized yet. Use 'mapReady' for further processing.");
+    } else
+      _throwNotInitializedException();
   }
 
   void updateMap() {
@@ -80,15 +82,19 @@ class MapView extends StatefulWidget {
       layerPainter.addLayer(layer);
       layerPainter.notifyLayers(_mapCenterPosition, viewport);
       log("MapView: AddLayer");
-    }
-    else
-      throw new Exception("Map is not initialized yet. Use 'mapReady' for further processing.");
+    } else
+      _throwNotInitializedException();
   }
 
   void _notifyLayers() {
     if (initialized)
       layerPainter.notifyLayers(_mapCenterPosition, viewport);
     else
-      throw new Exception("Map is not initialized yet. Use 'mapReady' for further processing.");
+      _throwNotInitializedException();
+  }
+
+  void _throwNotInitializedException() {
+    throw Exception(
+        "Map is not initialized yet. Use 'mapReady' for further processing.");
   }
 }

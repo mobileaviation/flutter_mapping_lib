@@ -1,3 +1,5 @@
-## 0.0.3
+## 0.0.4
+Format changes and small bugfixes
 
-* TODO: Describe initial release.
+## 0.0.3
+* Initial release.

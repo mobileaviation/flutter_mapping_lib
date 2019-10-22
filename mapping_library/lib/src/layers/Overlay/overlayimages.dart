@@ -2,9 +2,10 @@ import 'dart:collection';
 import 'overlayimage.dart' as im;
 
 class OverlayImages extends ListBase<im.OverlayImage> {
-  List _innerList = new List();
+  List _innerList = [];
 
   int get length => _innerList.length;
+
   void set length(int length) {
     _innerList.length = length;
   }
@@ -14,7 +15,6 @@ class OverlayImages extends ListBase<im.OverlayImage> {
 
   @override
   void operator []=(int index, im.OverlayImage value) {
-    // TODO: implement []=
     _innerList[index] = value;
   }
 
@@ -31,7 +31,7 @@ class OverlayImages extends ListBase<im.OverlayImage> {
   }
 
   im.OverlayImage removeAt(int index) {
-    im.OverlayImage d =_innerList.removeAt(index);
+    im.OverlayImage d = _innerList.removeAt(index);
     return d;
   }
 }

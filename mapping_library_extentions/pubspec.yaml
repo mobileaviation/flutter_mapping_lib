@@ -1,6 +1,6 @@
 name: mapping_library_extentions
-description: Extention methods specific for IOS and Andriod devices for Flutter Chart Mapping Widget Library. This library gives you the ability to add any tilebase map (like OpenStreetMaps) to your application.
-version: 0.0.3
+description: Extention methods for mapping_library specific for IOS and Andriod devices for Flutter Chart Mapping Widget Library.
+version: 0.0.4
 author: Mobile Aviation Tools <info@mobileaviationtools.com>
 homepage: http://www.mobileaviationtools.com
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   mapping_library:
-    path: ../mapping_librarycd
+    path: ../mapping_library
   sqflite: ^1.1.7+1
 
 dev_dependencies:

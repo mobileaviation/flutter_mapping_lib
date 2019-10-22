@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 import 'tile.dart';
 
 class TileSource {
-
   Future<TileImage> getTileImage(Tile tile) async {}
 
   Future<TileImage> getImageFromBytes(Uint8List data) async {
@@ -15,6 +14,7 @@ class TileSource {
 
 class TileImage {
   TileImage(this.image, this.data);
+
   ui.Image image;
   Uint8List data;
 }
