@@ -17,17 +17,23 @@ class TilesLayer extends Layer {
 
   void paint(Canvas canvas, Size size) {
     if (_mapPosition != null) {
-      for (int x = _tilesBoundingBox.minTileX; x <=
-          _tilesBoundingBox.maxTileX; x++) {
-        for (int y = _tilesBoundingBox.minTileY; y <=
-            _tilesBoundingBox.maxTileY; y++) {
-          ScreenTile t = _tiles[MercatorProjection.getTileId(
-              x, y, _mapPosition.zoomLevel)];
-          double tilesize = values.Tile.SIZE.toDouble() * (1 + _mapPosition.getZoomFraction());
+      for (int x = _tilesBoundingBox.minTileX;
+          x <= _tilesBoundingBox.maxTileX;
+          x++) {
+        for (int y = _tilesBoundingBox.minTileY;
+            y <= _tilesBoundingBox.maxTileY;
+            y++) {
+          ScreenTile t = _tiles[
+              MercatorProjection.getTileId(x, y, _mapPosition.zoomLevel)];
+          double tilesize = values.Tile.SIZE.toDouble() *
+              (1 + _mapPosition.getZoomFraction());
           if (t.tileImage != null) {
-            canvas.drawImageRect(t.tileImage, Rect.fromLTWH(0, 0, values.Tile.SIZE.toDouble(), values.Tile.SIZE.toDouble()),
+            canvas.drawImageRect(
+                t.tileImage,
+                Rect.fromLTWH(0, 0, values.Tile.SIZE.toDouble(),
+                    values.Tile.SIZE.toDouble()),
                 Rect.fromLTWH(t.drawPosX, t.drawPosY, tilesize, tilesize),
-                new Paint());
+                Paint());
           }
         }
       }
@@ -41,21 +47,27 @@ class TilesLayer extends Layer {
   }
 
   @override
-  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
+  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
 
-  }
+  void _setupTilesArray(MapPosition mapPosition, MapViewport viewport) {
+    _tilesBoundingBox = TilesBoundingBox(
+        MercatorProjection.pixelXToTileX(
+            viewport.topLeftAbsPixels.x, mapPosition.zoomLevel),
+        MercatorProjection.pixelYToTileY(
+            viewport.topLeftAbsPixels.y, mapPosition.zoomLevel),
+        MercatorProjection.pixelXToTileX(
+            viewport.bottomRightAbsPixels.x, mapPosition.zoomLevel),
+        MercatorProjection.pixelYToTileY(
+            viewport.bottomRightAbsPixels.y, mapPosition.zoomLevel));
 
-  void _setupTilesArray(MapPosition mapPosition, MapViewport viewport)
-  {
-    _tilesBoundingBox = new TilesBoundingBox(
-        MercatorProjection.pixelXToTileX(viewport.topLeftAbsPixels.x, mapPosition.zoomLevel),
-        MercatorProjection.pixelYToTileY(viewport.topLeftAbsPixels.y, mapPosition.zoomLevel),
-        MercatorProjection.pixelXToTileX(viewport.bottomRightAbsPixels.x, mapPosition.zoomLevel),
-        MercatorProjection.pixelYToTileY(viewport.bottomRightAbsPixels.y, mapPosition.zoomLevel));
-
-    for (int x = _tilesBoundingBox.minTileX; x<=_tilesBoundingBox.maxTileX; x++) {
-      for (int y = _tilesBoundingBox.minTileY; y<=_tilesBoundingBox.maxTileY; y++) {
-        String tileId = MercatorProjection.getTileId(x, y, mapPosition.zoomLevel);
+    for (int x = _tilesBoundingBox.minTileX;
+        x <= _tilesBoundingBox.maxTileX;
+        x++) {
+      for (int y = _tilesBoundingBox.minTileY;
+          y <= _tilesBoundingBox.maxTileY;
+          y++) {
+        String tileId =
+            MercatorProjection.getTileId(x, y, mapPosition.zoomLevel);
         ScreenTile t = _tiles[tileId];
         if (t == null) t = ScreenTile(x, y, mapPosition);
         t.calcScreenPosition(viewport, mapPosition);
@@ -67,7 +79,7 @@ class TilesLayer extends Layer {
     }
   }
 
-  Map<String,Tile> _tiles;
+  Map<String, Tile> _tiles;
   TilesBoundingBox _tilesBoundingBox;
   MapPosition _mapPosition;
   TileSource _source;

@@ -19,29 +19,48 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Mapping Library Test App'),
+      home: MappingHomePage(title: 'Mapping Library Test App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class MappingHomePage extends StatefulWidget {
+  MappingHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MappingPageState createState() => _MappingPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  _MyHomePageState() {
+/// This is an example of how to use the mapping_library
+///
+/// The mapping tiles used in this example are from
+/// the https://www.openflightmaps.org website
+///
+/// This example will show tiles from the openflightmaps site
+/// To run this example copy the files which are in the example/files
+/// directory to your device in the /sdcard/Download directory
+class _MappingPageState extends State<MappingHomePage> {
+  _MappingPageState() {
     _openFlightMap = _createOfmMapWidget();
   }
+  // This is the base Widget which will show just the map tiles
+  // from openflightmaps
   OpenFlightMap _openFlightMap;
+  // Some operations needs permission from the user to run
   PermissionStatus _storagePermStatus;
 
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // !!!!!!!!!!!!!!!!!! Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // The widget needs to be pre-created in the constructor of the parent
+  // widget. It will not work correctly if you create the widget in the
+  // build function
+  // _createOfmMapWidget needs to be called from the parents oonstructor
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   Widget _createOfmMapWidget() {
     return OpenFlightMap(
       mapPosition: new MapPosition.create(
+        // This is a location in the middle of the netherlands
         geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
         zoomLevel: 10,
       ),
@@ -49,31 +68,52 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // mapReady Callback
+  //
+  // This callback is mandatory. Anything that you want to add to the map in
+  // terms of layers, markers etc. can only be added after this callback
   void _mapReady(MapView mapView) {
+    // We so a check to see, or ask for storage access permissions ( probably
+    // only applicable for andriod devices)
     _checkStorageAccess().then((permission){
+      // permission.value=2 : granted
       if (permission.value == 2) {
         // Permission for storage access is granded so display both the overlay
         // and mbtiles file.
+        // Check the test_overlay.dart for the implementation
         setupTestOverlay(mapView);
+        // This function will add a additional layer. The first layer is already
+        // added when the Widget was created. This will be the base layer. All
+        // newly added layers are drawn on top of the base tile layer in order
+        // in which the layers are added.
       }
 
+      // A vector layer is used to add "vector" type objects like lines, circles
+      // polylines or (closed) polygons. You may use more than one vector layer
+      // to have more control over the order the objects are drawn
       VectorLayer vectorLayer = VectorLayer();
       mapView.addLayer(vectorLayer);
+      // Polygons and Lines currently support the selected event
       vectorLayer.vectorSelected = _vectorSelected;
 
+      // A marker layer is used to add "Markers" to the map
       MarkersLayer markersLayer = MarkersLayer();
       mapView.addLayer(markersLayer);
       markersLayer.markerSelected = _markerSelected;
 
-      testPolyLineUpdate(vectorLayer);
-      drawHoogeveenCircuit(vectorLayer);
-      drawLelystadCircuit(vectorLayer);
-      drawSchipholCtr(vectorLayer);
+      // Checkout the following methods for there implementation
+      testPolyLineUpdate(vectorLayer);  // see test_vectors.dart
+      drawHoogeveenCircuit(vectorLayer);  // see test_vectors.dart
+      drawLelystadCircuit(vectorLayer); // see test_vetors.dart
+      drawSchipholCtr(vectorLayer); // see test_vectors.dart
 
-      addDefaultMarker(markersLayer);
-      addSimpleMarker(markersLayer);
+      // Checkout the following methods for adding Markers to the map
+      addDefaultMarker(markersLayer); // see test_markers.dart
+      addSimpleMarker(markersLayer); // see test_markers.dart
     });
 
+    // This method will add a "mbtiles" rastermap file to the map
+    // see test_mbtiles.dart
     setupTestMBTilesSource(mapView);
   }
 
@@ -106,6 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Container(
+          // Give the container a size to fill its parent. The mapview will
+          // always (current implementation) full extent to its parent
           height: double.infinity,
           width: double.infinity,
           child: _openFlightMap,

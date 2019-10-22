@@ -1,17 +1,18 @@
 import 'dart:ui';
 import '../core/mapviewport.dart';
-import 'Markers/markerbase.dart';
+import 'markers/markerbase.dart';
 import '../utils/mapposition.dart';
-import 'Markers/markers.dart';
+import 'markers/markers.dart';
 import 'layer.dart';
 import '../utils/geopoint.dart';
 
 class MarkersLayer extends Layer {
   MarkersLayer() {
-    _markers = new Markers();
+    _markers = Markers();
   }
 
   Markers _markers;
+
   void addMarker(MarkerBase marker) {
     _markers.add(marker);
     marker.setUpdateListener(_markerUpdated);
@@ -25,7 +26,6 @@ class MarkersLayer extends Layer {
   void paint(Canvas canvas, Size size) {
     for (MarkerBase marker in _markers) {
       if (marker.withinViewport(_viewport)) {
-        //log("Draw marker: " + marker.Name);
         marker.paint(canvas);
       }
     }
@@ -40,7 +40,7 @@ class MarkersLayer extends Layer {
   }
 
   @override
-  void doTabCheck(GeoPoint clickedPosition, Offset screenPos){
+  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
     for (MarkerBase marker in _markers) {
       if (marker.markerSelectedByScreenPos(screenPos)) {
         _fireMarkerSelected(marker);
@@ -49,6 +49,7 @@ class MarkersLayer extends Layer {
   }
 
   Function(MarkerBase marker) markerSelected;
+
   void _fireMarkerSelected(MarkerBase marker) {
     if (markerSelected != null) {
       markerSelected(marker);

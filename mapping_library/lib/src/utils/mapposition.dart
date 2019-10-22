@@ -7,7 +7,6 @@ import 'geopoint.dart';
 import 'mercatorprojection.dart' as MercatorProjection;
 import '../core/values.dart';
 
-
 /// MapPosition Class
 /// This class holds variables and functions to manage the position,
 /// zoomlevel, bearing, tilt and roll of a map
@@ -76,8 +75,7 @@ class MapPosition {
   /// @param latitude value in degrees (double)
   /// @param longitude value in degrees (double)
   /// @para, zoom value (int)
-  MapPosition.fromDegZoom(double latitude, double longitude, int zoomLevel)
-  {
+  MapPosition.fromDegZoom(double latitude, double longitude, int zoomLevel) {
     setPositionDeg(latitude, longitude);
     setZoomLevel(zoomLevel);
   }
@@ -192,7 +190,8 @@ class MapPosition {
     this.zoomLevel = FastMath.log2(scale.floor());
   }
 
-  setR(double x, double y, double scale, double bearing, double tilt, double roll) {
+  setR(double x, double y, double scale, double bearing, double tilt,
+      double roll) {
     set(x, y, scale, bearing, tilt);
     this._roll = FastMath.clampDegree(roll);
   }
@@ -202,8 +201,8 @@ class MapPosition {
   }
 
   GeoPoint getGeoPoint() {
-    return new GeoPoint(MercatorProjection.toLatitude(_y),
-        MercatorProjection.toLongitude(_x));
+    return new GeoPoint(
+        MercatorProjection.toLatitude(_y), MercatorProjection.toLongitude(_x));
   }
 
   double getLatitude() {
@@ -218,8 +217,10 @@ class MapPosition {
     double minx = MercatorProjection.longitudeToX(bbox.getMinLongitude());
     double miny = MercatorProjection.latitudeToY(bbox.getMaxLatitude());
 
-    double dx = (MercatorProjection.longitudeToX(bbox.getMaxLongitude()) - minx).abs();
-    double dy = (MercatorProjection.latitudeToY(bbox.getMinLatitude()) - miny).abs();
+    double dx =
+        (MercatorProjection.longitudeToX(bbox.getMaxLongitude()) - minx).abs();
+    double dy =
+        (MercatorProjection.latitudeToY(bbox.getMinLatitude()) - miny).abs();
     double zx = viewWidth / (dx * Tile.SIZE);
     double zy = viewHeight / (dy * Tile.SIZE);
 

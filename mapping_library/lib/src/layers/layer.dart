@@ -12,6 +12,7 @@ class Layer {
 
   void notifyLayer(MapPosition mapPosition, MapViewport viewport) {}
   Function(Layer layer) _updatedLayer;
+
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
 
   void fireUpdatedLayer() {

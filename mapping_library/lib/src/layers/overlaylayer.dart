@@ -1,6 +1,5 @@
-import 'Overlay/overlayimage.dart';
-import 'Overlay/overlayimages.dart';
-
+import 'overlay/overlayimage.dart';
+import 'overlay/overlayimages.dart';
 import 'layer.dart';
 import 'dart:ui';
 import '../utils/geopoint.dart';
@@ -9,7 +8,7 @@ import '../utils/mapposition.dart';
 
 class OverlayLayer extends Layer {
   OverlayLayer() {
-    _overlayImages = new OverlayImages();
+    _overlayImages = OverlayImages();
   }
 
   OverlayImages _overlayImages;
@@ -40,9 +39,7 @@ class OverlayLayer extends Layer {
   }
 
   @override
-  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
-
-  }
+  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
 
   void _setupOverlayForViewport() {
     for (OverlayImage image in _overlayImages) {
@@ -57,5 +54,4 @@ class OverlayLayer extends Layer {
 
   MapPosition _mapPosition;
   MapViewport _viewport;
-
 }

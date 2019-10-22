@@ -1,7 +1,6 @@
 import 'mapview.dart';
 import 'package:flutter/widgets.dart';
 
-
 class MapViewStateBase extends State<MapView> {
   CustomPaint p;
 
@@ -19,13 +18,9 @@ class MapViewStateBase extends State<MapView> {
     widget.mapReady(widget);
   }
 
-  void _doTapMapCheck() {
-
-  }
-
   @override
   Widget build(BuildContext context) {
-    p = new CustomPaint(
+    p = CustomPaint(
       foregroundPainter: widget.layerPainter,
     );
 

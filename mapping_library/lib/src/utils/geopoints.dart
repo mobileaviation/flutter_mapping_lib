@@ -4,44 +4,46 @@ import 'geopoint.dart' as p;
 import 'dart:math' as math;
 
 class GeoPoints extends ListBase<p.GeoPoint> {
-  List _innerList = new List();
-  double _minLat = 1000,
-      _maxLat = 1000,
-      _minLon = 1000,
-      _maxLon = 1000;
+  List _innerList = [];
+  double _minLat = 1000, _maxLat = 1000, _minLon = 1000, _maxLon = 1000;
   b.BoundingBox _boundingBox;
 
   get boundingBox {
-
-    return _boundingBox; }
+    return _boundingBox;
+  }
 
   get mathPointsE6 {
-    List<math.Point> pp  = new List();
+    List<math.Point> pp = [];
     for (p.GeoPoint po in _innerList) {
-      pp.add(new math.Point(po.longitudeE6 , po.latitudeE6));
+      pp.add(new math.Point(po.longitudeE6, po.latitudeE6));
     }
     return pp;
   }
 
   bool _closed = false;
-  get closed { return _closed; }
+
+  get closed {
+    return _closed;
+  }
 
   _setupMinMax(p.GeoPoint point) {
     double lat = point.getLatitude();
     double lon = point.getLongitude();
-    _minLat = (_minLat==1000)? lat: math.min(_minLat, lat);
-    _maxLat = (_maxLat==1000)? lat: math.max(_maxLon, lat);
-    _minLon = (_minLon==1000)? lon: math.min(_minLon, lon);
-    _maxLon = (_maxLon==1000)? lon: math.max(_maxLon, lon);
+    _minLat = (_minLat == 1000) ? lat : math.min(_minLat, lat);
+    _maxLat = (_maxLat == 1000) ? lat : math.max(_maxLon, lat);
+    _minLon = (_minLon == 1000) ? lon : math.min(_minLon, lon);
+    _maxLon = (_maxLon == 1000) ? lon : math.max(_maxLon, lon);
   }
 
   _setupBoundaryBox() {
     for (p.GeoPoint pi in _innerList) _setupMinMax(pi);
-    _boundingBox = new b.BoundingBox.fromDeg(_minLat, _minLon, _maxLat, _maxLon);
+    _boundingBox =
+        new b.BoundingBox.fromDeg(_minLat, _minLon, _maxLat, _maxLon);
   }
 
-  int get length => _innerList.length;
-  void set length(int length) {
+  get length => _innerList.length;
+
+  set length(int length) {
     _innerList.length = length;
   }
 
@@ -50,7 +52,6 @@ class GeoPoints extends ListBase<p.GeoPoint> {
 
   @override
   void operator []=(int index, p.GeoPoint value) {
-    // TODO: implement []=
     _innerList[index] = value;
   }
 
@@ -70,7 +71,7 @@ class GeoPoints extends ListBase<p.GeoPoint> {
   }
 
   p.GeoPoint removeAt(int index) {
-    p.GeoPoint d =_innerList.removeAt(index);
+    p.GeoPoint d = _innerList.removeAt(index);
     _setupBoundaryBox();
     return d;
   }
@@ -79,9 +80,9 @@ class GeoPoints extends ListBase<p.GeoPoint> {
     var points = geoPoints.split(" ");
     for (String point in points) {
       var latlon = point.split(",");
-      if (latlon.length>=2) {
-        p.GeoPoint geoPoint = new p.GeoPoint(
-            double.parse(latlon[1]), double.parse(latlon[0]));
+      if (latlon.length >= 2) {
+        p.GeoPoint geoPoint =
+            new p.GeoPoint(double.parse(latlon[1]), double.parse(latlon[0]));
         add(geoPoint);
       }
     }
@@ -89,6 +90,4 @@ class GeoPoints extends ListBase<p.GeoPoint> {
     _closed = closed;
     _setupBoundaryBox();
   }
-
-
 }

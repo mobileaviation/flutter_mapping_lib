@@ -13,7 +13,7 @@ mapping_library_extentions library adds extra IOS and Android specific
 code. When using Flutter-web only add the mapping_library to the
 dependencies (not tested yet!).
 
-- Version: 0.0.3
+- Version: 0.0.4
 
 ***Disclaimer**: This version is far from finished. Most of the options
 just supply very basic functionality which might still holds many bugs.
@@ -27,20 +27,23 @@ We are continuesly adding and improving options. Use at your own risk*
 
 ## Examples
 
-**Checkout the github repository for a full example off all the options
+**Checkout the [github repository](https://github.com/mobileaviation/flutter_mapping_lib) for a full example off all the options
 and how to use them!!**!
 
 **Basic Example** 
 
 Create an instance of the OsmMap object in the contructor of your App
 widget as the map needs to be in persistent memory. Add this instance to
-the Build function..
+the Build function.. **Do not add it directly to the build method!!**
 ```
         
     import 'package:mapping_library/mapping_library.dart';
         
     class MyApp extends StatelessWidget {
       MyApp() : super() {
+        // It is important that the widget is pre-created in the constructor
+        // of this parent widget as it needs to be persistant in memory
+        // So do not add the directly to the build method. 
         _osmMap = _createOsmMapWidget();
       }
         

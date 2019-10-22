@@ -5,7 +5,7 @@ import '../tiles/sources/cachedhttpsource.dart';
 class OsmMap extends StatelessWidget {
   OsmMap({Key key, MapPosition mapPosition, this.mapReady}) : super(key: key) {
     _mapPosition = mapPosition;
-    _mapView = new MapView.fromMapPosition(_mapReady, mapPosition);
+    _mapView = MapView.fromMapPosition(_mapReady, mapPosition);
     _mapView.mapClicked = _mapClicked;
     _mapView.mapPositionChanged = _mapPositionChanged;
   }
@@ -37,9 +37,10 @@ class OsmMap extends StatelessWidget {
   }
 
   void _createTileLayer(MapView mapView) {
-    CachedHttpTileSource osmTileSource = new CachedHttpTileSource(_osmUrl, 'openflightmaps');
+    CachedHttpTileSource osmTileSource =
+        CachedHttpTileSource(_osmUrl, 'openflightmaps');
     osmTileSource.openCachedTileSource(() {
-      TilesLayer tileLayer = new TilesLayer(osmTileSource);
+      TilesLayer tileLayer = TilesLayer(osmTileSource);
       _mapView.addLayer(tileLayer);
 
       if (mapReady != null) mapReady(mapView);

@@ -99,7 +99,6 @@ math.Point getPixelRelativeByPoint(
   return getPixelRelative(geoPoint, mapSize, origin.x, origin.y);
 }
 
-
 ///**
 /// * Calculates the distance on the ground that is represented by a single
 /// * pixel on the map.
@@ -260,7 +259,6 @@ double longitudeToPixelXMapSize(double longitude, int mapSize) {
   return ((longitude + 180) / 360) * mapSize;
 }
 
-
 /// Converts a longitude coordinate (in degrees) to the tile X number at a certain scale factor.
 ///
 /// @param longitude the longitude coordinate that should be converted.
@@ -270,7 +268,6 @@ int longitudeToTileXWithScale(double longitude, double scale) {
   return pixelXToTileXWithScale(
       longitudeToPixelXWithScale(longitude, scale), scale);
 }
-
 
 /// Converts a longitude coordinate (in degrees) to the tile X number at a certain zoom level.
 ///
@@ -282,7 +279,6 @@ int longitudeToTileX(double longitude, int zoomLevel) {
       longitudeToPixelXZoomLevel(longitude, zoomLevel), zoomLevel);
 }
 
-
 /// Projects a longitude coordinate (in degrees) to the range [0.0,1.0]
 ///
 /// @param longitude the longitude coordinate that should be converted.
@@ -290,7 +286,6 @@ int longitudeToTileX(double longitude, int zoomLevel) {
 double longitudeToX(double longitude) {
   return (longitude + 180.0) / 360.0;
 }
-
 
 /// Converts meters to pixels at latitude for zoom-level.
 ///
@@ -301,7 +296,6 @@ double longitudeToX(double longitude) {
 double metersToPixelsWithScale(double meters, double latitude, double scale) {
   return meters / groundResolutionWithScale(latitude, scale);
 }
-
 
 /// Converts meters to pixels at latitude for zoom-level.
 ///
@@ -323,7 +317,6 @@ double pixelXToLongitudeWithScale(double pixelX, double scale) {
   int mapSize = getMapSizeWithScale(scale);
   return 360 * ((pixelX / mapSize) - 0.5);
 }
-
 
 /// Converts a pixel X coordinate at a certain map size to a longitude coordinate.
 ///
@@ -354,7 +347,6 @@ int pixelXToTileX(double pixelX, int zoomLevel) {
       math.max(pixelX / Tile.SIZE, 0).floor(), math.pow(2, zoomLevel) - 1);
 }
 
-
 /// Converts a pixel Y coordinate at a certain scale to a latitude coordinate.
 ///
 /// @param pixelY the pixel Y coordinate that should be converted.
@@ -366,7 +358,6 @@ double pixelYToLatitudeWithScale(double pixelY, double scale) {
   double y = 0.5 - (pixelY / mapSize);
   return 90 - 360 * math.atan(math.exp(-y * (2 * math.pi))) / math.pi;
 }
-
 
 /// Converts a pixel Y coordinate at a certain map size to a latitude coordinate.
 ///
@@ -387,7 +378,6 @@ double pixelYToLatitude(double pixelY, int mapSize) {
 int pixelYToTileYWithScale(double pixelY, double scale) {
   return math.min(math.max(pixelY / Tile.SIZE, 0), scale - 1).floor();
 }
-
 
 /// Converts a pixel Y coordinate to the tile Y number.
 ///
@@ -420,7 +410,6 @@ double scaleToZoomLevel(double scale) {
 int tileToPixel(int tileNumber) {
   return tileNumber * Tile.SIZE;
 }
-
 
 /// Converts a tile X number at a certain scale to a longitude coordinate.
 ///
@@ -507,7 +496,6 @@ double wrapLongitude(double longitude) {
 double zoomLevelToScale(int zoomLevel) {
   return (1 << zoomLevel).toDouble();
 }
-
 
 /// Convert from zoomlevel (double) to scale via math.pow function
 ///
