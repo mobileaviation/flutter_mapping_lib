@@ -1,6 +1,6 @@
 name: mapping_library
 description: Flutter Chart Mapping Widget Library. This will add any tilebase map (like OpenStreetMaps) to your application.
-version: 0.0.5
+version: 0.0.6
 author: Mobile Aviation Tools <info@mobileaviationtools.com>
 homepage: http://www.mobileaviationtools.com
 
