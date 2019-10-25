@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
+import 'package:mapping_library/mapping_library.dart';
+
 import '../utils/geopoint.dart';
 import '../utils/mapposition.dart';
 import '../utils/mercatorprojection.dart' as MercatorProjection;
@@ -44,6 +46,24 @@ class MapViewGestures extends MapViewStateBase {
     log("MapTab: " + tp.toString());
   }
 
+  _mapLongPressStart(LongPressStartDetails longPressStartDetails) {
+    Offset s = longPressStartDetails.localPosition;
+    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+        s.dx, s.dy));
+    List<MarkerBase> m = widget.layerPainter.doMarkerLayerStartDragCheck(tp, s);
+    log("LongPressStartDetails: $m");
+  }
+
+  _mapLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+    Offset s = details.localPosition;
+    log("LongpressMoveUpdate: $s");
+  }
+
+  _mapLongPressEnd(LongPressEndDetails details) {
+    Offset s = details.localPosition;
+    log("LongpressMoveEnd: $s");
+  }
+
   @override
   Widget build(BuildContext context) {
     CustomPaint p = super.build(context);
@@ -54,6 +74,10 @@ class MapViewGestures extends MapViewStateBase {
       onScaleUpdate: _mapScaleUpdate,
       onScaleEnd: _mapScaleEnd,
       onTapUp: _mapTap,
+      onLongPressStart: _mapLongPressStart,
+      onLongPressMoveUpdate: _mapLongPressMoveUpdate,
+      onLongPressEnd: _mapLongPressEnd,
+
       behavior: HitTestBehavior.translucent,
     );
 

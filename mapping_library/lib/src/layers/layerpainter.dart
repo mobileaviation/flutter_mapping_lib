@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:mapping_library/mapping_library.dart';
 import '../utils/geopoint.dart';
 import '../utils/mapposition.dart';
 import '../core/mapviewport.dart' as viewPort;
@@ -30,6 +31,16 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
     for (Layer l in _layers) {
       l.doTabCheck(clickedPosition, screenPos);
     }
+  }
+
+  List<MarkerBase> doMarkerLayerStartDragCheck(GeoPoint clickedPosition, Offset screenPos) {
+    List<MarkerBase> m = [];
+    for (Layer l in _layers) {
+      if (l is MarkersLayer) {
+        m.addAll(l.doTabCheck(clickedPosition, screenPos));
+      }
+    }
+    return m;
   }
 
   void _layerUpdated(Layer layer) {

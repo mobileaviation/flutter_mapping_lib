@@ -40,12 +40,15 @@ class MarkersLayer extends Layer {
   }
 
   @override
-  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
+  List<MarkerBase> doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
+    List<MarkerBase> m = [];
     for (MarkerBase marker in _markers) {
       if (marker.markerSelectedByScreenPos(screenPos)) {
         _fireMarkerSelected(marker);
+        m.add(marker);
       }
     }
+    return m;
   }
 
   Function(MarkerBase marker) markerSelected;
