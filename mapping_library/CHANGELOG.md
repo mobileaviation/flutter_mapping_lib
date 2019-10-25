@@ -1,3 +1,6 @@
+## [0.0.6] 25 Oktober 2019
+* Broken release Fix
+
 ## [0.0.5] 25 Oktober 2019
 * Added fixed objects layer
 * Added a basic scalebar as Fixed object

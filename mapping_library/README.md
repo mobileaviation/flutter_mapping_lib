@@ -13,7 +13,7 @@ mapping_library_extentions library adds extra IOS and Android specific
 code. When using Flutter-web only add the mapping_library to the
 dependencies (not tested yet!).
 
-- Version: 0.0.4
+- Version: 0.0.6
 
 ***Disclaimer**: This version is far from finished. Most of the options
 just supply very basic functionality which might still holds many bugs.
