@@ -159,6 +159,18 @@ class BoundingBox {
     return getMaxLongitude() - getMinLongitude();
   }
 
+  double getLatitudeDistance() {
+    return GeoPoint.fromE6(minLatitudeE6, minLongitudeE6).sphericalDistance(
+      GeoPoint.fromE6(maxLatitudeE6, minLongitudeE6)
+    );
+  }
+
+  double getLongitudeDistance() {
+    return GeoPoint.fromE6(minLatitudeE6, minLongitudeE6).sphericalDistance(
+        GeoPoint.fromE6(minLatitudeE6, maxLongitudeE6)
+    );
+  }
+
   double getMaxLatitude() {
     return maxLatitudeE6 / CONVERSION_FACTOR;
   }
@@ -187,9 +199,9 @@ class BoundingBox {
   }
 
   String toString() {
-    return "LeftTop.Lat: $getMaxLatitude()" +
-        " LeftTop.Lon: $getMinLongitude()" +
-        " BottomRight.Lat: $getMinLatitude()" +
-        " BottomRight.lon: $getMaxLongitude()";
+    return "LeftTop.Lat: $maxLatitudeE6" +
+        " LeftTop.Lon: $minLongitudeE6" +
+        " BottomRight.Lat: $minLatitudeE6" +
+        " BottomRight.lon: $maxLongitudeE6";
   }
 }

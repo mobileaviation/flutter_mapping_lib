@@ -19,6 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  mapping_library:
+    path: ../../mapping_library
   mapping_library_extentions:
     path: ../../mapping_library_extentions
   permission_handler: ^3.2.0

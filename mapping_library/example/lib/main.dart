@@ -1,3 +1,4 @@
+import 'package:example/test_fixedobjects.dart';
 import 'package:example/test_markers.dart';
 import 'package:example/test_mbtiles.dart';
 import 'package:example/test_overlay.dart';
@@ -110,6 +111,8 @@ class _MappingPageState extends State<MappingHomePage> {
       // Checkout the following methods for adding Markers to the map
       addDefaultMarker(markersLayer); // see test_markers.dart
       addSimpleMarker(markersLayer); // see test_markers.dart
+
+      addTestFixedObject(mapView);
     });
 
     // This method will add a "mbtiles" rastermap file to the map

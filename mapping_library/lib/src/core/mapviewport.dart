@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import '../utils/geopoint.dart';
@@ -44,10 +45,6 @@ class MapViewport {
 
   Size getScreenSize() {
     return _screenSize;
-  }
-
-  Size getDrawSize() {
-    return _drawSize;
   }
 
   math.Point projectScreenPositionByReferenceAndScale(
@@ -113,12 +110,12 @@ class MapViewport {
         _centerAbsMapPixels.x + (_screenSize.width / 2),
         _centerAbsMapPixels.y + (_screenSize.height / 2));
 
-    _viewPortBoundingBox = BoundingBox.fromGeoPoints([
-      MercatorProjection.fromPixels(
-          _bottomRightAbsMapPixels.x, _bottomRightAbsMapPixels.y, _mapSize),
-      MercatorProjection.fromPixels(
-          _topLeftAbsMapPixels.x, _topLeftAbsMapPixels.y, _mapSize)
-    ]);
+    GeoPoint lt = getGeopointForScreenPosition(math.Point(0,0));
+    GeoPoint br = getGeopointForScreenPosition(math.Point(_screenSize.width, _screenSize.height));
+
+    _viewPortBoundingBox = BoundingBox.fromGeoPoints([lt, br]);
+
+    //log("BoundingBox: $_viewPortBoundingBox");
   }
 
   math.Point _getAbsPixelsForMapPosition(MapPosition mapPosition, int mapSize) {
@@ -146,5 +143,4 @@ class MapViewport {
   MapPosition _mapPosition;
   BoundingBox _viewPortBoundingBox;
   Size _screenSize;
-  Size _drawSize;
 }
