@@ -30,6 +30,7 @@ void testPolyLineUpdate(VectorLayer layer) {
   l.geomPaint.color = Colors.redAccent;
   l.borderColor = Colors.black;
   l.borderWidth = 2;
+  l.name = "Updating polyline";
 
   layer.addVectors(l);
 

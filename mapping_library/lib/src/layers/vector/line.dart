@@ -37,7 +37,7 @@ class Line extends GeomBase {
         math.Point(_drawStartPoint.x, _drawStartPoint.y),
         math.Point(_drawEndPoint.x, _drawEndPoint.y),
         math.Point(screenPoint.dx, screenPoint.dy),
-        7);
+        15);
     return (test != null);
   }
 

@@ -63,14 +63,14 @@ packages:
   mapping_library:
     dependency: "direct main"
     description:
-      path: ".."
+      path: mapping_library
       relative: true
     source: path
     version: "0.0.4"
   mapping_library_extentions:
     dependency: "direct main"
     description:
-      path: "..\\..\\mapping_library_extentions"
+      path: mapping_library_extentions
       relative: true
     source: path
     version: "0.0.4"
@@ -95,6 +95,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_provider:
+    dependency: "direct main"
+    description:
+      name: path_provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.0"
   pedantic:
     dependency: transitive
     description:
@@ -102,13 +109,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
-  permission_handler:
-    dependency: "direct main"
+  platform:
+    dependency: transitive
     description:
-      name: permission_handler
+      name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.2"
+    version: "2.2.1"
   quiver:
     dependency: transitive
     description:

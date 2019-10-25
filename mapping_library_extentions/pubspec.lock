@@ -59,7 +59,7 @@ packages:
       path: "..\\mapping_library"
       relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   matcher:
     dependency: transitive
     description:

@@ -7,6 +7,7 @@ import '../../utils/geopoint.dart' as gp;
 import '../../core/mapviewport.dart' as vp;
 import '../../utils/mercatorprojection.dart' as MercatorProjection;
 import '../../utils/geopoints.dart';
+import '../../utils/geomutils.dart' as geomutils;
 
 class Polyline extends GeomBase {
   Polyline() {
@@ -14,6 +15,7 @@ class Polyline extends GeomBase {
     _drawPoints = [];
     defaultPaint();
     borderColor = geomPaint2.color;
+    name = "Polyline";
   }
 
   GeoPoints _points;
@@ -126,6 +128,15 @@ class Polyline extends GeomBase {
 
   @override
   bool withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
-    return super.withinPolygon(geoPoint, screenPoint);
+    bool test = false;
+    for (int i=1; i<_drawPoints.length; i++) {
+      var segmentTest = geomutils.interceptOnCircle(
+          math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+          math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+          math.Point(screenPoint.dx, screenPoint.dy),
+          15);
+      test = test || (segmentTest != null);
+    }
+    return test;
   }
 }
