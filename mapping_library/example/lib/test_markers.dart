@@ -31,6 +31,7 @@ void addSimpleMarker(MarkersLayer markersLayer) {
   GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
   SimpleMarkerRenderer drawer = new SimpleMarkerRenderer();
   SimpleMarker marker = new SimpleMarker(drawer, Size(100, 100), s);
+  marker.dragable = true;
   // Checkout the implementation of SimpleMarker and SimpleMarkerRenderer to
   // create your own custom marker implementation..
   marker.name = "Marker1";

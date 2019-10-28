@@ -33,14 +33,26 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
     }
   }
 
-  List<MarkerBase> doMarkerLayerStartDragCheck(GeoPoint clickedPosition, Offset screenPos) {
-    List<MarkerBase> m = [];
+  void dragStart(GeoPoint clickedPosition, Offset screenPos) {
     for (Layer l in _layers) {
       if (l is MarkersLayer) {
-        m.addAll(l.doTabCheck(clickedPosition, screenPos));
+        l.dragStart(clickedPosition, screenPos);
       }
     }
-    return m;
+  }
+  void drag(GeoPoint clickedPosition, Offset screenPos) {
+    for (Layer l in _layers) {
+      if (l is MarkersLayer) {
+        l.drag(clickedPosition, screenPos);
+      }
+    }
+  }
+  void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
+    for (Layer l in _layers) {
+      if (l is MarkersLayer) {
+        l.dragEnd(clickedPosition, screenPos);
+      }
+    }
   }
 
   void _layerUpdated(Layer layer) {

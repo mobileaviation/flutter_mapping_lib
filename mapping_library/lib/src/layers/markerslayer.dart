@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:math' as math;
 import '../core/mapviewport.dart';
 import 'markers/markerbase.dart';
 import '../utils/mapposition.dart';
@@ -40,18 +41,62 @@ class MarkersLayer extends Layer {
   }
 
   @override
-  List<MarkerBase> doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
-    List<MarkerBase> m = [];
+  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
     for (MarkerBase marker in _markers) {
       if (marker.markerSelectedByScreenPos(screenPos)) {
         _fireMarkerSelected(marker);
-        m.add(marker);
       }
     }
-    return m;
   }
 
+  @override
+  void dragStart(GeoPoint clickedPosition, Offset screenPos) {
+    // Check if there is a marker om screenPos
+    // If is, mark this marker as draggin = true
+    // store its startdraggin location (screenPos)
+    // Calculate the offset between its current position and the screenPos
+    for (MarkerBase marker in _markers){
+      if (marker.dragable) {
+        if (marker.markerSelectedByScreenPos(screenPos)) {
+          _markers.dragginMarker = marker;
+          _markers.dragginOffset = Offset(screenPos.dx - marker.drawingPoint.x,
+              screenPos.dy - marker.drawingPoint.y);
+          if (markerDragStart != null) markerDragStart(marker, clickedPosition);
+          break;
+        }
+      }
+    }
+  }
+
+  @override
+  void drag(GeoPoint clickedPosition, Offset screenPos) {
+    // Update the marker(s) (draggin = true) position
+    // newPosition = screenPos + markerOffset (from dragStart)
+    // fire markerupdated for repaint
+    if (_markers.dragginMarker != null) {
+      Offset s = Offset(screenPos.dx - _markers.dragginOffset.dx,
+          screenPos.dy - _markers.dragginOffset.dy);
+      GeoPoint tp = _viewport.getGeopointForScreenPosition(math.Point(
+          s.dx, s.dy));
+      _markers.dragginMarker.location = tp;
+      if (markerDrag != null) markerDrag(_markers.dragginMarker, tp);
+    }
+  }
+
+  @override
+  void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
+    // Update the marker(s) set draggin = false
+    // fire a markerPositionChanged event to the mapview
+    if (markerDrag != null) markerDrag(_markers.dragginMarker, clickedPosition);
+    _markers.dragginOffset = null;
+    _markers.dragginMarker = null;
+  }
+
+
   Function(MarkerBase marker) markerSelected;
+  Function(MarkerBase marker, GeoPoint draggedPosition) markerDragStart;
+  Function(MarkerBase marker, GeoPoint draggedPosition) markerDrag;
+  Function(MarkerBase marker, GeoPoint draggedPosition) markerDragEnd;
 
   void _fireMarkerSelected(MarkerBase marker) {
     if (markerSelected != null) {

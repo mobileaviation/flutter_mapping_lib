@@ -50,18 +50,21 @@ class MapViewGestures extends MapViewStateBase {
     Offset s = longPressStartDetails.localPosition;
     GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    List<MarkerBase> m = widget.layerPainter.doMarkerLayerStartDragCheck(tp, s);
-    log("LongPressStartDetails: $m");
+    widget.layerPainter.dragStart(tp, s);
   }
 
   _mapLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
     Offset s = details.localPosition;
-    log("LongpressMoveUpdate: $s");
+    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+        s.dx, s.dy));
+    widget.layerPainter.drag(tp, s);
   }
 
   _mapLongPressEnd(LongPressEndDetails details) {
     Offset s = details.localPosition;
-    log("LongpressMoveEnd: $s");
+    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+        s.dx, s.dy));
+    widget.layerPainter.dragEnd(tp, s);
   }
 
   @override

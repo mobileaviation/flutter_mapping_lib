@@ -15,6 +15,10 @@ class Layer {
 
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
 
+  void dragStart(GeoPoint clickedPosition, Offset screenPos) {}
+  void drag(GeoPoint clickedPosition, Offset screenPos) {}
+  void dragEnd(GeoPoint clickedPosition, Offset screenPos) {}
+
   void fireUpdatedLayer() {
     if (_updatedLayer != null) {
       _updatedLayer(this);

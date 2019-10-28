@@ -93,8 +93,8 @@ class MarkerBase {
   }
 
   bool _dragable = false;
-  get Dragable { return _dragable; }
-  set Dragable(value) { _dragable = value; }
+  get dragable { return _dragable; }
+  set dragable(value) { _dragable = value; }
 
   double _scale = -1;
 
@@ -151,25 +151,7 @@ class MarkerBase {
         ((drawingPoint.y - pivotPoint.y) + (markerSize.height / 2)));
     Rect markerRect = Rect.fromCenter(
         center: drawPoint, width: markerSize.width, height: markerSize.height);
-
-    if (_dragable) _startDrag(screenPos);
-
     return markerRect.contains(screenPos);
-  }
-
-  bool _draggin = false;
-  _startDrag(Offset position){
-    _draggin = true;
-  }
-
-  _drag(){
-    if (_draggin) {
-
-    }
-  }
-
-  _stopDrag(){
-    _draggin = false;
   }
 
   bool withinViewport(MapViewport viewport) {
