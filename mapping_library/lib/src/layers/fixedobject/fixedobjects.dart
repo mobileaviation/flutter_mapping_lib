@@ -14,7 +14,6 @@ class FixedObjects<FixedObject> extends ListBase<FixedObject> {
 
   @override
   void operator []=(int index, FixedObject value) {
-    // TODO: implement []=
     _innerList[index] = value;
   }
 

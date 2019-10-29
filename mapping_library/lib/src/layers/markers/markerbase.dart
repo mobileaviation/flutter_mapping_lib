@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:math' as math;
+import 'package:flutter/material.dart' as material;
 import '../../utils/boundingbox.dart' as utils;
 import '../../core/mapviewport.dart';
 import '../../utils/mapposition.dart';
@@ -21,6 +22,26 @@ class MarkerBase {
       Offset drawPoint =
           Offset(drawingPoint.x - pivotPoint.x, drawingPoint.y - pivotPoint.y);
       canvas.drawImage(markerImage, drawPoint, Paint());
+
+      if (_selected) {
+        Size selectedBorderSize = Size(markerSize.width + (0.1 * markerSize.width),
+          markerSize.height + (0.1 * markerSize.height));
+        Paint selectedBorderPaint = Paint()
+            ..style = PaintingStyle.stroke
+            ..isAntiAlias = true
+            ..strokeWidth = 5
+            ..color = selectedColor;
+        Rect rect = Rect.fromLTWH(drawingPoint.x - (selectedBorderSize.width/2),
+            drawingPoint.y - (selectedBorderSize.height/2),
+            selectedBorderSize.width, selectedBorderSize.height);
+        RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(20));
+        canvas.drawRRect(rrect, selectedBorderPaint);
+
+//        if (DateTime.now().difference(_selectedTime).inMilliseconds >_showSelectedBorderFor) {
+//          selected = false;
+//        }
+      }
+
     }
   }
 
@@ -29,9 +50,9 @@ class MarkerBase {
   }
 
   String name = "Marker";
+  dynamic object;
 
   GeoPoint _location;
-
   get location {
     return _location;
   }
@@ -43,17 +64,14 @@ class MarkerBase {
   }
 
   utils.BoundingBox _boundingBox;
-
   get boundingBox {
     return _boundingBox;
   }
 
   double _rotation;
-
   get rotation {
     return _rotation;
   }
-
   set rotation(double value) {
     _rotation = value;
     _calcBoundingBox(_scale);
@@ -61,17 +79,14 @@ class MarkerBase {
   }
 
   math.Point _pivotPoint;
-
   get pivotPoint {
     return _pivotPoint;
   }
 
   Image _markerImage;
-
   get markerImage {
     return _markerImage;
   }
-
   set markerImage(Image value) {
     _markerImage = value;
     _calcBoundingBox(_scale);
@@ -81,13 +96,11 @@ class MarkerBase {
   Size markerSize;
 
   math.Point _drawPoint;
-
   get drawingPoint {
     return _drawPoint;
   }
 
   MarkerRenderer _markerDrawer;
-
   MarkerRenderer get markerDrawer {
     return _markerDrawer;
   }
@@ -95,6 +108,19 @@ class MarkerBase {
   bool _dragable = false;
   get dragable { return _dragable; }
   set dragable(value) { _dragable = value; }
+
+  bool selectable = true;
+  bool _selected = false;
+  set selected(value) {
+    _selected = value;
+    _selectedTime = DateTime.now();
+    fireUpdatedMarker();
+  }
+  get selected { return _selected; }
+
+  int _showSelectedBorderFor = 2000; // in MS
+  DateTime _selectedTime;
+  Color selectedColor = material.Colors.red;
 
   double _scale = -1;
 

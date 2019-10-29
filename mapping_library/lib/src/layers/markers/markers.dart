@@ -15,7 +15,6 @@ class Markers<MarkerBase> extends ListBase<MarkerBase> {
 
   @override
   void operator []=(int index, MarkerBase value) {
-    // TODO: implement []=
     _innerList[index] = value;
   }
 

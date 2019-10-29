@@ -24,6 +24,6 @@
 * Started on API Documentation
 
 ## [0.0.1] 2 Oktober 2019
-* TODO: Describe initial release.
+* initial release.
 
 

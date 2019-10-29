@@ -125,7 +125,7 @@ class _MappingPageState extends State<MappingHomePage> {
   }
 
   void _markerSelected(MarkerBase marker) {
-    log("Marker selected: " + marker.name);
+    log("Marker selected: ${marker.name} Selected: ${marker.selected}");
   }
 
   Future<PermissionStatus> _checkStorageAccess() async {

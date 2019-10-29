@@ -44,6 +44,7 @@ class MarkersLayer extends Layer {
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
     for (MarkerBase marker in _markers) {
       if (marker.markerSelectedByScreenPos(screenPos)) {
+        marker.selected = !marker.selected;
         _fireMarkerSelected(marker);
       }
     }
@@ -55,9 +56,10 @@ class MarkersLayer extends Layer {
     // If is, mark this marker as draggin = true
     // store its startdraggin location (screenPos)
     // Calculate the offset between its current position and the screenPos
-    for (MarkerBase marker in _markers){
+    for (MarkerBase marker in _markers) {
       if (marker.dragable) {
         if (marker.markerSelectedByScreenPos(screenPos)) {
+          marker.selected = true;
           _markers.dragginMarker = marker;
           _markers.dragginOffset = Offset(screenPos.dx - marker.drawingPoint.x,
               screenPos.dy - marker.drawingPoint.y);
@@ -76,8 +78,8 @@ class MarkersLayer extends Layer {
     if (_markers.dragginMarker != null) {
       Offset s = Offset(screenPos.dx - _markers.dragginOffset.dx,
           screenPos.dy - _markers.dragginOffset.dy);
-      GeoPoint tp = _viewport.getGeopointForScreenPosition(math.Point(
-          s.dx, s.dy));
+      GeoPoint tp =
+          _viewport.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
       _markers.dragginMarker.location = tp;
       if (markerDrag != null) markerDrag(_markers.dragginMarker, tp);
     }
@@ -88,15 +90,15 @@ class MarkersLayer extends Layer {
     // Update the marker(s) set draggin = false
     // fire a markerPositionChanged event to the mapview
     if (markerDrag != null) markerDrag(_markers.dragginMarker, clickedPosition);
+    _markers.dragginMarker.selected = false;
     _markers.dragginOffset = null;
     _markers.dragginMarker = null;
   }
 
-
   Function(MarkerBase marker) markerSelected;
-  Function(MarkerBase marker, GeoPoint draggedPosition) markerDragStart;
-  Function(MarkerBase marker, GeoPoint draggedPosition) markerDrag;
-  Function(MarkerBase marker, GeoPoint draggedPosition) markerDragEnd;
+  Function(MarkerBase marker, GeoPoint startPosition) markerDragStart;
+  Function(MarkerBase marker, GeoPoint dragToPosition) markerDrag;
+  Function(MarkerBase marker, GeoPoint endPosition) markerDragEnd;
 
   void _fireMarkerSelected(MarkerBase marker) {
     if (markerSelected != null) {
