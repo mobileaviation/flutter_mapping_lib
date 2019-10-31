@@ -1,5 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:mapping_library/src/layers/vector/markergeopoint.dart';
+import '../../layers/markers/renderers/pointmarkerrenderer.dart';
+import '../../layers/markers/pointmarker.dart';
+import '../../layers/markers/markers.dart';
 import '../../layers/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
@@ -19,6 +23,7 @@ class Polyline extends GeomBase {
   }
 
   GeoPoints _points;
+  Markers _pointMarkers;
   List<Offset> _drawPoints;
 
   int _lineWidth = 5;
@@ -61,17 +66,43 @@ class Polyline extends GeomBase {
   }
 
   void addPoints(List<gp.GeoPoint> points) {
-    _points.addAll(points);
+    for(gp.GeoPoint geoPoint in points)
+    {
+      MarkerGeopoint p = _setupMarker(geoPoint);
+      _points.add(p);
+    }
     fireUpdatedVector();
   }
 
+  MarkerGeopoint _setupMarker(gp.GeoPoint geoPoint)
+  {
+    PointMarkerRenderer drawer = PointMarkerRenderer();
+    drawer.setup(_getPointMarkerData());
+    MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
+    p.marker = PointMarker(drawer, Size(20,20), geoPoint);
+    p.marker.doDraw().then((value) {
+      fireUpdatedVector();
+    });
+    return p;
+  }
+
+  PointMarkerRendererData _getPointMarkerData() {
+    PointMarkerRendererData data = PointMarkerRendererData();
+    data.borderWidth = 3;
+    data.borderColor = Colors.red;
+    data.backgroundColor = Colors.greenAccent;
+    return data;
+  }
+
   void addPoint(gp.GeoPoint point) {
-    _points.add(point);
+    MarkerGeopoint p = _setupMarker(point);
+    _points.add(p);
     fireUpdatedVector();
   }
 
   void editPoint(gp.GeoPoint point, int index) {
-    _points.insert(index, point);
+    MarkerGeopoint p = _setupMarker(point);
+    _points.insert(index, p);
     fireUpdatedVector();
   }
 
@@ -92,6 +123,10 @@ class Polyline extends GeomBase {
       p.addPolygon(_drawPoints, false);
       canvas.drawPath(p, geomPaint);
     }
+
+    for (MarkerGeopoint geopoint in _points) {
+      geopoint.marker.paint(canvas);
+    }
   }
 
   @override
@@ -110,7 +145,7 @@ class Polyline extends GeomBase {
     double cy = centerPixels.y - sh2;
 
     _drawPoints.clear();
-    for (gp.GeoPoint p in _points) {
+    for (MarkerGeopoint p in _points) {
       math.Point pix = _getPixelsPosition(p, mapPosition.zoomLevel);
       double x = pix.x - cx;
       double y = pix.y - cy;
@@ -119,6 +154,7 @@ class Polyline extends GeomBase {
           math.Point(sw2, sh2),
           mapPosition.getZoomFraction() + 1);
       _drawPoints.add(Offset(pp.x, pp.y));
+      p.marker.drawingPoint = pp;
     }
   }
 

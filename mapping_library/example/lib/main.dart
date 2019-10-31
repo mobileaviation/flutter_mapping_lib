@@ -103,7 +103,7 @@ class _MappingPageState extends State<MappingHomePage> {
       markersLayer.markerSelected = _markerSelected;
 
       // Checkout the following methods for there implementation
-      testPolyLineUpdate(vectorLayer);  // see test_vectors.dart
+      testPolyLineUpdate(vectorLayer, mapView);  // see test_vectors.dart
       drawHoogeveenCircuit(vectorLayer);  // see test_vectors.dart
       drawLelystadCircuit(vectorLayer); // see test_vetors.dart
       drawSchipholCtr(vectorLayer); // see test_vectors.dart
@@ -111,6 +111,7 @@ class _MappingPageState extends State<MappingHomePage> {
       // Checkout the following methods for adding Markers to the map
       addDefaultMarker(markersLayer); // see test_markers.dart
       addSimpleMarker(markersLayer); // see test_markers.dart
+      addImageMarker(markersLayer); // see test_markers.dart
 
       addTestFixedObject(mapView);
     });

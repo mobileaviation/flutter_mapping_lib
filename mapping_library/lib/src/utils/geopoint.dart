@@ -32,6 +32,10 @@ class GeoPoint {
         latitudeE6 / CONVERSION_FACTOR, longitudeE6 / CONVERSION_FACTOR);
   }
 
+  GeoPoint.fromGeopoint(GeoPoint geoPoint) {
+    _initGeopoint(geoPoint.getLatitude(), geoPoint.getLongitude());
+  }
+
   String toString() {
     return "Lat: " +
         getLatitude().toString() +

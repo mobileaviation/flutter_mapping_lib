@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart' as material;
+import '../../utils/angles.dart';
 import '../../utils/boundingbox.dart' as utils;
 import '../../core/mapviewport.dart';
 import '../../utils/mapposition.dart';
@@ -12,41 +13,71 @@ class MarkerBase {
   MarkerBase(MarkerRenderer drawerBase, Size size, GeoPoint location) {
     _markerDrawer = drawerBase;
     markerSize = size;
-    _pivotPoint = math.Point(size.width / 2, size.height / 2);
+    _calcPivotPoint();
     _location = location;
+    _rotation = 0;
     name = _location.toString();
   }
 
-  void paint(Canvas canvas) {
-    if (markerImage != null) {
-      Offset drawPoint =
-          Offset(drawingPoint.x - pivotPoint.x, drawingPoint.y - pivotPoint.y);
-      canvas.drawImage(markerImage, drawPoint, Paint());
+  void _calcPivotPoint() {
+    if (markerSize != null) {
+      _pivotPoint = math.Point(markerSize.width / 2, markerSize.height / 2);
+    }
+    else _pivotPoint = math.Point(0,0);
+  }
 
-      if (_selected) {
-        Size selectedBorderSize = Size(markerSize.width + (0.1 * markerSize.width),
-          markerSize.height + (0.1 * markerSize.height));
-        Paint selectedBorderPaint = Paint()
+  Future<Image> _drawMarker() async {
+    var pictureRec = PictureRecorder();
+    Canvas c = Canvas(pictureRec);
+    _calcPivotPoint();
+    c.translate(_pivotPoint.x, _pivotPoint.y);
+    c.rotate(toRadians(_rotation));
+    c.translate(-_pivotPoint.x, -_pivotPoint.y);
+    c.drawImage(markerImage, Offset.zero, Paint());
+    return await pictureRec.endRecording().toImage(markerSize.width.floor(),
+        markerSize.height.floor());
+  }
+
+  void paint(Canvas canvas) {
+    if (_visible) {
+      _calcPivotPoint();
+      if (_drawImage != null) {
+        Offset drawPoint =
+        Offset(drawingPoint.x - pivotPoint.x, drawingPoint.y - pivotPoint.y);
+        canvas.drawImage(_drawImage, drawPoint, Paint());
+
+        if (_selected) {
+          Size selectedBorderSize = Size(
+              markerSize.width + (0.1 * markerSize.width),
+              markerSize.height + (0.1 * markerSize.height));
+          Paint selectedBorderPaint = Paint()
             ..style = PaintingStyle.stroke
             ..isAntiAlias = true
             ..strokeWidth = 5
             ..color = selectedColor;
-        Rect rect = Rect.fromLTWH(drawingPoint.x - (selectedBorderSize.width/2),
-            drawingPoint.y - (selectedBorderSize.height/2),
-            selectedBorderSize.width, selectedBorderSize.height);
-        RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(20));
-        canvas.drawRRect(rrect, selectedBorderPaint);
+          Rect rect = Rect.fromLTWH(
+              drawingPoint.x - (selectedBorderSize.width / 2),
+              drawingPoint.y - (selectedBorderSize.height / 2),
+              selectedBorderSize.width, selectedBorderSize.height);
+          RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(20));
+          canvas.drawRRect(rrect, selectedBorderPaint);
 
 //        if (DateTime.now().difference(_selectedTime).inMilliseconds >_showSelectedBorderFor) {
 //          selected = false;
 //        }
+        }
       }
-
     }
   }
 
   Future<Image> doDraw() async {
-    return null;
+    if (_rotation == 0) {
+      _drawImage = await markerImage;
+      return await markerImage;
+    } else {
+      _drawImage = await _drawMarker();
+      return await _drawImage;
+    }
   }
 
   String name = "Marker";
@@ -92,6 +123,7 @@ class MarkerBase {
     _calcBoundingBox(_scale);
     fireUpdatedMarker();
   }
+  Image _drawImage;
 
   Size markerSize;
 
@@ -99,6 +131,7 @@ class MarkerBase {
   get drawingPoint {
     return _drawPoint;
   }
+  set drawingPoint(value) { _drawPoint = value; }
 
   MarkerRenderer _markerDrawer;
   MarkerRenderer get markerDrawer {
@@ -117,6 +150,13 @@ class MarkerBase {
     fireUpdatedMarker();
   }
   get selected { return _selected; }
+
+  bool _visible = true;
+  get visible { return _visible; }
+  set visible(value) {
+    _visible = value;
+    fireUpdatedMarker();
+  }
 
   int _showSelectedBorderFor = 2000; // in MS
   DateTime _selectedTime;
@@ -139,6 +179,8 @@ class MarkerBase {
         new math.Point(screensize.width / 2, screensize.height / 2),
         mapPosition.getZoomFraction() + 1);
   }
+
+
 
   void _getBoundingBox(double scale) {
     if (_scale != scale) {

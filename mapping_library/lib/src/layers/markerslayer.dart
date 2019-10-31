@@ -13,6 +13,8 @@ class MarkersLayer extends Layer {
   }
 
   Markers _markers;
+  MarkerBase _dragginMarker;
+  Offset _dragginOffset;
 
   void addMarker(MarkerBase marker) {
     _markers.add(marker);
@@ -46,7 +48,7 @@ class MarkersLayer extends Layer {
       if (marker.markerSelectedByScreenPos(screenPos)) {
         marker.selected = !marker.selected;
         _fireMarkerSelected(marker);
-      }
+      } else marker.selected = false;
     }
   }
 
@@ -60,8 +62,8 @@ class MarkersLayer extends Layer {
       if (marker.dragable) {
         if (marker.markerSelectedByScreenPos(screenPos)) {
           marker.selected = true;
-          _markers.dragginMarker = marker;
-          _markers.dragginOffset = Offset(screenPos.dx - marker.drawingPoint.x,
+          _dragginMarker = marker;
+          _dragginOffset = Offset(screenPos.dx - marker.drawingPoint.x,
               screenPos.dy - marker.drawingPoint.y);
           if (markerDragStart != null) markerDragStart(marker, clickedPosition);
           break;
@@ -75,13 +77,13 @@ class MarkersLayer extends Layer {
     // Update the marker(s) (draggin = true) position
     // newPosition = screenPos + markerOffset (from dragStart)
     // fire markerupdated for repaint
-    if (_markers.dragginMarker != null) {
-      Offset s = Offset(screenPos.dx - _markers.dragginOffset.dx,
-          screenPos.dy - _markers.dragginOffset.dy);
+    if (_dragginMarker != null) {
+      Offset s = Offset(screenPos.dx - _dragginOffset.dx,
+          screenPos.dy - _dragginOffset.dy);
       GeoPoint tp =
           _viewport.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
-      _markers.dragginMarker.location = tp;
-      if (markerDrag != null) markerDrag(_markers.dragginMarker, tp);
+      _dragginMarker.location = tp;
+      if (markerDrag != null) markerDrag(_dragginMarker, tp);
     }
   }
 
@@ -89,10 +91,10 @@ class MarkersLayer extends Layer {
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
     // Update the marker(s) set draggin = false
     // fire a markerPositionChanged event to the mapview
-    if (markerDrag != null) markerDrag(_markers.dragginMarker, clickedPosition);
-    _markers.dragginMarker.selected = false;
-    _markers.dragginOffset = null;
-    _markers.dragginMarker = null;
+    if (markerDrag != null) markerDrag(_dragginMarker, clickedPosition);
+    _dragginMarker.selected = false;
+    _dragginOffset = null;
+    _dragginMarker = null;
   }
 
   Function(MarkerBase marker) markerSelected;

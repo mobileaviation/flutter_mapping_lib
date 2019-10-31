@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
 
 /// This function will show a multipoint polyline on the map
-void testPolyLineUpdate(VectorLayer layer) {
+void testPolyLineUpdate(VectorLayer layer, MapView mapView) {
   List<GeoPoint> points = [
     GeoPoint(52.373893, 5.232694),
     GeoPoint(52.389645 , 5.298114),
@@ -21,7 +21,10 @@ void testPolyLineUpdate(VectorLayer layer) {
     GeoPoint(52.331196 , 5.520941)
   ];
 
+
+
   int counter = 0;
+
 
   // A polyline consists of two lines painted one over the other
   // This way we are able to draw lines with a border. Under the hood two

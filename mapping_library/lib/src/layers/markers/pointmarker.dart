@@ -1,19 +1,22 @@
 import 'dart:ui';
+import 'renderers/pointmarkerrenderer.dart';
 import 'renderers/markerrenderer.dart';
 import '../../utils/geopoint.dart';
 import 'markerbase.dart';
 
-class SimpleMarker extends MarkerBase {
-  SimpleMarker(MarkerRenderer drawerBase, Size size, GeoPoint location)
+class PointMarker extends MarkerBase {
+  PointMarker(MarkerRenderer drawerBase, Size size, GeoPoint location)
       : super(drawerBase, size, location);
+
+  PointMarkerRendererData pointSetupData;
 
   @override
   Future<Image> doDraw() async {
     if (markerImage == null) {
       if (markerDrawer != null) {
-        markerDrawer.setup(rotation);
-        Picture _simpleMarkerPicture = markerDrawer.draw(markerSize);
-        markerImage = await _simpleMarkerPicture.toImage(
+        markerDrawer.setup(pointSetupData);
+        Picture _pointMarkerPicture = markerDrawer.draw(markerSize);
+        markerImage = await _pointMarkerPicture.toImage(
             markerSize.width.floor(), markerSize.height.floor());
       }
 
