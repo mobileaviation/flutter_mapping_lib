@@ -20,13 +20,15 @@ class PointMarkerRenderer extends MarkerRenderer {
       p.color = _data.backgroundColor;
       p.style = PaintingStyle.fill;
       drawerCanvas.drawCircle(
-          Offset(size.width / 2, size.height / 2), size.width / 2, p);
+          Offset(size.width / 2, size.height / 2),
+          ((size.width / 2) - (_data.borderWidth/2)), p);
 
       p.color = _data.borderColor;
       p.strokeWidth = _data.borderWidth;
       p.style = PaintingStyle.stroke;
       drawerCanvas.drawCircle(
-          Offset(size.width / 2, size.height / 2), size.width / 2, p);
+          Offset(size.width / 2, size.height / 2),
+          ((size.width / 2) - (_data.borderWidth/2)), p);
 
       return drawerRec.endRecording();
     } else throw new Exception("No PointMarkerRenderer data supplied!!");

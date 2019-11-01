@@ -35,21 +35,21 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
 
   void dragStart(GeoPoint clickedPosition, Offset screenPos) {
     for (Layer l in _layers) {
-      if (l is MarkersLayer) {
+      if ((l is MarkersLayer)||(l is VectorLayer)) {
         l.dragStart(clickedPosition, screenPos);
       }
     }
   }
   void drag(GeoPoint clickedPosition, Offset screenPos) {
     for (Layer l in _layers) {
-      if (l is MarkersLayer) {
+      if ((l is MarkersLayer)||(l is VectorLayer)) {
         l.drag(clickedPosition, screenPos);
       }
     }
   }
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
     for (Layer l in _layers) {
-      if (l is MarkersLayer) {
+      if ((l is MarkersLayer)||(l is VectorLayer)) {
         l.dragEnd(clickedPosition, screenPos);
       }
     }

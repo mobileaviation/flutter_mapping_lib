@@ -18,13 +18,17 @@ class Polyline extends GeomBase {
     _points = GeoPoints();
     _drawPoints = [];
     defaultPaint();
+    _markerDrawer = PointMarkerRenderer();
+    _markerDrawer.setup(_getPointMarkerData());
     borderColor = geomPaint2.color;
     name = "Polyline";
   }
 
   GeoPoints _points;
+  get points { return _points; }
   Markers _pointMarkers;
   List<Offset> _drawPoints;
+  PointMarkerRenderer _markerDrawer;
 
   int _lineWidth = 5;
   int _borderWidth = 0;
@@ -76,10 +80,9 @@ class Polyline extends GeomBase {
 
   MarkerGeopoint _setupMarker(gp.GeoPoint geoPoint)
   {
-    PointMarkerRenderer drawer = PointMarkerRenderer();
-    drawer.setup(_getPointMarkerData());
     MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
-    p.marker = PointMarker(drawer, Size(20,20), geoPoint);
+    p.marker = PointMarker(_markerDrawer, Size(20,20), geoPoint);
+    p.marker.dragable = true;
     p.marker.doDraw().then((value) {
       fireUpdatedVector();
     });
@@ -100,7 +103,7 @@ class Polyline extends GeomBase {
     fireUpdatedVector();
   }
 
-  void editPoint(gp.GeoPoint point, int index) {
+  void insertPoint(gp.GeoPoint point, int index) {
     MarkerGeopoint p = _setupMarker(point);
     _points.insert(index, p);
     fireUpdatedVector();
@@ -122,10 +125,10 @@ class Polyline extends GeomBase {
       Path p = Path();
       p.addPolygon(_drawPoints, false);
       canvas.drawPath(p, geomPaint);
-    }
 
-    for (MarkerGeopoint geopoint in _points) {
-      geopoint.marker.paint(canvas);
+      for (MarkerGeopoint geopoint in _points) {
+        geopoint.marker.paint(canvas);
+      }
     }
   }
 

@@ -91,10 +91,12 @@ class MarkersLayer extends Layer {
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
     // Update the marker(s) set draggin = false
     // fire a markerPositionChanged event to the mapview
-    if (markerDrag != null) markerDrag(_dragginMarker, clickedPosition);
-    _dragginMarker.selected = false;
-    _dragginOffset = null;
-    _dragginMarker = null;
+    if (_dragginMarker != null) {
+      if (markerDragEnd != null) markerDragEnd(_dragginMarker, clickedPosition);
+      _dragginMarker.selected = false;
+      _dragginOffset = null;
+      _dragginMarker = null;
+    }
   }
 
   Function(MarkerBase marker) markerSelected;

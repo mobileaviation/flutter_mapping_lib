@@ -36,6 +36,10 @@ class GeoPoint {
     _initGeopoint(geoPoint.getLatitude(), geoPoint.getLongitude());
   }
 
+  void copyFrom(GeoPoint geoPoint) {
+    _initGeopoint(geoPoint.getLatitude(), geoPoint.getLongitude());
+  }
+
   String toString() {
     return "Lat: " +
         getLatitude().toString() +
