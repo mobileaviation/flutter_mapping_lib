@@ -88,7 +88,6 @@ class VectorLayer extends Layer {
   @override
   void drag(GeoPoint clickedPosition, Offset screenPos) {
     if (_dragginPoint != null) {
-      log("draggin polyline marker");
       Offset s = Offset(screenPos.dx - _dragginOffset.dx,
           screenPos.dy - _dragginOffset.dy);
       GeoPoint tp =
