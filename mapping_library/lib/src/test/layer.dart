@@ -39,6 +39,7 @@ class TileLayer extends Layer {
 
 class Layer extends StatefulWidget {
   Layer(Key key) : super(key: key);
+
   LayerPainter layerPainter;
   Size _size;
   set size(value) {_size = value; }

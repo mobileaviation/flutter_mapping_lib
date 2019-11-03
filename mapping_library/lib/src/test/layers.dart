@@ -13,17 +13,17 @@ class Layers extends Stack {
   get mapPosition { return _mapPosition; }
   set mapPosition(value) {
     _mapPosition = value;
-    _notifyChildren();
+    notifyChildren();
   }
 
   MapViewport _mapViewport;
   get mapViewPort { return _mapViewport; }
   set mapViewPort(value) {
     _mapViewport = value;
-    _notifyChildren();
+    notifyChildren();
   }
 
-  _notifyChildren() {
+  notifyChildren() {
     for (Layer layer in children) {
       layer.layerUpdated = _layerUpdated;
       layer.notifyLayer(_mapPosition, _mapViewport);
