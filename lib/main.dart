@@ -23,18 +23,27 @@ class MyApp extends StatelessWidget {
         ),
         home: Container(
             child: Mapview(
+                mapPosition: MapPosition.create(
+                  // This is a location in the middle of the netherlands
+                  geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
+                  zoomLevel: 10,
+                ),
                 layers: Layers(
-          mapPosition: MapPosition.create(
-            // This is a location in the middle of the netherlands
-            geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
-            zoomLevel: 10,
-          ),
-          children: <Widget>[
-            TileLayer(
-              backgroundColor: Colors.cyanAccent,
-            ),
-          ],
-        ))));
+                  children: <Widget>[
+                    TestLayer(
+                      backgroundColor: Colors.cyanAccent,
+                      backgroundOffset: Offset(100, 100),
+                      backgroundSize: Size(200, 200),
+                      name: "Layer1",
+                    ),
+                    TestLayer(
+                      backgroundColor: Colors.greenAccent,
+                      backgroundOffset: Offset(200, 200),
+                      backgroundSize: Size(200, 200),
+                      name: "Layer2",
+                    )
+                  ],
+                ))));
   }
 }
 

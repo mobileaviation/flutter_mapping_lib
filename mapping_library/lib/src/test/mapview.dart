@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
 import 'package:mapping_library/src/test/layer.dart';
@@ -12,43 +11,36 @@ class Mapview extends StatefulWidget {
     _layers = layers;
     _layers.updatedLayer = _layerUpdated;
     _mapPosition = mapPosition;
+    _size = Size.square(1000);
+    _mapViewport = MapViewport(_size, _mapPosition);
+    _layers.mapViewPort = _mapViewport;
+    _layers.notifyChildren();
   }
 
   @override
   _MapviewState createState() => _MapviewState();
 
   Layers _layers;
+
+  Size _size;
+  Size get size => _size;
+
   MapPosition _mapPosition;
-  MapViewport _mapViewport;
-
-  void updateViewport(Size size, MapPosition mapPosition) {
-    if (_mapViewport == null) {
-      _mapViewport = MapViewport(size, mapPosition);
-    } else {
-      _mapViewport.setMapPositionSize(size, mapPosition);
-    }
-
-
+  MapPosition get mapPosition => _mapPosition;
+  set mapPosition(value) {
+    _mapPosition = value;
     _layers.notifyChildren();
   }
 
+  MapViewport _mapViewport;
+  MapViewport get mapViewport => _mapViewport;
+
   void _layerUpdated(Layer updatedLayer) {
-    log("Layer Updated");
+    log("Layer (${updatedLayer.name}) Updated ${updatedLayer.size.toString()}");
   }
 }
 
 class _MapviewState extends State<Mapview> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
-    super.initState();
-  }
-
-  _afterLayout(_) {
-    RenderBox _mapViewRenderbox = this.context.findRenderObject();
-    Size _size = _mapViewRenderbox.size;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

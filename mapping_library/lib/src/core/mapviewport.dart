@@ -34,6 +34,11 @@ class MapViewport {
     _setupViewport(mapPosition);
   }
 
+  void setMapSize(Size size) {
+    _setSize(size);
+    _setupViewport(_mapPosition);
+  }
+
   math.Point getScreenPositionForMapPosition(MapPosition mapPosition) {
     return getScreenPositionForGeoPoint(mapPosition.getGeoPoint());
   }
@@ -141,6 +146,7 @@ class MapViewport {
 
   int _mapSize;
   MapPosition _mapPosition;
+  MapPosition get mapPosition => _mapPosition;
   BoundingBox _viewPortBoundingBox;
   Size _screenSize;
 }

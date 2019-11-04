@@ -1,8 +1,7 @@
 import 'package:flutter/widgets.dart';
-
 import 'layer.dart';
 
-class LayerPainter implements CustomPainter {
+class LayerPainter extends ChangeNotifier implements CustomPainter {
   Layer layer;
 
   @override
@@ -12,7 +11,13 @@ class LayerPainter implements CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: implement paint
+    layer.size = size;
+    layer.mapViewPort.setMapSize(size);
+    layer.layerUpdated(layer);
+  }
+
+  void redraw() {
+    notifyListeners();
   }
 
   @override
@@ -27,15 +32,5 @@ class LayerPainter implements CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
-  }
-
-  @override
-  void addListener(listener) {
-    // TODO: implement addListener
-  }
-
-  @override
-  void removeListener(listener) {
-    // TODO: implement removeListener
   }
 }
