@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
-import 'package:mapping_library/src/test/layerpainter.dart';
-import 'package:mapping_library/src/test/testlayerpainter.dart';
+import 'package:mapping_library/src/utils/geopoint.dart';
+import 'painters/layerpainter.dart';
+import 'painters/testlayerpainter.dart';
 
 class TestLayer extends Layer {
   TestLayer({Key key, Color backgroundColor,
@@ -14,7 +15,7 @@ class TestLayer extends Layer {
     bgColor = backgroundColor;
     bgSize = backgroundSize;
     bgPosition = backgroundOffset;
-    _name = (name == null) ? "TileLayer" : name;
+    _name = (name == null) ? "TestLayer" : name;
   }
 
   get _layerPainter {
@@ -31,18 +32,11 @@ class TestLayer extends Layer {
     _layerPainter.blockPosition = value;
   }
 
-
   @override
-  mapTap(TapUpDetails tapUpdetails) {
-    log(tapUpdetails.localPosition.toString());
-    layerPainter.redraw();
-    return super.mapTap(tapUpdetails);
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    super.notifyLayer(viewport, mapChanged);
   }
 
-  @override
-  notifyLayer(MapViewport viewport) {
-    super.notifyLayer(viewport);
-  }
 }
 
 class Layer extends StatelessWidget {
@@ -51,7 +45,7 @@ class Layer extends StatelessWidget {
   LayerPainter layerPainter;
 
   String _name;
-  set name(value) {_name = name; }
+  set name(value) {_name = value; }
   String get name => _name;
 
   Size _size;
@@ -68,22 +62,24 @@ class Layer extends StatelessWidget {
   Function(Layer layer) get layerUpdated => _layerUpdated;
   Function(Layer layer) _layerUpdated;
 
-  mapTap(TapUpDetails tapUpdetails) {}
-
-  notifyLayer(MapViewport viewport) {
+  notifyLayer(MapViewport viewport, bool mapChanged) {
     _mapViewport = viewport;
   }
+
+  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
+
+  void dragStart(GeoPoint clickedPosition, Offset screenPos) {}
+
+  void drag(GeoPoint clickedPosition, Offset screenPos) {}
+
+  void dragEnd(GeoPoint clickedPosition, Offset screenPos) {}
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GestureDetector(
-        child: CustomPaint(
+      child: CustomPaint(
           painter: layerPainter,
         ),
-        onTapUp: mapTap,
-        behavior: HitTestBehavior.translucent,
-      ),
       height: double.infinity,
       width: double.infinity,
     );

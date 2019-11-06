@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
-import 'package:mapping_library/src/utils/mapposition.dart';
-import 'package:mapping_library/src/test/layer.dart';
+import 'layer.dart';
 
 class Layers extends Stack {
   Layers({Key key, List<Widget> children})
@@ -14,10 +13,10 @@ class Layers extends Stack {
     _mapViewport = value;
   }
 
-  notifyChildren() {
+  notifyChildren(bool mapChanged) {
     for (Layer layer in children) {
       layer.layerUpdated = _updatedLayer;
-      layer.notifyLayer(_mapViewport);
+      layer.notifyLayer(_mapViewport, mapChanged);
     }
   }
 

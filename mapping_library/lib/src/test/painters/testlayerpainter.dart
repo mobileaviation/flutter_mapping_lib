@@ -1,6 +1,5 @@
 import 'dart:ui';
-import 'package:mapping_library/src/test/layerpainter.dart';
-import 'layer.dart';
+import 'layerpainter.dart';
 
 class TestLayerPainter extends LayerPainter {
 
@@ -8,6 +7,7 @@ class TestLayerPainter extends LayerPainter {
   Size blockSize;
   Offset blockPosition;
 
+  @override
   paint(Canvas canvas, Size size) {
     super.paint(canvas, size);
 
@@ -18,5 +18,7 @@ class TestLayerPainter extends LayerPainter {
         blockPosition.dy,
         blockSize.width,
         blockSize.height), paint);
+
+
   }
 }

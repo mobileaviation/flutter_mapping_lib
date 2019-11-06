@@ -1,5 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
-import 'layer.dart';
+import '../layer.dart';
 
 class LayerPainter extends ChangeNotifier implements CustomPainter {
   Layer layer;
@@ -20,17 +22,29 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
     notifyListeners();
   }
 
+  bool _doRedraw = true;
+  bool get doRedraw => _doRedraw;
+  set doRedraw(bool value) { _doRedraw = value; }
+
+  Picture _layerPicture;
+  Picture get layerPicture => _layerPicture;
+  set layerPicture(Picture value) { _layerPicture = value; }
+
   @override
   // TODO: implement semanticsBuilder
   get semanticsBuilder => null;
 
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) {
-    return true;
+    // TODO: implement shouldRebuildSemantics
+    return false;
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+    // TODO: implement shouldRepaint
+    return false;
   }
+
+
 }
