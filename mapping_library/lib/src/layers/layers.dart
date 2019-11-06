@@ -1,23 +1,25 @@
-import 'dart:collection';
+import 'package:flutter/widgets.dart';
+import 'package:mapping_library/src/core/mapviewport.dart';
+import 'layer.dart';
 
-class Layers<Layer> extends ListBase<Layer> {
-  List _innerList = [];
-
-  int get length => _innerList.length;
-
-  void set length(int length) {
-    _innerList.length = length;
+class Layers extends Stack {
+  Layers({Key key, List<Widget> children})
+      :super(key: key, children: children) {
   }
 
-  @override
-  Layer operator [](int index) => _innerList[index];
-
-  @override
-  void operator []=(int index, Layer value) {
-    _innerList[index] = value;
+  MapViewport _mapViewport;
+  MapViewport get mapViewPort => _mapViewport;
+  set mapViewPort(MapViewport value) {
+    _mapViewport = value;
   }
 
-  void add(Layer layer) => _innerList.add(layer);
+  notifyChildren(bool mapChanged) {
+    for (Layer layer in children) {
+      layer.layerUpdated = _updatedLayer;
+      layer.notifyLayer(_mapViewport, mapChanged);
+    }
+  }
 
-  void addAll(Iterable<Layer> layers) => _innerList.addAll(layers);
+  Function(Layer layerUpdated) _updatedLayer;
+  set updatedLayer(value) { _updatedLayer = value; }
 }

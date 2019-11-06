@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/test/fixedobjectlayer.dart';
+import '../fixedobjectlayer.dart';
 import 'layerpainter.dart';
 
 class FixedObjectLayerPainter extends LayerPainter {

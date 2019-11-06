@@ -1,50 +1,69 @@
-import 'dart:developer';
 import 'dart:ui';
 import 'dart:math' as math;
-import '../layers/vector/markergeopoint.dart';
-import '../layers/vector/polyline.dart';
-import '../layers/vector/geombase.dart';
-import '../utils/geopoint.dart';
+import 'package:flutter/widgets.dart';
 import '../core/mapviewport.dart';
-import 'markers/markerbase.dart';
-import 'vector/vectors.dart';
-import '../utils/mapposition.dart';
+import '../objects/vector/geombase.dart';
+import '../objects/vector/markergeopoint.dart';
+import '../objects/vector/polyline.dart';
+import '../objects/vector/vectors.dart';
+import '../utils/geopoint.dart';
 import 'layer.dart';
+import 'painters/vectorlayerpainter.dart';
 
 class VectorLayer extends Layer {
-  VectorLayer() {
-    _vectors = Vectors();
+  VectorLayer({Key key,
+    Vectors vectors,
+    Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected,
+    String name}) : super(key) {
+
+    layerPainter = VectorLayerPainter();
+    layerPainter.layer = this;
+
+    this.vectorSelected = vectorSelected;
+
+    this.vectors = vectors;
+    _setVectorsUpdateListener();
+
+    this.name = (name == null) ? "VectorLayer" : name;
   }
 
-  Vectors _vectors;
+  Vectors vectors;
   MarkerGeopoint _dragginPoint;
   Offset _dragginOffset;
   GeomBase _draggingVector;
 
-  void addVectors(GeomBase vector) {
-    _vectors.add(vector);
-    vector.setUpdateListener(_vectorUpdated);
-    fireUpdatedLayer();
-  }
-
-  void paint(Canvas canvas, Size size) {
-    for (GeomBase vector in _vectors) {
-      if (vector.withinViewport(_viewport)) {
-        vector.paint(canvas);
-      }
+  _setVectorsUpdateListener() {
+    for (GeomBase vector in vectors) {
+      vector.setUpdateListener(_vectorUpdated);
     }
   }
 
+  _setup(MapViewport viewport) {
+    for (GeomBase vector in vectors) {
+      vector.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
+    }
+  }
+
+  void _vectorUpdated(GeomBase vector) {
+    notifyLayer(mapViewPort, true);
+    layerPainter.redraw();
+  }
+
   @override
-  void notifyLayer(MapPosition mapPosition, MapViewport viewport) {
-    _mapPosition = mapPosition;
-    _viewport = viewport;
-    _setupVectorsForViewport();
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    super.notifyLayer(viewport, mapChanged);
+    _setup(viewport);
+  }
+
+  void addVectors(GeomBase vector) {
+    vectors.add(vector);
+    vector.setUpdateListener(_vectorUpdated);
+    _setup(mapViewPort);
   }
 
   @override
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
-    for (GeomBase vector in _vectors) {
+    for (GeomBase vector in vectors) {
       if (_checkVector(vector, clickedPosition, screenPos)) {
         _fireVectorSelected(vector, clickedPosition);
       }
@@ -52,7 +71,7 @@ class VectorLayer extends Layer {
   }
 
   bool _checkVector(GeomBase vector, GeoPoint clickedPosition, Offset screenPos) {
-    if (vector.withinViewport(_viewport)) {
+    if (vector.withinViewport(mapViewPort)) {
       if (vector.withinPolygon(clickedPosition, screenPos)) {
         return true;
       } else return false;
@@ -61,7 +80,7 @@ class VectorLayer extends Layer {
 
   @override
   void dragStart(GeoPoint clickedPosition, Offset screenPos) {
-    for (GeomBase vector in _vectors) {
+    for (GeomBase vector in vectors) {
       if (_checkVector(vector, clickedPosition, screenPos)) {
         if (vector is Polyline) {
           // Found a polyline, Now check for markers on this line
@@ -75,7 +94,9 @@ class VectorLayer extends Layer {
                     screenPos.dy - point.marker.drawingPoint.y);
                 if (pointDragStart != null) pointDragStart(
                     point, clickedPosition);
-                fireUpdatedLayer();
+                _fireVectorSelected(vector, clickedPosition);
+                notifyLayer(mapViewPort, true);
+                layerPainter.redraw();
                 break;
               }
             }
@@ -91,12 +112,13 @@ class VectorLayer extends Layer {
       Offset s = Offset(screenPos.dx - _dragginOffset.dx,
           screenPos.dy - _dragginOffset.dy);
       GeoPoint tp =
-      _viewport.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
+      mapViewPort.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
       _dragginPoint.marker.location = tp;
       _dragginPoint.copyFrom(tp);
-      _draggingVector.calculatePixelPosition(_viewport, _mapPosition);
-      fireUpdatedLayer();
+      _draggingVector.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
       if (pointDrag != null) pointDrag(_dragginPoint, tp);
+      notifyLayer(mapViewPort, true);
+      layerPainter.redraw();
     }
   }
 
@@ -107,19 +129,8 @@ class VectorLayer extends Layer {
       _dragginPoint.marker.selected = false;
       _dragginOffset = null;
       _dragginPoint = null;
-      fireUpdatedLayer();
-    }
-  }
-
-
-  void _vectorUpdated(GeomBase vector) {
-    _setupVectorsForViewport();
-    fireUpdatedLayer();
-  }
-
-  void _setupVectorsForViewport() {
-    for (GeomBase vector in _vectors) {
-      vector.calculatePixelPosition(_viewport, _mapPosition);
+      notifyLayer(mapViewPort, true);
+      layerPainter.redraw();
     }
   }
 
@@ -133,7 +144,4 @@ class VectorLayer extends Layer {
       vectorSelected(vector, clickedPosition);
     }
   }
-
-  MapPosition _mapPosition;
-  MapViewport _viewport;
 }

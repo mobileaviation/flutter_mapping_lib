@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/src/layers/fixedobject/scalebar.dart';
-import 'package:mapping_library/src/layers/fixedobject/fixedobject.dart';
-import 'package:mapping_library/src/layers/markers/markers.dart';
-import 'package:mapping_library/src/layers/vector/geombase.dart';
-import 'package:mapping_library/src/layers/vector/polygon.dart';
-import 'package:mapping_library/src/layers/vector/polyline.dart';
-import 'package:mapping_library/src/layers/vector/vectors.dart';
+import 'package:mapping_library/src/objects/fixedobject/scalebar.dart';
+import 'package:mapping_library/src/objects/fixedobject/fixedobject.dart';
+import 'package:mapping_library/src/objects/markers/markers.dart';
+import 'package:mapping_library/src/objects/vector/geombase.dart';
+import 'package:mapping_library/src/objects/vector/polygon.dart';
+import 'package:mapping_library/src/objects/vector/polyline.dart';
+import 'package:mapping_library/src/objects/vector/vectors.dart';
 import 'package:mapping_library/src/tiles/sources/httptilesource.dart';
 import 'package:mapping_library/src/test/layer.dart';
 import 'package:mapping_library/src/test/layers.dart';
@@ -19,10 +19,13 @@ import 'package:mapping_library/src/test/mapview.dart';
 import 'package:mapping_library/src/test/tilelayer.dart';
 import 'package:mapping_library/src/test/fixedobjectlayer.dart';
 import 'package:mapping_library/src/test/markerslayer.dart';
-import 'package:mapping_library/src/layers/markers/renderers/simplemarkerrenderer.dart';
-import 'package:mapping_library/src/layers/markers/simplemarker.dart';
-import 'package:mapping_library/src/layers/markers/markerbase.dart';
+import 'package:mapping_library/src/objects/markers/renderers/simplemarkerrenderer.dart';
+import 'package:mapping_library/src/objects/markers/simplemarker.dart';
+import 'package:mapping_library/src/objects/markers/markerbase.dart';
 import 'package:mapping_library/src/test/vectorlayer.dart';
+import 'package:mapping_library/src/test/overlaylayer.dart';
+import 'package:mapping_library/src/objects/overlay/overlayimage.dart';
+import 'package:mapping_library/src/objects/overlay/overlayimages.dart';
 
 
 void main() => runApp(MyApp());
@@ -122,6 +125,22 @@ class MyApp extends StatelessWidget {
     return l;
   }
 
+  OverlayImages _getOverlayImages() {
+    double north = 52.58651688434567;
+    double south = 52.27448205017151;
+    double east = 5.717278709730119;
+    double west = 5.378079539513956;
+
+    String path = "/sdcard/Download";
+    String fileEHLE = path + "/" + "EH-AD-2.EHLE-VAC.png";
+    OverlayImage ehleImage = OverlayImage(File(fileEHLE));
+    ehleImage.setImageBox(north, south, west, east);
+
+    OverlayImages images = OverlayImages();
+    images.add(ehleImage);
+    return images;
+  }
+
   Vectors _getVectors() {
     Vectors vectors = Vectors();
     vectors.add(_getEHAMCtr());
@@ -150,6 +169,10 @@ class MyApp extends StatelessWidget {
                     TilesLayer(
                       tileSource: HttpTileSource("http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
                       name: "TilesLayer",
+                    ),
+                    OverlayLayer(
+                      overlayImages: _getOverlayImages(),
+                      name: "OverlayLayer",
                     ),
                     FixedObjectLayer(
                       fixedObject: ScaleBar(FixedObjectPosition.lefttop,

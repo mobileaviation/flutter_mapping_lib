@@ -6,6 +6,8 @@ import '../utils/mapposition.dart';
 import '../core/mapviewport.dart' as viewPort;
 import 'layer.dart';
 import 'layers.dart';
+import 'markerslayer.dart';
+import 'vectorlayer.dart';
 
 class LayerPainter extends ChangeNotifier implements CustomPainter {
   LayerPainter() {

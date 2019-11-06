@@ -1,57 +1,56 @@
-import 'overlay/overlayimage.dart';
-import 'overlay/overlayimages.dart';
-import 'layer.dart';
 import 'dart:ui';
-import '../utils/geopoint.dart';
-import '../core/mapviewport.dart';
-import '../utils/mapposition.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mapping_library/src/core/mapviewport.dart';
+import '../objects/overlay/overlayimage.dart';
+import '../objects/overlay/overlayimages.dart';
+import 'layer.dart';
+import 'painters/overlaylayerpainter.dart';
 
 class OverlayLayer extends Layer {
-  OverlayLayer() {
-    _overlayImages = OverlayImages();
+  OverlayLayer({Key key,
+    OverlayImages overlayImages,
+    String name}) : super(key) {
+
+    layerPainter = OverlayLayerPainter();
+    layerPainter.layer = this;
+
+    this.overlayImages = overlayImages;
+    _setOverlaysUpdateListener();
+
+    this.name = (name == null) ? "OverlayLayer" : name;
   }
 
-  OverlayImages _overlayImages;
+  OverlayImages overlayImages;
+
+  _setOverlaysUpdateListener() {
+    for (OverlayImage image in overlayImages) {
+      image.setUpdateListener(_imageUpdated);
+    }
+  }
+
+  _setup(MapViewport viewport) {
+    for (OverlayImage image in overlayImages) {
+      image.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
+      image.getImage().then((image) {
+        layerPainter.redraw();
+      });
+    }
+  }
+
+  @override
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    super.notifyLayer(viewport, mapChanged);
+    _setup(viewport);
+  }
 
   void addImage(OverlayImage overlayImage) {
-    _overlayImages.add(overlayImage);
+    overlayImages.add(overlayImage);
     overlayImage.setUpdateListener(_imageUpdated);
-    fireUpdatedLayer();
+    _setup(mapViewPort);
   }
 
   void _imageUpdated(OverlayImage image) {
-    _setupOverlayForViewport();
+    _setup(mapViewPort);
   }
 
-  void paint(Canvas canvas, Size size) {
-    for (OverlayImage image in _overlayImages) {
-      if (image.withinViewport(_viewport)) {
-        image.paint(canvas);
-      }
-    }
-  }
-
-  @override
-  void notifyLayer(MapPosition mapPosition, MapViewport viewport) {
-    _mapPosition = mapPosition;
-    _viewport = viewport;
-    _setupOverlayForViewport();
-  }
-
-  @override
-  void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
-
-  void _setupOverlayForViewport() {
-    for (OverlayImage image in _overlayImages) {
-      image.calculatePixelPosition(_viewport, _mapPosition);
-      image.getImage().then(_imageRetrieved);
-    }
-  }
-
-  void _imageRetrieved(Image image) {
-    fireUpdatedLayer();
-  }
-
-  MapPosition _mapPosition;
-  MapViewport _viewport;
 }

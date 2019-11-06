@@ -1,50 +1,68 @@
 import 'dart:ui';
 import 'dart:math' as math;
+import 'package:flutter/widgets.dart';
 import '../core/mapviewport.dart';
-import 'markers/markerbase.dart';
-import '../utils/mapposition.dart';
-import 'markers/markers.dart';
-import 'layer.dart';
+import '../objects/markers/markerbase.dart';
+import '../objects/markers/markers.dart';
 import '../utils/geopoint.dart';
+import 'layer.dart';
+import 'painters/markerslayerpainter.dart';
 
 class MarkersLayer extends Layer {
-  MarkersLayer() {
-    _markers = Markers();
+  MarkersLayer({Key key,
+    Markers markers,
+    Function(MarkerBase marker) markerSelected,
+    String name}) : super(key) {
+
+    this.markers = markers;
+    _setMarkersUpdateListener();
+
+    layerPainter = MarkersLayerPainter();
+    layerPainter.layer = this;
+
+    this.markerSelected = markerSelected;
+
+    this.name = (name == null) ? "MarkersLayer" : name;
   }
 
-  Markers _markers;
+  Markers markers;
   MarkerBase _dragginMarker;
   Offset _dragginOffset;
 
-  void addMarker(MarkerBase marker) {
-    _markers.add(marker);
-    marker.setUpdateListener(_markerUpdated);
-    fireUpdatedLayer();
-  }
-
-  void _markerUpdated(MarkerBase marker) {
-    _setupMarkersForViewport();
-  }
-
-  void paint(Canvas canvas, Size size) {
-    for (MarkerBase marker in _markers) {
-      if (marker.withinViewport(_viewport)) {
-        marker.paint(canvas);
-      }
+  _setMarkersUpdateListener() {
+    for (MarkerBase marker in markers) {
+      marker.setUpdateListener(_markerUpdated);
     }
   }
 
+  _setup(MapViewport viewport) {
+    for (MarkerBase marker in markers) {
+      marker.calculatePixelPosition(viewport, viewport.mapPosition);
+      marker.doDraw().then((image) {
+        layerPainter.redraw();
+      });
+    }
+  }
+
+  void _markerUpdated(MarkerBase marker) {
+    notifyLayer(mapViewPort, true);
+  }
+
   @override
-  void notifyLayer(MapPosition mapPosition, MapViewport viewport) {
-    // Calculate the position if the Markers for the current viewport and mapPosition
-    _mapPosition = mapPosition;
-    _viewport = viewport;
-    _setupMarkersForViewport();
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    super.notifyLayer(viewport, mapChanged);
+    _setup(viewport);
+  }
+
+  void addMarker(MarkerBase marker) {
+    marker.setUpdateListener(_markerUpdated);
+    markers.add(marker);
+    _setup(mapViewPort);
   }
 
   @override
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
-    for (MarkerBase marker in _markers) {
+    for (MarkerBase marker in markers) {
       if (marker.markerSelectedByScreenPos(screenPos)) {
         marker.selected = !marker.selected;
         _fireMarkerSelected(marker);
@@ -58,7 +76,7 @@ class MarkersLayer extends Layer {
     // If is, mark this marker as draggin = true
     // store its startdraggin location (screenPos)
     // Calculate the offset between its current position and the screenPos
-    for (MarkerBase marker in _markers) {
+    for (MarkerBase marker in markers) {
       if (marker.dragable) {
         if (marker.markerSelectedByScreenPos(screenPos)) {
           marker.selected = true;
@@ -81,7 +99,7 @@ class MarkersLayer extends Layer {
       Offset s = Offset(screenPos.dx - _dragginOffset.dx,
           screenPos.dy - _dragginOffset.dy);
       GeoPoint tp =
-          _viewport.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
+      mapViewPort.getGeopointForScreenPosition(math.Point(s.dx, s.dy));
       _dragginMarker.location = tp;
       if (markerDrag != null) markerDrag(_dragginMarker, tp);
     }
@@ -109,18 +127,4 @@ class MarkersLayer extends Layer {
       markerSelected(marker);
     }
   }
-
-  void _setupMarkersForViewport() {
-    for (MarkerBase marker in _markers) {
-      marker.calculatePixelPosition(_viewport, _mapPosition);
-      marker.doDraw().then(_imageRetrieved);
-    }
-  }
-
-  void _imageRetrieved(Image image) {
-    fireUpdatedLayer();
-  }
-
-  MapPosition _mapPosition;
-  MapViewport _viewport;
 }

@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/src/core/mapviewport.dart';
-import 'package:mapping_library/src/layers/fixedobject/fixedobject.dart';
-import 'package:mapping_library/src/utils/mapposition.dart';
+import '../../core/mapviewport.dart';
+import 'fixedobject.dart';
+import '../../utils/mapposition.dart';
 
 class ScaleBar extends FixedObject {
   ScaleBar(FixedObjectPosition fixedObjectPosition, Offset objectMargin) {

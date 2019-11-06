@@ -1,4 +1,4 @@
-import '../../layers/markers/pointmarker.dart';
+import '../../objects/markers/pointmarker.dart';
 import '../../../mapping_library.dart';
 
 class MarkerGeopoint extends GeoPoint {

@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'dart:math' as math;
 import '../../utils/boundingbox.dart';
 import '../../utils/geopoint.dart';
-import '../../layers/vector/geombase.dart';
+import '../../objects/vector/geombase.dart';
 import '../../core/mapviewport.dart' as vp;
 import '../../utils/mapposition.dart';
 import '../../utils/mercatorprojection.dart' as MercatorProjection;

@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/values.dart' as values;
-import 'package:mapping_library/src/layers/overlay/overlayimage.dart';
-import 'package:mapping_library/src/test/overlaylayer.dart';
+import '../../objects/overlay/overlayimage.dart';
+import '../overlaylayer.dart';
 import 'layerpainter.dart';
 import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
 

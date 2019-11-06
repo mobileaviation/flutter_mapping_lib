@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import '../utils/geopoint.dart';
 import '../utils/mapposition.dart';
-import '../layers/layer.dart';
-import '../layers/layerpainter.dart';
+import '../objects/layer.dart';
+import '../objects/layerpainter.dart';
 import 'mapviewgestures.dart';
 import 'mapviewport.dart' as mapViewport;
 

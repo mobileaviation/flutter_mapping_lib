@@ -1,8 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/values.dart' as values;
-import 'package:mapping_library/src/layers/vector/geombase.dart';
-import 'package:mapping_library/src/test/vectorlayer.dart';
+import '../../objects/vector/geombase.dart';
+import '../vectorlayer.dart';
 import 'layerpainter.dart';
 import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
 

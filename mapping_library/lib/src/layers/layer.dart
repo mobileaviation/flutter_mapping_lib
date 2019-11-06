@@ -1,27 +1,87 @@
-import 'dart:ui';
-import '../utils/geopoint.dart';
-import '../core/mapviewport.dart';
-import '../utils/mapposition.dart';
+import 'dart:developer';
+import 'package:flutter/widgets.dart';
+import 'package:mapping_library/src/core/mapviewport.dart';
+import 'package:mapping_library/src/utils/geopoint.dart';
+import 'painters/layerpainter.dart';
+import 'painters/testlayerpainter.dart';
 
-class Layer {
-  void paint(Canvas canvas, Size size) {}
-
-  void setUpdateListener(Function listener) {
-    _updatedLayer = listener;
+class TestLayer extends Layer {
+  TestLayer({Key key, Color backgroundColor,
+      Size backgroundSize,
+      Offset backgroundOffset,
+      String name}) : super(key) {
+    layerPainter = TestLayerPainter();
+    layerPainter.layer = this;
+    bgColor = backgroundColor;
+    bgSize = backgroundSize;
+    bgPosition = backgroundOffset;
+    _name = (name == null) ? "TestLayer" : name;
   }
 
-  void notifyLayer(MapPosition mapPosition, MapViewport viewport) {}
-  Function(Layer layer) _updatedLayer;
+  get _layerPainter {
+    return (layerPainter as TestLayerPainter);
+  }
+
+  set bgColor(value) {
+    _layerPainter.backgroundColor = value;
+  }
+  set bgSize(value) {
+    _layerPainter.blockSize = value;
+  }
+  set bgPosition(value) {
+    _layerPainter.blockPosition = value;
+  }
+
+  @override
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    super.notifyLayer(viewport, mapChanged);
+  }
+
+}
+
+class Layer extends StatelessWidget {
+  Layer(Key key) : super(key: key);
+
+  LayerPainter layerPainter;
+
+  String _name;
+  set name(value) {_name = value; }
+  String get name => _name;
+
+  Size _size;
+  set size(value) {_size = value; }
+  get size { return _size; }
+
+  MapViewport _mapViewport;
+  MapViewport get mapViewPort => _mapViewport;
+  set mapViewPort(value) {
+    _mapViewport = value;
+  }
+
+  set layerUpdated(value) { _layerUpdated = value; }
+  Function(Layer layer) get layerUpdated => _layerUpdated;
+  Function(Layer layer) _layerUpdated;
+
+  notifyLayer(MapViewport viewport, bool mapChanged) {
+    _mapViewport = viewport;
+  }
 
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {}
 
   void dragStart(GeoPoint clickedPosition, Offset screenPos) {}
+
   void drag(GeoPoint clickedPosition, Offset screenPos) {}
+
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {}
 
-  void fireUpdatedLayer() {
-    if (_updatedLayer != null) {
-      _updatedLayer(this);
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: CustomPaint(
+          painter: layerPainter,
+        ),
+      height: double.infinity,
+      width: double.infinity,
+    );
   }
 }

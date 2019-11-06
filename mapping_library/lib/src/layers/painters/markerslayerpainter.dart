@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/layers/markers/markerbase.dart';
-import 'package:mapping_library/src/test/markerslayer.dart';
+import '../../objects/markers/markerbase.dart';
+import '../markerslayer.dart';
 import 'layerpainter.dart';
 
 class MarkersLayerPainter extends LayerPainter {

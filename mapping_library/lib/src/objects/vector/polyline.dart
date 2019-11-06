@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/src/layers/vector/markergeopoint.dart';
-import '../../layers/markers/renderers/pointmarkerrenderer.dart';
-import '../../layers/markers/pointmarker.dart';
-import '../../layers/markers/markers.dart';
-import '../../layers/vector/geombase.dart';
+import '../../objects/vector/markergeopoint.dart';
+import '../../objects/markers/renderers/pointmarkerrenderer.dart';
+import '../../objects/markers/pointmarker.dart';
+import '../../objects/markers/markers.dart';
+import '../../objects/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
 import '../../utils/geopoint.dart' as gp;

@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../utils/boundingbox.dart';
-import '../../layers/vector/geombase.dart';
+import '../../objects/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
 import '../../utils/geopoint.dart';

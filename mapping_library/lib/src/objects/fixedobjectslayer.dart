@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:mapping_library/mapping_library.dart';
-import 'package:mapping_library/src/layers/fixedobject/fixedobject.dart';
-import 'package:mapping_library/src/layers/fixedobject/fixedobjects.dart';
+import './fixedobject/fixedobject.dart';
+import './fixedobject/fixedobjects.dart';
+import 'layer.dart';
 
 class FixedObjectsLayer extends Layer {
   FixedObjectsLayer() {
