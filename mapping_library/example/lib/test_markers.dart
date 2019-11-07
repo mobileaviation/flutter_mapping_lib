@@ -4,7 +4,7 @@ import 'package:mapping_library/mapping_library.dart';
 
 /// Add a default marker to the map. The location is in the middle of the
 /// Netherlands near the town of Harderwijk
-void addDefaultMarker(MarkersLayer markersLayer) {
+Markers _addDefaultMarker(Markers markers) {
   GeoPoint t = new GeoPoint(52.383063, 5.556776);
   // The default marker implementation will show a "Default" droplet marker icon
   // in different custom choseable colors
@@ -22,13 +22,14 @@ void addDefaultMarker(MarkersLayer markersLayer) {
   marker2.name = "Marker2";
   // draw order of the markers is the order they are added to the layer. First
   // added is bottom. Last added is top.
-  markersLayer.addMarker(marker2);
+  markers.add(marker2);
+  return markers;
 }
 
 /// Add the custom rendered marker (two purple circles) to the map
 /// The location is in the middle of the Netherlands, on top of
 /// Lelystad airport.
-void addSimpleMarker(MarkersLayer markersLayer) {
+Markers _addSimpleMarker(Markers markers) {
   GeoPoint s = new GeoPoint(52.45657243868931, 5.52041338863477);
   SimpleMarkerRenderer drawer = new SimpleMarkerRenderer();
   SimpleMarker marker = new SimpleMarker(drawer, Size(100, 100), s);
@@ -37,12 +38,13 @@ void addSimpleMarker(MarkersLayer markersLayer) {
   // create your own custom marker implementation..
   marker.name = "Marker1";
   marker.rotation = 45;
-  markersLayer.addMarker(marker);
+  markers.add(marker);
+  return markers;
 }
 
 /// Add a image Marker to the map.
 /// The image is loaded (png) from the local storage of the device
-void addImageMarker(MarkersLayer markersLayer) {
+Markers _addImageMarker(Markers markers) {
   // This location is in the Netherlands above the Markermeer
   GeoPoint s = new GeoPoint(52.571921, 5.123513);
   // Create the ImageMarkerRenderer
@@ -57,5 +59,13 @@ void addImageMarker(MarkersLayer markersLayer) {
   marker.name = "ImageMarker1";
   marker.dragable = true;
   marker.rotation = 90;
-  markersLayer.addMarker(marker);
+  markers.add(marker);
+  return markers;
+}
+
+Markers getMarkers(Markers markers) {
+  _addDefaultMarker(markers);
+  _addImageMarker(markers);
+  _addSimpleMarker(markers);
+  return markers;
 }

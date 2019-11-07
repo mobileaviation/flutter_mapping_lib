@@ -1,100 +1,74 @@
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
-import '../utils/geopoint.dart';
-import '../utils/mapposition.dart';
-import '../objects/layer.dart';
-import '../objects/layerpainter.dart';
 import 'mapviewgestures.dart';
-import 'mapviewport.dart' as mapViewport;
+import 'package:mapping_library/src/core/mapviewport.dart';
+import '../layers/layer.dart';
+import '../layers/layers.dart';
+import 'package:mapping_library/src/utils/mapposition.dart';
 
-class MapView extends StatefulWidget {
-  MapView(this.mapReady) {
-    this._createLayerPainter();
-    this._mapCenterPosition = MapPosition.fromDegZoom(0, 0, 5);
-  }
-
-  MapView.fromMapPosition(this.mapReady, MapPosition mapPosition) {
-    this._createLayerPainter();
-    this._mapCenterPosition = mapPosition;
-  }
-
-  MapView.create(Key key, this.mapReady, MapPosition mapPosition)
+class Mapview extends StatefulWidget {
+  Mapview({Key, key, Layers layers, MapPosition mapPosition})
       : super(key: key) {
-    this._createLayerPainter();
-    this._mapCenterPosition = mapPosition;
-  }
-
-  final void Function(MapView) mapReady;
-  bool initialized = false;
-
-  void Function(GeoPoint) mapClicked;
-
-  void Function(mapViewport.MapViewport viewport) mapPositionChanged;
-
-  _createLayerPainter() {
-    layerPainter = LayerPainter();
-  }
-
-  setupViewPort(Size size) {
-    _widgetSize = size;
-    if (viewport == null) {
-      viewport = new mapViewport.MapViewport(_widgetSize, _mapCenterPosition);
-    }
-    viewport.setMapPositionSize(_widgetSize, _mapCenterPosition);
+    _layers = layers;
+    _layers.updatedLayer = _layerUpdated;
+    _mapPosition = mapPosition;
+    _size = Size.square(1000);
+    _mapViewport = MapViewport(_size, _mapPosition);
+    _gestures = MapViewGestures(this, _layers);
+    _layers.mapViewPort = _mapViewport;
+    _layers.notifyChildren(true);
   }
 
   @override
-  MapViewGestures createState() => MapViewGestures();
+  _MapviewState createState() => _MapviewState();
 
-  LayerPainter layerPainter;
-  MapPosition _mapCenterPosition;
-  Size _widgetSize;
-  mapViewport.MapViewport viewport;
-  int zoomMin = 4;
-  int zoomMax = 20;
+  Layers _layers;
 
-  void setMapPosition(MapPosition mapPosition) {
-    if (mapPosition.getZoom() < zoomMin.toDouble() - 0.9)
-      mapPosition.setZoom(zoomMin.toDouble() - 0.9);
-    if (mapPosition.getZoom() > zoomMax.toDouble() + 0.9)
-      mapPosition.setZoom(zoomMax.toDouble() + 0.9);
-    if (initialized) {
-      _mapCenterPosition = mapPosition;
-      setupViewPort(_widgetSize);
-      _notifyLayers();
-      if (mapPositionChanged != null) {
-        mapPositionChanged(viewport);
-      }
-    } else
-      _throwNotInitializedException();
+  Size _size;
+  Size get size => _size;
+
+  MapPosition _mapPosition;
+  MapPosition get mapPosition => _mapPosition;
+  set mapPosition(value) {
+    _mapPosition = value;
+    _mapViewport.setMapPosition(_mapPosition);
+    _layers.mapViewPort = _mapViewport;
+    _layers.notifyChildren(true);
   }
 
-  void updateMap() {
-    _notifyLayers();
+  MapViewport _mapViewport;
+  MapViewport get mapViewport => _mapViewport;
+
+  MapViewGestures _gestures;
+
+  void _layerUpdated(Layer updatedLayer) {
+    //log("Layer (${updatedLayer.name}) Updated ${updatedLayer.size.toString()}");
+    _changeSize(updatedLayer.size);
   }
 
-  MapPosition getMapPosition() {
-    return _mapCenterPosition;
+  void _changeSize(Size size) {
+    if ((size.width != _size.width) || (size.height != _size.height)) {
+      _size = size;
+      _mapViewport.setMapSize(_size);
+      _layers.notifyChildren(true);
+    }
   }
+}
 
-  void addLayer(Layer layer) {
-    if (initialized) {
-      layerPainter.addLayer(layer);
-      layerPainter.notifyLayers(_mapCenterPosition, viewport);
-      log("MapView: AddLayer");
-    } else
-      _throwNotInitializedException();
-  }
-
-  void _notifyLayers() {
-    if (initialized)
-      layerPainter.notifyLayers(_mapCenterPosition, viewport);
-    else
-      _throwNotInitializedException();
-  }
-
-  void _throwNotInitializedException() {
-    throw Exception(
-        "Map is not initialized yet. Use 'mapReady' for further processing.");
+class _MapviewState extends State<Mapview> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: GestureDetector (
+        child: widget._layers,
+        behavior: HitTestBehavior.translucent,
+        onTapUp: widget._gestures.mapTap,
+        onScaleStart: widget._gestures.mapScaleStart,
+        onScaleUpdate: widget._gestures.mapScaleUpdate,
+        onLongPressStart: widget._gestures.mapLongPressStart,
+        onLongPressMoveUpdate: widget._gestures.mapLongPressMoveUpdate,
+        onLongPressEnd: widget._gestures.mapLongPressEnd,
+      ),
+    );
   }
 }

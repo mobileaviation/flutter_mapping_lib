@@ -14,7 +14,7 @@ import 'package:mapping_library/src/layers/layers.dart';
 import 'package:mapping_library/src/utils/mapposition.dart';
 import 'package:mapping_library/src/utils/geopoint.dart';
 import 'package:mapping_library/src/utils/geopoints.dart';
-import 'package:mapping_library/src/layers/mapview.dart';
+import 'package:mapping_library/src/core/mapview.dart';
 import 'package:mapping_library/src/layers/tilelayer.dart';
 import 'package:mapping_library/src/layers/fixedobjectlayer.dart';
 import 'package:mapping_library/src/layers/markerslayer.dart';

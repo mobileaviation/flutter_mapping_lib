@@ -1,89 +1,81 @@
 import 'dart:developer';
 import 'dart:math' as math;
-import 'package:mapping_library/mapping_library.dart';
-
-import '../utils/geopoint.dart';
-import '../utils/mapposition.dart';
-import '../utils/mercatorprojection.dart' as MercatorProjection;
-import 'mapviewstatebase.dart';
 import 'package:flutter/widgets.dart';
-import 'mapviewport.dart' as viewPort;
+import 'package:mapping_library/src/core/mapviewport.dart';
+import 'mapview.dart';
+import 'package:mapping_library/src/utils/geopoint.dart';
+import 'package:mapping_library/src/utils/mapposition.dart';
+import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
+import '../layers/layers.dart';
+import '../layers/layer.dart';
 
-class MapViewGestures extends MapViewStateBase {
-  viewPort.MapViewport _dragViewport;
+class MapViewGestures {
+  MapViewGestures(this._mapview, this._layers);
+
+  Mapview _mapview;
+  Layers _layers;
+
+  MapViewport _dragViewport;
   Offset _touchedOffset;
   double _scale;
 
-  _mapScaleStart(ScaleStartDetails scaleStartDetails) {
-    _touchedOffset = Offset(scaleStartDetails.localFocalPoint.dx,
-        scaleStartDetails.localFocalPoint.dy);
-    _dragViewport = viewPort.MapViewport.fromViewport(widget.viewport);
-    _scale = widget.getMapPosition().getScale();
+  mapTap(TapUpDetails tapUpdetails) {
+    GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
+        tapUpdetails.localPosition.dx, tapUpdetails.localPosition.dy));
+
+    for (Layer layer in _layers.children) {
+      layer.doTabCheck(tp, tapUpdetails.localPosition);
+    }
+
+    //if (widget.mapClicked != null) widget.mapClicked(tp);
+    log("Layer Tapped: ${tapUpdetails.localPosition.toString()} : Geopoint: ${tp.toString()}" );
   }
 
-  _mapScaleUpdate(ScaleUpdateDetails scaleUpdateDetails) {
+  mapScaleStart(ScaleStartDetails scaleStartDetails) {
+    _touchedOffset = Offset(scaleStartDetails.localFocalPoint.dx,
+        scaleStartDetails.localFocalPoint.dy);
+    _dragViewport = MapViewport.fromViewport(_mapview.mapViewport);
+    _scale = _mapview.mapPosition.getScale();
+  }
+
+  mapScaleUpdate(ScaleUpdateDetails scaleUpdateDetails) {
     GeoPoint newCenterPoint = _dragViewport.getNewCenterGeopointForDragPosition(
         _touchedOffset, scaleUpdateDetails.localFocalPoint);
     MapPosition newMapPosition =
-        MapPosition.fromGeopointScale(newCenterPoint, _scale);
+    MapPosition.fromGeopointScale(newCenterPoint, _scale);
 
     double s = MercatorProjection.zoomLevelToScaleD(
         newMapPosition.getZoom() + (scaleUpdateDetails.scale - 1));
     newMapPosition = newMapPosition.setScale(s);
 
-    widget.setMapPosition(newMapPosition);
+    _mapview.mapPosition = newMapPosition;
   }
 
-  _mapScaleEnd(ScaleEndDetails scaleEndDetails) {
-    //log("ScaleEndDetails " + scaleEndDetails.toString());
-  }
-
-  _mapTap(TapUpDetails tapUpDetails) {
-    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
-        tapUpDetails.localPosition.dx, tapUpDetails.localPosition.dy));
-    widget.layerPainter.doLayerTabCheck(tp, tapUpDetails.localPosition);
-    if (widget.mapClicked != null) widget.mapClicked(tp);
-    log("MapTab: " + tp.toString());
-  }
-
-  _mapLongPressStart(LongPressStartDetails longPressStartDetails) {
+  mapLongPressStart(LongPressStartDetails longPressStartDetails) {
     Offset s = longPressStartDetails.localPosition;
-    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+    GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    widget.layerPainter.dragStart(tp, s);
+    for (Layer layer in _layers.children) {
+      layer.dragStart(tp, s);
+    }
   }
 
-  _mapLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
+  mapLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
     Offset s = details.localPosition;
-    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+    GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    widget.layerPainter.drag(tp, s);
+    for (Layer layer in _layers.children) {
+      layer.drag(tp, s);
+    }
   }
 
-  _mapLongPressEnd(LongPressEndDetails details) {
+  mapLongPressEnd(LongPressEndDetails details) {
     Offset s = details.localPosition;
-    GeoPoint tp = widget.viewport.getGeopointForScreenPosition(new math.Point(
+    GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    widget.layerPainter.dragEnd(tp, s);
+    for (Layer layer in _layers.children) {
+      layer.dragEnd(tp, s);
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    CustomPaint p = super.build(context);
-
-    GestureDetector gestureDetector = new GestureDetector(
-      child: p,
-      onScaleStart: _mapScaleStart,
-      onScaleUpdate: _mapScaleUpdate,
-      onScaleEnd: _mapScaleEnd,
-      onTapUp: _mapTap,
-      onLongPressStart: _mapLongPressStart,
-      onLongPressMoveUpdate: _mapLongPressMoveUpdate,
-      onLongPressEnd: _mapLongPressEnd,
-
-      behavior: HitTestBehavior.translucent,
-    );
-
-    return Container(child: gestureDetector);
-  }
 }
