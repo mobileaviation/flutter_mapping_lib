@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/values.dart' as values;
 import '../../objects/overlay/overlayimage.dart';
 import '../overlaylayer.dart';
-import 'layerpainter.dart';
-import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
+import 'layerpainterbase.dart';
 
-class OverlayLayerPainter extends LayerPainter {
+class OverlayLayerPainter extends LayerPainterBase {
 
   @override
   void paint(Canvas canvas, Size size) {

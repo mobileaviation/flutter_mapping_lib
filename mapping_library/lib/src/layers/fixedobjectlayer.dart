@@ -7,7 +7,8 @@ import 'painters/fixedobjectlayerpainter.dart';
 class FixedObjectLayer extends Layer {
   FixedObjectLayer({Key key,
     FixedObject fixedObject,
-    String name}) : super(key) {
+    String name})// : super(key)
+  {
 
     this.fixedObject = fixedObject;
     layerPainter = FixedObjectLayerPainter();

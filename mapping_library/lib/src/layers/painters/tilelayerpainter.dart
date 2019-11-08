@@ -1,12 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/values.dart' as values;
-import 'layerpainter.dart';
+import 'layerpainterbase.dart';
 import '../tilelayer.dart';
 import 'package:mapping_library/src/tiles/tile.dart';
 import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
 
-class TileLayerPainter extends LayerPainter {
+class TileLayerPainter extends LayerPainterBase {
 
   @override
   void paint(Canvas canvas, Size size) {

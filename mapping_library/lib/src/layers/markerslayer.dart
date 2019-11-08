@@ -7,13 +7,14 @@ import '../objects/markers/markers.dart';
 import '../utils/geopoint.dart';
 import 'layer.dart';
 import 'painters/markerslayerpainter.dart';
+import 'painters/layerpainter.dart';
 
 class MarkersLayer extends Layer {
   MarkersLayer({Key key,
     Markers markers,
     Function(MarkerBase marker) markerSelected,
-    String name}) : super(key) {
-
+    String name}) // : super(key)
+  {
     this.markers = markers;
     _setMarkersUpdateListener();
 
@@ -35,13 +36,14 @@ class MarkersLayer extends Layer {
     }
   }
 
-  _setup(MapViewport viewport) {
+  _setup(MapViewport viewport) async {
     for (MarkerBase marker in markers) {
       marker.calculatePixelPosition(viewport, viewport.mapPosition);
-      marker.doDraw().then((image) {
-        layerPainter.redraw();
-      });
+      await marker.doDraw();//.then((image) {
+//        redrawPainter();
+//      });
     }
+    redrawPainter();
   }
 
   void _markerUpdated(MarkerBase marker) {

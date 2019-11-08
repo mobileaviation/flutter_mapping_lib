@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import '../../objects/markers/markerbase.dart';
 import '../markerslayer.dart';
-import 'layerpainter.dart';
+import 'layerpainterbase.dart';
 
-class MarkersLayerPainter extends LayerPainter {
+class MarkersLayerPainter extends LayerPainterBase {
 
   @override
   void paint(Canvas canvas, Size size) {

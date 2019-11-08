@@ -1,15 +1,17 @@
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
+import 'package:mapping_library/src/layers/painters/layerpainter.dart';
 import 'package:mapping_library/src/utils/geopoint.dart';
-import 'painters/layerpainter.dart';
+import 'painters/layerpainterbase.dart';
 import 'painters/testlayerpainter.dart';
 
 class TestLayer extends Layer {
   TestLayer({Key key, Color backgroundColor,
       Size backgroundSize,
       Offset backgroundOffset,
-      String name}) : super(key) {
+      String name})// : super(key)
+  {
     layerPainter = TestLayerPainter();
     layerPainter.layer = this;
     bgColor = backgroundColor;
@@ -36,21 +38,15 @@ class TestLayer extends Layer {
   notifyLayer(MapViewport viewport, bool mapChanged) {
     super.notifyLayer(viewport, mapChanged);
   }
-
 }
 
-class Layer extends StatelessWidget {
-  Layer(Key key) : super(key: key);
-
-  LayerPainter layerPainter;
+class Layer {
+  LayerPainterBase layerPainter;
+  LayerPainter painter;
 
   String _name;
   set name(value) {_name = value; }
   String get name => _name;
-
-  Size _size;
-  set size(value) {_size = value; }
-  get size { return _size; }
 
   MapViewport _mapViewport;
   MapViewport get mapViewPort => _mapViewport;
@@ -61,6 +57,11 @@ class Layer extends StatelessWidget {
   set layerUpdated(value) { _layerUpdated = value; }
   Function(Layer layer) get layerUpdated => _layerUpdated;
   Function(Layer layer) _layerUpdated;
+
+  redrawPainter() {
+    if (painter != null)
+      painter.redraw();
+  }
 
   notifyLayer(MapViewport viewport, bool mapChanged) {
     _mapViewport = viewport;
@@ -73,15 +74,4 @@ class Layer extends StatelessWidget {
   void drag(GeoPoint clickedPosition, Offset screenPos) {}
 
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {}
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: CustomPaint(
-          painter: layerPainter,
-        ),
-      height: double.infinity,
-      width: double.infinity,
-    );
-  }
 }

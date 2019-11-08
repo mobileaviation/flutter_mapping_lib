@@ -11,7 +11,8 @@ import 'painters/tilelayerpainter.dart';
 class TilesLayer extends Layer {
   TilesLayer({Key key,
     TileSource tileSource,
-    String name}) : super(key) {
+    String name})// : super(key)
+  {
     source = tileSource;
     layerPainter = TileLayerPainter();
     layerPainter.layer = this;
@@ -44,7 +45,8 @@ class TilesLayer extends Layer {
         t.calcScreenPosition(viewport, viewport.mapPosition);
         t.retrieveImage(source).then((i) {
           layerPainter.doRedraw = true;
-          layerPainter.redraw();
+          redrawPainter();
+
         });
         _tiles[t.tileId] = t;
       }

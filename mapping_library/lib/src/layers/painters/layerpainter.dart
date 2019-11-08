@@ -1,10 +1,20 @@
+import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/widgets.dart';
+import 'package:mapping_library/src/layers/layers.dart';
 import '../layer.dart';
 
 class LayerPainter extends ChangeNotifier implements CustomPainter {
-  Layer layer;
+  LayerPainter() : super() {
+    _setupFrameTimer();
+  }
+
+  _setupFrameTimer() {
+    _notifyTimer = Timer.periodic(Duration(milliseconds: 40), _notifyListeners);
+  }
+
+  Layers layers;
+  Timer _notifyTimer;
 
   @override
   bool hitTest(Offset position) {
@@ -13,22 +23,25 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    layer.size = size;
-    layer.mapViewPort.setMapSize(size);
-    layer.layerUpdated(layer);
+    _doRedraw = false;
+    for (Layer l in layers.layers) {
+      l.painter = this;
+      l.layerPainter.paint(canvas, size);
+    }
+    layers.mapViewPort.setMapSize(size);
+    layers.size = size;
   }
 
+  bool _doRedraw = false;
   void redraw() {
-    notifyListeners();
+    _doRedraw = true;
   }
 
-  bool _doRedraw = true;
-  bool get doRedraw => _doRedraw;
-  set doRedraw(bool value) { _doRedraw = value; }
-
-  Picture _layerPicture;
-  Picture get layerPicture => _layerPicture;
-  set layerPicture(Picture value) { _layerPicture = value; }
+  void _notifyListeners(Timer t) {
+    if (_doRedraw) {
+      notifyListeners();
+    }
+  }
 
   @override
   // TODO: implement semanticsBuilder
@@ -37,13 +50,13 @@ class LayerPainter extends ChangeNotifier implements CustomPainter {
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) {
     // TODO: implement shouldRebuildSemantics
-    return false;
+    return true;
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     // TODO: implement shouldRepaint
-    return false;
+    return true;
   }
 
 

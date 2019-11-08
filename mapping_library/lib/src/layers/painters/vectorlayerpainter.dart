@@ -2,10 +2,10 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import '../../objects/vector/geombase.dart';
 import '../vectorlayer.dart';
-import 'layerpainter.dart';
+import 'layerpainterbase.dart';
 import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
 
-class VectorLayerPainter extends LayerPainter {
+class VectorLayerPainter extends LayerPainterBase {
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -37,7 +37,7 @@ Markers _addSimpleMarker(Markers markers) {
   // Checkout the implementation of SimpleMarker and SimpleMarkerRenderer to
   // create your own custom marker implementation..
   marker.name = "Marker1";
-  marker.rotation = 45;
+  marker.rotation = 24;
   markers.add(marker);
   return markers;
 }
@@ -58,7 +58,7 @@ Markers _addImageMarker(Markers markers) {
   ImageMarker marker = ImageMarker(drawer, null, s, File(file));
   marker.name = "ImageMarker1";
   marker.dragable = true;
-  marker.rotation = 90;
+  marker.rotation = 67;
   markers.add(marker);
   return markers;
 }

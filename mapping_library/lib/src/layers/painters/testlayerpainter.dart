@@ -1,7 +1,7 @@
 import 'dart:ui';
-import 'layerpainter.dart';
+import 'layerpainterbase.dart';
 
-class TestLayerPainter extends LayerPainter {
+class TestLayerPainter extends LayerPainterBase {
 
   Color backgroundColor;
   Size blockSize;

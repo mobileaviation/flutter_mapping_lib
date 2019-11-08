@@ -27,16 +27,23 @@ class MarkerBase {
   }
 
   Future<Image> _drawMarker() async {
-    var pictureRec = PictureRecorder();
-    Canvas c = Canvas(pictureRec);
-    _calcPivotPoint();
-    c.translate(_pivotPoint.x, _pivotPoint.y);
-    c.rotate(toRadians(_rotation));
-    c.translate(-_pivotPoint.x, -_pivotPoint.y);
-    c.drawImage(markerImage, Offset.zero, Paint());
-    return await pictureRec.endRecording().toImage(markerSize.width.floor(),
-        markerSize.height.floor());
+    if (_doDrawMarker) {
+      _doDrawMarker = false;
+      var pictureRec = PictureRecorder();
+      Canvas c = Canvas(pictureRec);
+      _calcPivotPoint();
+      c.translate(_pivotPoint.x, _pivotPoint.y);
+      c.rotate(toRadians(_rotation));
+      c.translate(-_pivotPoint.x, -_pivotPoint.y);
+      c.drawImage(markerImage, Offset.zero, Paint());
+      _localMarkerImage =
+      await pictureRec.endRecording().toImage(markerSize.width.floor(),
+          markerSize.height.floor());
+    }
+    return await _localMarkerImage;
   }
+
+  Image _localMarkerImage;
 
   void paint(Canvas canvas) {
     if (_visible) {
@@ -99,11 +106,13 @@ class MarkerBase {
     return _boundingBox;
   }
 
+  bool _doDrawMarker = true;
   double _rotation;
   get rotation {
     return _rotation;
   }
   set rotation(double value) {
+    _doDrawMarker = true;
     _rotation = value;
     _calcBoundingBox(_scale);
     fireUpdatedMarker();

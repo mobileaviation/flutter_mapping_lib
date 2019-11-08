@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import '../fixedobjectlayer.dart';
-import 'layerpainter.dart';
+import 'layerpainterbase.dart';
 
-class FixedObjectLayerPainter extends LayerPainter {
+class FixedObjectLayerPainter extends LayerPainterBase {
 
   @override
   void paint(Canvas canvas, Size size) {

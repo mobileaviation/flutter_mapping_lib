@@ -111,7 +111,7 @@ class _MappingPageState extends State<MappingHomePage> {
               zoomLevel: 10,
             ),
             layers: Layers(
-              children: <Widget>[
+              layers: <Layer>[
                 TilesLayer(
                   //tileSource: HttpTileSource("http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
 
@@ -133,11 +133,11 @@ class _MappingPageState extends State<MappingHomePage> {
                   name: "Markers Layer",
                   markerSelected: _markerSelected,
                 ),
-                VectorLayer(
-                  vectors: getVectors(Vectors()),
-                  name: "Vectors Layer",
-                  vectorSelected: _vectorSelected,
-                )
+//                VectorLayer(
+//                  vectors: getVectors(Vectors()),
+//                  name: "Vectors Layer",
+//                  vectorSelected: _vectorSelected,
+//                )
               ],
             )
         )

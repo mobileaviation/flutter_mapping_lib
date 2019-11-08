@@ -23,7 +23,7 @@ class MapViewGestures {
     GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         tapUpdetails.localPosition.dx, tapUpdetails.localPosition.dy));
 
-    for (Layer layer in _layers.children) {
+    for (Layer layer in _layers.layers) {
       layer.doTabCheck(tp, tapUpdetails.localPosition);
     }
 
@@ -55,7 +55,7 @@ class MapViewGestures {
     Offset s = longPressStartDetails.localPosition;
     GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    for (Layer layer in _layers.children) {
+    for (Layer layer in _layers.layers) {
       layer.dragStart(tp, s);
     }
   }
@@ -64,7 +64,7 @@ class MapViewGestures {
     Offset s = details.localPosition;
     GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    for (Layer layer in _layers.children) {
+    for (Layer layer in _layers.layers) {
       layer.drag(tp, s);
     }
   }
@@ -73,7 +73,7 @@ class MapViewGestures {
     Offset s = details.localPosition;
     GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
         s.dx, s.dy));
-    for (Layer layer in _layers.children) {
+    for (Layer layer in _layers.layers) {
       layer.dragEnd(tp, s);
     }
   }

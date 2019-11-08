@@ -9,7 +9,8 @@ import 'painters/overlaylayerpainter.dart';
 class OverlayLayer extends Layer {
   OverlayLayer({Key key,
     OverlayImages overlayImages,
-    String name}) : super(key) {
+    String name})// : super(key)
+  {
 
     layerPainter = OverlayLayerPainter();
     layerPainter.layer = this;
@@ -32,7 +33,7 @@ class OverlayLayer extends Layer {
     for (OverlayImage image in overlayImages) {
       image.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
       image.getImage().then((image) {
-        layerPainter.redraw();
+        redrawPainter();
       });
     }
   }

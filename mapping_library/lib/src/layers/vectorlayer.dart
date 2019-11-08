@@ -14,7 +14,8 @@ class VectorLayer extends Layer {
   VectorLayer({Key key,
     Vectors vectors,
     Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected,
-    String name}) : super(key) {
+    String name}) //: super(key)
+  {
 
     layerPainter = VectorLayerPainter();
     layerPainter.layer = this;
@@ -46,7 +47,7 @@ class VectorLayer extends Layer {
 
   void _vectorUpdated(GeomBase vector) {
     notifyLayer(mapViewPort, true);
-    layerPainter.redraw();
+    redrawPainter();
   }
 
   @override
@@ -96,7 +97,7 @@ class VectorLayer extends Layer {
                     point, clickedPosition);
                 _fireVectorSelected(vector, clickedPosition);
                 notifyLayer(mapViewPort, true);
-                layerPainter.redraw();
+                redrawPainter();
                 break;
               }
             }
@@ -118,7 +119,7 @@ class VectorLayer extends Layer {
       _draggingVector.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
       if (pointDrag != null) pointDrag(_dragginPoint, tp);
       notifyLayer(mapViewPort, true);
-      layerPainter.redraw();
+      redrawPainter();
     }
   }
 
@@ -130,7 +131,7 @@ class VectorLayer extends Layer {
       _dragginOffset = null;
       _dragginPoint = null;
       notifyLayer(mapViewPort, true);
-      layerPainter.redraw();
+      redrawPainter();
     }
   }
 
