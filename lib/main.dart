@@ -11,6 +11,7 @@ import 'package:mapping_library/src/objects/vector/polyline.dart';
 import 'package:mapping_library/src/objects/vector/vectors.dart';
 import 'package:mapping_library/src/tiles/sources/httptilesource.dart';
 import 'package:mapping_library/src/layers/layers.dart';
+import 'package:mapping_library/src/layers/layer.dart';
 import 'package:mapping_library/src/utils/mapposition.dart';
 import 'package:mapping_library/src/utils/geopoint.dart';
 import 'package:mapping_library/src/utils/geopoints.dart';
@@ -164,7 +165,7 @@ class MyApp extends StatelessWidget {
                   zoomLevel: 10,
                 ),
                 layers: Layers(
-                  children: <Widget>[
+                  layers: <Layer>[
                     TilesLayer(
                       tileSource: HttpTileSource("http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
                       name: "TilesLayer",

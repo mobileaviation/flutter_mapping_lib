@@ -16,7 +16,6 @@ class VectorLayer extends Layer {
     Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected,
     String name}) //: super(key)
   {
-
     layerPainter = VectorLayerPainter();
     layerPainter.layer = this;
 
@@ -84,21 +83,24 @@ class VectorLayer extends Layer {
     for (GeomBase vector in vectors) {
       if (_checkVector(vector, clickedPosition, screenPos)) {
         if (vector is Polyline) {
-          // Found a polyline, Now check for markers on this line
-          _draggingVector = vector;
-          for (MarkerGeopoint point in (vector as Polyline).points) {
-            if (point.marker.dragable) {
-              if (point.marker.markerSelectedByScreenPos(screenPos)) {
-                point.marker.selected = true;
-                _dragginPoint = point;
-                _dragginOffset = Offset(screenPos.dx - point.marker.drawingPoint.x,
-                    screenPos.dy - point.marker.drawingPoint.y);
-                if (pointDragStart != null) pointDragStart(
-                    point, clickedPosition);
-                _fireVectorSelected(vector, clickedPosition);
-                notifyLayer(mapViewPort, true);
-                redrawPainter();
-                break;
+          if ((vector as Polyline).drawMarkers) {
+            // Found a polyline, Now check for markers on this line
+            _draggingVector = vector;
+            for (MarkerGeopoint point in (vector as Polyline).points) {
+              if (point.marker.dragable) {
+                if (point.marker.markerSelectedByScreenPos(screenPos)) {
+                  point.marker.selected = true;
+                  _dragginPoint = point;
+                  _dragginOffset =
+                      Offset(screenPos.dx - point.marker.drawingPoint.x,
+                          screenPos.dy - point.marker.drawingPoint.y);
+                  if (pointDragStart != null) pointDragStart(
+                      point, clickedPosition);
+                  _fireVectorSelected(vector, clickedPosition);
+                  notifyLayer(mapViewPort, true);
+                  redrawPainter();
+                  break;
+                }
               }
             }
           }

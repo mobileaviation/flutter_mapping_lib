@@ -92,6 +92,10 @@ class CachedHttpTileSource extends HttpTileSource {
 
   @override
   Future<TileImage> getTileImage(Tile tile) async {
+    if (!_databaseOpen) {
+      String path = await _getDatabasePath(_name);
+      await _openDatabase(path);
+    }
     if (_databaseOpen) {
       var dbimage = await _getImageFromCache(tile);
       if (dbimage != null) {

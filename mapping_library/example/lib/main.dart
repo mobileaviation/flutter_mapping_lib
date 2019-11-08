@@ -114,9 +114,7 @@ class _MappingPageState extends State<MappingHomePage> {
               layers: <Layer>[
                 TilesLayer(
                   //tileSource: HttpTileSource("http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
-
                   tileSource: HttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png"),
-                  //https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/512/latest/8/131/83.png
                   name: "Tiles Layer",
                 ),
                 OverlayLayer(
@@ -133,11 +131,11 @@ class _MappingPageState extends State<MappingHomePage> {
                   name: "Markers Layer",
                   markerSelected: _markerSelected,
                 ),
-//                VectorLayer(
-//                  vectors: getVectors(Vectors()),
-//                  name: "Vectors Layer",
-//                  vectorSelected: _vectorSelected,
-//                )
+                VectorLayer(
+                  vectors: getVectors(Vectors()),
+                  name: "Vectors Layer",
+                  vectorSelected: _vectorSelected,
+                )
               ],
             )
         )

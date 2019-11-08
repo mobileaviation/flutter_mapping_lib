@@ -12,9 +12,4 @@ class FixedObjectLayerPainter extends LayerPainterBase {
     FixedObjectLayer fixedObjectLayer = layer as FixedObjectLayer;
     fixedObjectLayer.fixedObject.paint(canvas);
   }
-
-  @override
-  void redraw() {
-    super.redraw();
-  }
 }

@@ -46,9 +46,4 @@ class TileLayerPainter extends LayerPainterBase {
 
     canvas.drawPicture(layerPicture);
   }
-
-  @override
-  void redraw() {
-    super.redraw();
-  }
 }

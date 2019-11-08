@@ -34,6 +34,7 @@ GeomBase _testPolyLineUpdate() {
   l.borderColor = Colors.black;
   l.borderWidth = 2;
   l.name = "Updating polyline";
+  l.drawMarkers = true;
 
   // This will add a sections of the line every second
   Timer.periodic(new Duration(seconds: 1), (Timer t) {

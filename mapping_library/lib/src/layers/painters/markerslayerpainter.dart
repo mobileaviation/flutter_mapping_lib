@@ -18,9 +18,4 @@ class MarkersLayerPainter extends LayerPainterBase {
       }
     }
   }
-
-  @override
-  void redraw() {
-    super.redraw();
-  }
 }

@@ -19,9 +19,4 @@ class VectorLayerPainter extends LayerPainterBase {
       }
     }
   }
-
-  @override
-  void redraw() {
-    super.redraw();
-  }
 }

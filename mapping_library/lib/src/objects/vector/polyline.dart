@@ -25,7 +25,7 @@ class Polyline extends GeomBase {
   }
 
   GeoPoints _points;
-  get points { return _points; }
+  GeoPoints get points { return _points; }
   Markers _pointMarkers;
   List<Offset> _drawPoints;
   PointMarkerRenderer _markerDrawer;
@@ -34,28 +34,25 @@ class Polyline extends GeomBase {
   int _borderWidth = 0;
   int _borderLineWidth = 5;
   Color _borderColor;
+  bool _drawMarkers = true;
 
-  get borderColor {
-    return _borderColor;
-  }
+  bool get drawMarkers => _drawMarkers;
+  set drawMarkers (bool value) { _drawMarkers = value; }
 
+  Color get borderColor => _borderColor;
   set borderColor(Color value) {
     _borderColor = value;
     _setupPaints();
   }
 
-  get borderWidth {
-    return _borderWidth;
-  }
+  int get borderWidth => _borderWidth;
 
   set borderWidth(int value) {
     _borderWidth = value;
     _setupPaints();
   }
 
-  get lineWidth {
-    return _lineWidth;
-  }
+  int get lineWidth => _lineWidth;
 
   set lineWidth(int value) {
     _lineWidth = value;
@@ -126,18 +123,19 @@ class Polyline extends GeomBase {
       p.addPolygon(_drawPoints, false);
       canvas.drawPath(p, geomPaint);
 
-      for (MarkerGeopoint geopoint in _points) {
-        geopoint.marker.paint(canvas);
-      }
+      if (_drawMarkers)
+        for (MarkerGeopoint geopoint in _points) {
+          geopoint.marker.paint(canvas);
+        }
     }
   }
 
   @override
-  calculatePixelPosition(vp.MapViewport viewport, MapPosition mapPosition) {
+  calculatePixelPosition(vp.MapViewport viewport, MapPosition mapPosition) async {
     _calculateDrawPositions(viewport, mapPosition);
   }
 
-  _calculateDrawPositions(vp.MapViewport viewport, MapPosition mapPosition) {
+  _calculateDrawPositions(vp.MapViewport viewport, MapPosition mapPosition) async {
     int mapSize = MercatorProjection.getMapSize(mapPosition.zoomLevel);
     math.Point centerPixels =
         MercatorProjection.getPixel(mapPosition.getGeoPoint(), mapSize);

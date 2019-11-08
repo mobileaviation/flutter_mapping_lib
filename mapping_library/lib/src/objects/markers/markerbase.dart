@@ -223,6 +223,7 @@ class MarkerBase {
   }
 
   bool markerSelectedByScreenPos(Offset screenPos) {
+    if (markerSize == null) return false;
     Offset drawPoint = new Offset(
         ((drawingPoint.x - pivotPoint.x) + (markerSize.width / 2)),
         ((drawingPoint.y - pivotPoint.y) + (markerSize.height / 2)));

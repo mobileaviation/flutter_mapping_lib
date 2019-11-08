@@ -17,9 +17,4 @@ class OverlayLayerPainter extends LayerPainterBase {
       }
     }
   }
-
-  @override
-  void redraw() {
-    super.redraw();
-  }
 }
