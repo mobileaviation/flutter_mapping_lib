@@ -114,7 +114,10 @@ class _MappingPageState extends State<MappingHomePage> {
               layers: <Layer>[
                 TilesLayer(
                   //tileSource: HttpTileSource("http://c.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
-                  tileSource: HttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png"),
+                  //tileSource: HttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png"),
+                  //tileSource: CachedHttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png",
+                  //  "Openflightmaps1912"),
+                  tileSource: OpenFlightMapsTileSource.create(),
                   name: "Tiles Layer",
                 ),
                 OverlayLayer(

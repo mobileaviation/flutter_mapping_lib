@@ -32,11 +32,12 @@ class CachedHttpTileSource extends HttpTileSource {
   Function _onDBOpened;
 
   Future<Database> _openDatabase(String path) async {
-    return await openDatabase(path,
+    _db = await openDatabase(path,
         version: _dbversion,
         onCreate: _onCreate,
         onOpen: _onOpen,
         onUpgrade: _onUpgrade);
+    return await _db;
   }
 
   _onCreate(Database db, int version) async {
@@ -52,7 +53,7 @@ class CachedHttpTileSource extends HttpTileSource {
   _onOpen(Database db) {
     _db = db;
     _databaseOpen = true;
-    _onDBOpened();
+    if (_onDBOpened != null)_onDBOpened();
     log("Tilescache Database opened");
   }
 
@@ -95,6 +96,7 @@ class CachedHttpTileSource extends HttpTileSource {
     if (!_databaseOpen) {
       String path = await _getDatabasePath(_name);
       await _openDatabase(path);
+      _databaseOpen = true;
     }
     if (_databaseOpen) {
       var dbimage = await _getImageFromCache(tile);

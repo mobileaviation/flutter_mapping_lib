@@ -22,6 +22,7 @@ class Mapview extends StatefulWidget {
   _MapviewState createState() => _MapviewState();
 
   Layers _layers;
+  AnimationController controller;
 
   Size _size;
   Size get size => _size;
@@ -41,9 +42,24 @@ class Mapview extends StatefulWidget {
   MapViewGestures _gestures;
 }
 
-class _MapviewState extends State<Mapview> {
+class _MapviewState extends State<Mapview> with TickerProviderStateMixin  {
+//  @override
+//  void initState() {
+//    // TODO: implement initState
+//    super.initState();
+//    widget._gestures.controller = AnimationController(vsync: this,  duration: Duration(milliseconds: 300));
+//    log("InitState");
+//  }
+
+//  _MapviewState() {
+//    widget._gestures.controller = AnimationController(vsync: this,  duration: Duration(milliseconds: 300));
+//  }
+
   @override
   Widget build(BuildContext context) {
+    widget._gestures.controller = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 500));
     return Container(
       child: GestureDetector (
         child: widget._layers,
@@ -51,6 +67,7 @@ class _MapviewState extends State<Mapview> {
         onTapUp: widget._gestures.mapTap,
         onScaleStart: widget._gestures.mapScaleStart,
         onScaleUpdate: widget._gestures.mapScaleUpdate,
+        onScaleEnd: widget._gestures.mapScaleEnd,
         onLongPressStart: widget._gestures.mapLongPressStart,
         onLongPressMoveUpdate: widget._gestures.mapLongPressMoveUpdate,
         onLongPressEnd: widget._gestures.mapLongPressEnd,

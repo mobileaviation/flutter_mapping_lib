@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:math' as math;
+import 'dart:core';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
 import 'mapview.dart';
@@ -15,9 +16,26 @@ class MapViewGestures {
   Mapview _mapview;
   Layers _layers;
 
+  Animation<Offset> _offset;
+  CurvedAnimation animation;
+  AnimationController _controller;
+  set controller(AnimationController controller) {
+    _controller = controller;
+    _controller
+      ..addListener(() {
+        MapPosition newMapPosition =
+        _updateMapPosition(_offset.value);
+        newMapPosition = _updateScale(newMapPosition, _dragScale);
+        _mapview.mapPosition = newMapPosition;
+      });
+  }
+
   MapViewport _dragViewport;
   Offset _touchedOffset;
+  Offset _lastOffset;
   double _scale;
+  double _dragScale;
+  DateTime _startDragTime;
 
   mapTap(TapUpDetails tapUpdetails) {
     GeoPoint tp = _mapview.mapViewport.getGeopointForScreenPosition(new math.Point(
@@ -32,6 +50,8 @@ class MapViewGestures {
   }
 
   mapScaleStart(ScaleStartDetails scaleStartDetails) {
+    _controller.stop();
+    _startDragTime = DateTime.now();
     _touchedOffset = Offset(scaleStartDetails.localFocalPoint.dx,
         scaleStartDetails.localFocalPoint.dy);
     _dragViewport = MapViewport.fromViewport(_mapview.mapViewport);
@@ -39,16 +59,55 @@ class MapViewGestures {
   }
 
   mapScaleUpdate(ScaleUpdateDetails scaleUpdateDetails) {
-    GeoPoint newCenterPoint = _dragViewport.getNewCenterGeopointForDragPosition(
-        _touchedOffset, scaleUpdateDetails.localFocalPoint);
+    _controller.stop();
+    _lastOffset = scaleUpdateDetails.localFocalPoint;
     MapPosition newMapPosition =
-    MapPosition.fromGeopointScale(newCenterPoint, _scale);
+      _updateMapPosition(scaleUpdateDetails.localFocalPoint);
 
-    double s = MercatorProjection.zoomLevelToScaleD(
-        newMapPosition.getZoom() + (scaleUpdateDetails.scale - 1));
-    newMapPosition = newMapPosition.setScale(s);
+    _dragScale = scaleUpdateDetails.scale;
+    newMapPosition = _updateScale(newMapPosition, _dragScale);
 
     _mapview.mapPosition = newMapPosition;
+  }
+
+  MapPosition _updateMapPosition(Offset localFocalPoint) {
+    GeoPoint newCenterPoint = _dragViewport.getNewCenterGeopointForDragPosition(
+        _touchedOffset, localFocalPoint);
+    return MapPosition.fromGeopointScale(newCenterPoint, _scale);
+  }
+
+  MapPosition _updateScale(MapPosition mapPosition, double scale) {
+    double s = MercatorProjection.zoomLevelToScaleD(
+        mapPosition.getZoom() + (scale - 1));
+    mapPosition = mapPosition.setScale(s);
+    return mapPosition;
+  }
+
+  mapScaleEnd(ScaleEndDetails scaleEndDetails) {
+    Velocity clambedVelocity = scaleEndDetails.velocity.clampMagnitude(0, 300);
+    double velocityFactor = 1.2;
+    if (DateTime.now().difference(_startDragTime).inMilliseconds < 300) {
+      if (clambedVelocity.pixelsPerSecond.dx.abs() > 5 ||
+          clambedVelocity.pixelsPerSecond.dy.abs() > 5) {
+        Offset posibleNewOffset = Offset(
+            _lastOffset.dx +
+                clambedVelocity.pixelsPerSecond.dx * velocityFactor,
+            _lastOffset.dy +
+                clambedVelocity.pixelsPerSecond.dy * velocityFactor);
+
+        _controller.reset();
+        _offset = Tween<Offset>(begin: _lastOffset, end: posibleNewOffset)
+            .animate(
+            new CurvedAnimation(
+                parent: _controller,
+                curve: Curves.easeOut
+            )
+        );
+        _controller.forward();
+      }
+    }
+
+    log("ScaleEndDetails: ${clambedVelocity.toString()}");
   }
 
   mapLongPressStart(LongPressStartDetails longPressStartDetails) {
