@@ -39,6 +39,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geometric_utils:
+    dependency: "direct main"
+    description:
+      path: "..\\geometric_utils"
+      relative: true
+    source: path
+    version: "0.0.1"
   http:
     dependency: "direct main"
     description:

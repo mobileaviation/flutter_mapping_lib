@@ -4,7 +4,7 @@ import 'package:mapping_library/src/core/mapviewport.dart';
 import 'package:mapping_library/src/tiles/tile.dart';
 import 'package:mapping_library/src/tiles/tileboundingbox.dart';
 import 'package:mapping_library/src/tiles/tilesource.dart';
-import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
 import 'layer.dart';
 import 'painters/tilelayerpainter.dart';
 

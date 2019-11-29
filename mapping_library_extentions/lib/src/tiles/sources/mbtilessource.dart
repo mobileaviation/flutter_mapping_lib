@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:mapping_library/mapping_library.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:math' as math;
 

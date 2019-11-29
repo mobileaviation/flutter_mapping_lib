@@ -2,10 +2,9 @@ import 'dart:io';
 import 'dart:ui';
 import 'dart:math' as math;
 import '../../core/mapviewport.dart';
-import '../../utils/geopoint.dart';
-import '../../utils/boundingbox.dart';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
 import '../../utils/mapposition.dart';
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
 
 class OverlayImage {
   OverlayImage(File file) {

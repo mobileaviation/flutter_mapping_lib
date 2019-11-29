@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
 import 'package:mapping_library/src/layers/painters/layerpainter.dart';
-import 'package:mapping_library/src/utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'painters/layerpainterbase.dart';
 import 'painters/testlayerpainter.dart';
 

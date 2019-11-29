@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'renderers/defaultmarkerrenderer.dart';
 import 'renderers/markerrenderer.dart';
-import '../../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'markerbase.dart';
 
 class DefaultMarker extends MarkerBase {

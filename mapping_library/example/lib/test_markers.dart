@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:mapping_library/mapping_library.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 
 /// Add a default marker to the map. The location is in the middle of the
 /// Netherlands near the town of Harderwijk

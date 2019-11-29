@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'renderers/markerrenderer.dart';
-import '../../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'markerbase.dart';
 
 class SimpleMarker extends MarkerBase {

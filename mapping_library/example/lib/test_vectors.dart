@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 
 /// This function will show a multipoint polyline on the map
 GeomBase _testPolyLineUpdate() {

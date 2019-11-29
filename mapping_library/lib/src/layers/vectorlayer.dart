@@ -6,7 +6,7 @@ import '../objects/vector/geombase.dart';
 import '../objects/vector/markergeopoint.dart';
 import '../objects/vector/polyline.dart';
 import '../objects/vector/vectors.dart';
-import '../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'layer.dart';
 import 'painters/vectorlayerpainter.dart';
 

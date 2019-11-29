@@ -1,11 +1,10 @@
 import 'dart:ui';
 import '../core/mapviewport.dart';
 import '../tiles/tilesource.dart';
-import '../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
 import '../utils/mapposition.dart';
-import '../utils/boundingbox.dart';
 import '../core/values.dart';
-import '../utils/mercatorprojection.dart' as MercatorProjection;
 import 'dart:math' as math;
 
 class ScreenTile extends Tile {

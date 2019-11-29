@@ -1,4 +1,5 @@
 import 'package:xml/xml.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 
 String getValueFrom(XmlElement e, String elementName) {
   var el = e.children
@@ -19,3 +20,12 @@ String enumValueToString(Object o) => o.toString().split('.').last;
 
 T enumValueFromString<T>(String key, List<T> values) =>
     values.firstWhere((v) => key == enumValueToString(v), orElse: () => null);
+
+GeoPoints getGeopointFrom(XmlElement e, String elementName) {
+  var elements = e.findElements(elementName);
+  if (elements.length==0) return null;
+  String posList = getValueFrom(elements.first, "gmlPosList");
+  GeoPoints p = GeoPoints();
+  p.addFromString(posList);
+  return p;
+}

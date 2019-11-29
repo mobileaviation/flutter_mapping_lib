@@ -13,9 +13,13 @@ class MyApp extends StatelessWidget {
   }
 
   void _testReadXMLFile() async {
-    String xml = await rootBundle.loadString("assets/ofm/aixm_eh.xml");
-    OFMImport import = OFMImport(xml);
-    import.readAhp();
+    String filename = "assets/ofm/aixm_eh.xml";
+    String xml = await rootBundle.loadString(filename);
+    String aseFileName = "assets/ofm/aixm_eh_ofmShapeExtension.xml";
+    String aseXml = await rootBundle.loadString(aseFileName);
+
+    OFMImport import = OFMImport(xml, aseXml);
+    import.readAixm(filename, aseFileName);
     log("Read XML File");
   }
 

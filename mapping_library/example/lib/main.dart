@@ -3,6 +3,7 @@ import 'package:example/test_overlay.dart';
 import 'package:example/test_vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'package:mapping_library_extentions/extentions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer';

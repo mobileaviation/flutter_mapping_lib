@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import '../utils/geopoint.dart';
-import '../utils/boundingbox.dart';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart' as MercatorProjection;
 import '../utils/mapposition.dart';
-import '../utils/mercatorprojection.dart' as MercatorProjection;
 import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart' as vectorMath;
 

@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../utils/geopoint.dart';
-import '../../utils/boundingbox.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import '../../core/mapviewport.dart' as vp;
 import '../../utils/mapposition.dart';
 

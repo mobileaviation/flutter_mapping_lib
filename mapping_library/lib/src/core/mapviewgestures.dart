@@ -4,9 +4,9 @@ import 'dart:core';
 import 'package:flutter/widgets.dart';
 import 'package:mapping_library/src/core/mapviewport.dart';
 import 'mapview.dart';
-import 'package:mapping_library/src/utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart' as MercatorProjection;
 import 'package:mapping_library/src/utils/mapposition.dart';
-import 'package:mapping_library/src/utils/mercatorprojection.dart' as MercatorProjection;
 import '../layers/layers.dart';
 import '../layers/layer.dart';
 

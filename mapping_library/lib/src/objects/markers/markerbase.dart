@@ -1,13 +1,14 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart' as material;
-import '../../utils/angles.dart';
-import '../../utils/boundingbox.dart' as utils;
+//import '../../utils/boundingbox.dart' as utils;
 import '../../core/mapviewport.dart';
 import '../../utils/mapposition.dart';
-import '../../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
+import 'package:geometric_utils/geomutils_utils.dart'  as geomutils;
 import 'renderers/markerrenderer.dart';
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
+
 
 class MarkerBase {
   MarkerBase(MarkerRenderer drawerBase, Size size, GeoPoint location) {
@@ -101,7 +102,7 @@ class MarkerBase {
     fireUpdatedMarker();
   }
 
-  utils.BoundingBox _boundingBox;
+  BoundingBox _boundingBox;
   get boundingBox {
     return _boundingBox;
   }
@@ -206,7 +207,7 @@ class MarkerBase {
     GeoPoint gtl = MercatorProjection.fromPixels(tl.x, tl.y, mapsize);
     GeoPoint gbr = MercatorProjection.fromPixels(br.x, br.y, mapsize);
 
-    _boundingBox = utils.BoundingBox.fromGeoPoints([gtl, gbr]);
+    _boundingBox = BoundingBox.fromGeoPoints([gtl, gbr]);
   }
 
   void _calcBoundingBox(double scale) {
@@ -219,7 +220,7 @@ class MarkerBase {
     GeoPoint gbr = MercatorProjection.fromPixels(
         br.x, br.y, MercatorProjection.getMapSizeWithScale(scale));
 
-    _boundingBox = utils.BoundingBox.fromGeoPoints([gtl, gbr]);
+    _boundingBox = BoundingBox.fromGeoPoints([gtl, gbr]);
   }
 
   bool markerSelectedByScreenPos(Offset screenPos) {

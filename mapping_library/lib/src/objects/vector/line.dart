@@ -1,14 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../utils/boundingbox.dart';
 import '../../objects/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
-import '../../utils/geopoint.dart';
 import '../../core/mapviewport.dart' as vp;
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
+import 'package:geometric_utils/geomutils_utils.dart'  as geomutils;
 import 'package:vector_math/vector_math.dart' as vector;
-import '../../utils/geomutils.dart' as geomutils;
 
 class Line extends GeomBase {
   Line(this.startPoint, this.endPoint) {

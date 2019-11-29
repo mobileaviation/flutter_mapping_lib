@@ -1,10 +1,8 @@
 import 'package:flutter/widgets.dart';
-
-import 'boundingbox.dart';
-import 'fastmath.dart' as FastMath;
+import 'package:geometric_utils/fastmath_utils.dart' as FastMath;
 import 'dart:math' as math;
-import 'geopoint.dart';
-import 'mercatorprojection.dart' as MercatorProjection;
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart' as MercatorProjection;
 import '../core/values.dart';
 
 /// MapPosition Class

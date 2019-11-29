@@ -4,13 +4,15 @@ enum uomT {
   F
 }
 
-/// A unit of measurement for an elevation.  E.g. metres or  feet.
+/// A unit of measurement for an elevation.
+/// E.g. metres or  feet.
 enum uomElev {
   FT,
   M
 }
 
-///A code specifying whether a particular entity occurrence is an Aerodrome or a Heliport.
+/// A code specifying whether a particular entity occurrence is an
+/// Aerodrome or a Heliport.
 enum codeTypeAdHp {
   AD,
   AH,
@@ -18,7 +20,8 @@ enum codeTypeAdHp {
   LS
 }
 
-/// A unit of measurement for a horizontal distance.  E.g. metres, feet, nautical miles, kilometres, etc. .
+/// A unit of measurement for a horizontal distance.
+/// E.g. metres, feet, nautical miles, kilometres, etc. .
 enum uomDistHorz {
   NM,
   KM,
@@ -26,7 +29,18 @@ enum uomDistHorz {
   FT
 }
 
-/// A code indicating the composition of a surface.  Eg. asphalt, concrete etc..
+/// A unit of measurement for a vertical distance.
+/// E.g. Flight Level, metres, feet.
+enum uomDistVerBase {
+  FT,
+  M,
+  FL,
+  SM
+}
+
+
+/// A code indicating the composition of a surface.
+/// Eg. asphalt, concrete etc..
 enum codeCompositionSfcBase {
   ASPH,
   ASP_GRS,
@@ -154,7 +168,58 @@ enum uomFreqBase {
   GHZ
 }
 
+/// A code indicating the type of the North reference used.
+enum codeTypeNorthBase {
+  TRUE,
+  MAG,
+  GRID,
+  OTHER,
+}
 
+///A code indicating the geodetic datum in which the geographical co-ordinates
+///are expressed (list of allowable based on the ICAO WGS-84 Manual;
+///abbreviations based on ARINC 424, Attachment 2).
+enum codeDatumBase {
+  WGE,
+  WGC,
+  EUS,
+  EUT,
+  ANS,
+  BEL,
+  BRN,
+  CHI,
+  DGI,
+  IGF,
+  POT,
+  GRK,
+  HJO,
+  IRL,
+  ROM,
+  IGL,
+  NTH,
+  OGB,
+  DLX,
+  PRD,
+  RNB,
+  STO,
+  NAS,
+  NAW,
+  U
+}
+
+/// A code indicating the reference for a vertical distance.
+/// Two series of values exist:
+/// 1) real distance: from GND, from the MSL, from the WGS-84 ellipsoid
+/// 2) pressure  distance: QFE, QNH, STD.
+enum codeDistVerBase {
+  HEI,
+  ALT,
+  W84,
+  QFE,
+  QNH,
+  STD,
+  OTHER
+}
 
 
 

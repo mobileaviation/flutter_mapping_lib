@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'renderers/imagemarkerrenderer.dart';
 import 'renderers/markerrenderer.dart';
-import '../../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'markerbase.dart';
 
 class ImageMarker extends MarkerBase {

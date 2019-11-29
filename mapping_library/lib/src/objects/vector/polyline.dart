@@ -7,15 +7,14 @@ import '../../objects/markers/markers.dart';
 import '../../objects/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
-import '../../utils/geopoint.dart' as gp;
 import '../../core/mapviewport.dart' as vp;
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
-import '../../utils/geopoints.dart';
-import '../../utils/geomutils.dart' as geomutils;
+import 'package:geometric_utils/geometric_utils.dart' as gp;
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
+import 'package:geometric_utils/geomutils_utils.dart'  as geomutils;
 
 class Polyline extends GeomBase {
   Polyline() {
-    _points = GeoPoints();
+    _points = gp.GeoPoints();
     _drawPoints = [];
     defaultPaint();
     _markerDrawer = PointMarkerRenderer();
@@ -24,8 +23,8 @@ class Polyline extends GeomBase {
     name = "Polyline";
   }
 
-  GeoPoints _points;
-  GeoPoints get points { return _points; }
+  gp.GeoPoints _points;
+  gp.GeoPoints get points { return _points; }
   Markers _pointMarkers;
   List<Offset> _drawPoints;
   PointMarkerRenderer _markerDrawer;

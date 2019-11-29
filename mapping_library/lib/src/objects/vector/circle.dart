@@ -1,11 +1,10 @@
 import 'dart:ui';
 import 'dart:math' as math;
-import '../../utils/boundingbox.dart';
-import '../../utils/geopoint.dart';
 import '../../objects/vector/geombase.dart';
 import '../../core/mapviewport.dart' as vp;
 import '../../utils/mapposition.dart';
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
 import 'package:vector_math/vector_math.dart' as vector;
 
 class Circle extends GeomBase {

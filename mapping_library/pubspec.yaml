@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   http: ^0.12.0+2
   vector_math: ^2.0.8
+  geometric_utils:
+    path: ../geometric_utils
 
 dev_dependencies:
   flutter_test:

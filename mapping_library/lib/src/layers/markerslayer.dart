@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../core/mapviewport.dart';
 import '../objects/markers/markerbase.dart';
 import '../objects/markers/markers.dart';
-import '../utils/geopoint.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 import 'layer.dart';
 import 'painters/markerslayerpainter.dart';
 import 'painters/layerpainter.dart';

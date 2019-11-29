@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import '../../objects/vector/geombase.dart';
 import '../../utils/mapposition.dart';
 import 'dart:math' as math;
-import '../../utils/geopoint.dart';
 import '../../core/mapviewport.dart' as vp;
-import '../../utils/mercatorprojection.dart' as MercatorProjection;
-import '../../utils/geopoints.dart';
-import '../../utils/geomutils.dart' as geomutils;
+import 'package:geometric_utils/geometric_utils.dart';
+import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
+import 'package:geometric_utils/geomutils_utils.dart'  as geomutils;
 
 class Polygon extends GeomBase {
   Polygon(GeoPoints points) {
