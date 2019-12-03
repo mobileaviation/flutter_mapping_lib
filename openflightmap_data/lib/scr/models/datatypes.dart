@@ -221,5 +221,82 @@ enum codeDistVerBase {
   OTHER
 }
 
+/// Allowed types of Airspace.
+enum  codeTypeAsBase {
+  ICAO,
+  ECAC,
+  CFMU,
+  IFPS,
+  TACT,
+  NAS,
+  NAS_P,
+  FIR,
+  FIR_P,
+  UIR,
+  UIR_P,
+  CTA,
+  CTA_P,
+  OCA_P,
+  OCA,
+  UTA,
+  UTA_P,
+  TMA,
+  TMA_P,
+  CTR,
+  CTR_P,
+  ATZ,
+  ATZ_P,
+  MNPSA,
+  MNPSA_P,
+  OTA,
+  SECTOR,
+  SECTOR_C,
+  TSA,
+  CBA,
+  RCA,
+  RAS,
+  CDA,
+  AWY,
+  RTECL,
+  P,
+  R,
+  D,
+  R_AMC,
+  D_AMC,
+  MIL,
+  ADIZ,
+  HTZ,
+  OIL,
+  BIRD,
+  SPORT,
+  LMA,
+  NO_FIR,
+  PART,  CLASS,
+  POLITICAL,
+  D_OTHER,
+  TRA,
+  A,
+  W,
+  PROTECT,
+  AMA,
+  ASR,
+  TMZ,
+  GLDR,
+  HPGLDR,
+  HPZ
+}
+
+/// One letter code for the type of airspace according to Annex 11, Appendix 4.
+enum codeClassAsBase {
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  OTHER
+}
+
 
 

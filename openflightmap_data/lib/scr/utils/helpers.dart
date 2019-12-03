@@ -19,12 +19,16 @@ double getGeo(String geoString) {
 String enumValueToString(Object o) => o.toString().split('.').last;
 
 T enumValueFromString<T>(String key, List<T> values) =>
-    values.firstWhere((v) => key == enumValueToString(v), orElse: () => null);
+    values.firstWhere((v) => key.replaceAll("_", "-") == enumValueToString(v), orElse: () => null);
 
 GeoPoints getGeopointFrom(XmlElement e, String elementName) {
   var elements = e.findElements(elementName);
   if (elements.length==0) return null;
   String posList = getValueFrom(elements.first, "gmlPosList");
+  return getGeopointsFromString(posList);
+}
+
+GeoPoints getGeopointsFromString(String posList) {
   GeoPoints p = GeoPoints();
   p.addFromString(posList);
   return p;

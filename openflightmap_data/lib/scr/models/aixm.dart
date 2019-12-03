@@ -24,7 +24,7 @@ class Aixm {
     created = DateTime.tryParse(e.getAttribute("created"));
   }
 
-  Future<AixmStatus> insertDatabase(Database db) async {
+  Future<AixmStatus> checkStatus(Database db) async {
     AixmStatus s = AixmStatus();
     s.update = await _checkDoUpdate(db);
 

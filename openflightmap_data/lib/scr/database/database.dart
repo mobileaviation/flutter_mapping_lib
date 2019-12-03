@@ -51,21 +51,30 @@ class AixmDatabase {
     await db.execute(
         "CREATE TABLE frequencies (Id INTEGER PRIMARY KEY AUTOINCREMENT, serId INTEGER REFERENCES serviceTypes ON DELETE CASCADE, txtCallSign TEXT, xml TEXT)");
     await db.execute(
-        "CREATE TABLE designatedPoints (Id INTEGER PRIMARY KEY AUTOINCREMENT, aixmId INTEGER, txtName TEXT, "
+        "CREATE TABLE designatedPoints (Id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "aixmId INTEGER REFERENCES aixm ON DELETE CASCADE, txtName TEXT, "
             "ahpId INTEGER REFERENCES airports ON DELETE CASCADE, AhpUid_codeId TEXT, geoLongE6 INTEGER, geoLatE6 INTEGER, xml TEXT)");
     await db.execute(
         "CREATE INDEX designatedPoint_location ON designatedPoints (geoLongE6, geoLatE6)");
     await db.execute(
-        "CREATE TABLE procedures (Id INTEGER PRIMARY KEY AUTOINCREMENT, aixmId INTEGER, txtName TEXT, "
+        "CREATE TABLE gmlPositions (Id INTEGER PRIMARY KEY AUTOINCREMENT, latMinE6 INTEGER, latMaxE6 INTEGER, lonMinE6 INTEGER, lonMaxE6, gmlPostList TEXT)");
+    await db.execute(
+        "CREATE INDEX gmlPositions_location ON gmlPositions (latMinE6, latMaxE6, lonMinE6, lonMaxE6)");
+    await db.execute(
+        "CREATE TABLE procedures (Id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "aixmId INTEGER REFERENCES aixm ON DELETE CASCADE, txtName TEXT, "
             "ahpId INTEGER REFERENCES airports ON DELETE CASCADE, codeType TEXT, "
             "beztrajectoryId INTEGER REFERENCES gmlPositions ON DELETE CASCADE, "
             "beztrajectoryAlternateId INTEGER REFERENCES gmlPositions ON DELETE CASCADE, "
             "sceletonPathId INTEGER REFERENCES gmlPositions ON DELETE CASCADE, "
             "tfc_shapePointsId INTEGER REFERENCES gmlPositions ON DELETE CASCADE, xml TEXT)");
     await db.execute(
-        "CREATE TABLE gmlPositions (Id INTEGER PRIMARY KEY AUTOINCREMENT, latMinE6 INTEGER, latMaxE6 INTEGER, lonMinE6 INTEGER, lonMaxE6, gmlPostList TEXT)");
-    await db.execute(
-        "CREATE INDEX gmlPositions_location ON gmlPositions (latMinE6, latMaxE6, lonMinE6, lonMaxE6)");
+        "CREATE TABLE airspaces (Id INTEGER PRIMARY KEY AUTOINCREMENT, aixmId INTEGER, "
+            "txtName TEXT, codeType TEXT, codeClass TEXT, "
+            "gmlPosListId INTEGER REFERENCES gmlPositions ON DELETE CASCADE, codeDistVerUpper TEXT, "
+            "valDistVerUpper INTEGER, uomDistVerUpper TEXT, codeDistVerLower TEXT, "
+            "valDistVerLower INTEGER, uomDistVerLower TEXT, xml TEXT)");
+
   }
 
   _onUpgrade(db.Database db, int oldVersion, int newVersion) async {
