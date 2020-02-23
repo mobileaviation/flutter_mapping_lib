@@ -1,6 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/mapviewport.dart';
+import '../core/mapviewport.dart';
 import '../objects/overlay/overlayimage.dart';
 import '../objects/overlay/overlayimages.dart';
 import 'layer.dart';

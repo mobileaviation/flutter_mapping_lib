@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/values.dart' as values;
+import '../../core/values.dart' as values;
 import 'layerpainterbase.dart';
 import '../tilelayer.dart';
-import 'package:mapping_library/src/tiles/tile.dart';
+import '../../tiles/tile.dart';
 import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
 
 class TileLayerPainter extends LayerPainterBase {

@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:ui';
 
 class Markers<MarkerBase> extends ListBase<MarkerBase> {
   List _innerList = [];

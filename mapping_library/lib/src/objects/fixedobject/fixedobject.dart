@@ -1,7 +1,6 @@
 import 'dart:ui';
-
-import 'package:mapping_library/src/core/mapviewport.dart';
-import 'package:mapping_library/src/utils/mapposition.dart';
+import '../../core/mapviewport.dart';
+import '../../utils/mapposition.dart';
 
 class FixedObject {
   FixedObjectPosition position;

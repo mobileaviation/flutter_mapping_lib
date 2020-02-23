@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'defaultmarkers.dart';
-
 import 'markerrenderer.dart';
 
 class DefaultMarkerRenderer extends MarkerRenderer {

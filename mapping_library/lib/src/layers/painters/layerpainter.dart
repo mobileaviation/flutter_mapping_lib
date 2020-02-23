@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/layers/layers.dart';
+import '../layers.dart';
 import '../layer.dart';
 
 class LayerPainter extends ChangeNotifier implements CustomPainter {

@@ -7,7 +7,6 @@ import '../objects/markers/markers.dart';
 import 'package:geometric_utils/geometric_utils.dart';
 import 'layer.dart';
 import 'painters/markerslayerpainter.dart';
-import 'painters/layerpainter.dart';
 
 class MarkersLayer extends Layer {
   MarkersLayer({Key key,

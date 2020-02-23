@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/mapviewport.dart';
+import '../core/mapviewport.dart';
 import '../objects/fixedobject/fixedobject.dart';
 import 'layer.dart';
 import 'painters/fixedobjectlayerpainter.dart';

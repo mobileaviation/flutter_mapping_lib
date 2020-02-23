@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:openflightmap_data/openflightmap_data.dart';
 import 'package:openflightmap_data/scr/services/import.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:archive/archive.dart';

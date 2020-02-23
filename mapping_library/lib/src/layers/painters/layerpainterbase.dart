@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:mapping_library/src/core/mapviewport.dart';
 import '../layer.dart';
 import '../layers.dart';
 

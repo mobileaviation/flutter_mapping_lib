@@ -2,30 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/src/objects/fixedobject/scalebar.dart';
-import 'package:mapping_library/src/objects/fixedobject/fixedobject.dart';
-import 'package:mapping_library/src/objects/markers/markers.dart';
-import 'package:mapping_library/src/objects/vector/geombase.dart';
-import 'package:mapping_library/src/objects/vector/polygon.dart';
-import 'package:mapping_library/src/objects/vector/polyline.dart';
-import 'package:mapping_library/src/objects/vector/vectors.dart';
-import 'package:mapping_library/src/tiles/sources/httptilesource.dart';
-import 'package:mapping_library/src/layers/layers.dart';
-import 'package:mapping_library/src/layers/layer.dart';
-import 'package:mapping_library/src/utils/mapposition.dart';
+import 'package:mapping_library/mapping_library.dart';
 import 'package:geometric_utils/geometric_utils.dart';
-import 'package:mapping_library/src/core/mapview.dart';
-import 'package:mapping_library/src/layers/tilelayer.dart';
-import 'package:mapping_library/src/layers/fixedobjectlayer.dart';
-import 'package:mapping_library/src/layers/markerslayer.dart';
-import 'package:mapping_library/src/objects/markers/renderers/simplemarkerrenderer.dart';
-import 'package:mapping_library/src/objects/markers/simplemarker.dart';
-import 'package:mapping_library/src/objects/markers/markerbase.dart';
-import 'package:mapping_library/src/layers/vectorlayer.dart';
-import 'package:mapping_library/src/layers/overlaylayer.dart';
-import 'package:mapping_library/src/objects/overlay/overlayimage.dart';
-import 'package:mapping_library/src/objects/overlay/overlayimages.dart';
-
 
 void main() => runApp(MyApp());
 

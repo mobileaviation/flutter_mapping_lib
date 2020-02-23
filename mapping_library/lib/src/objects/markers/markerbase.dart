@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart' as material;
-//import '../../utils/boundingbox.dart' as utils;
 import '../../core/mapviewport.dart';
 import '../../utils/mapposition.dart';
 import 'package:geometric_utils/geometric_utils.dart';
 import 'package:geometric_utils/mercator_utils.dart'  as MercatorProjection;
-import 'package:geometric_utils/geomutils_utils.dart'  as geomutils;
 import 'renderers/markerrenderer.dart';
 
 
