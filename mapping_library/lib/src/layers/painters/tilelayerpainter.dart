@@ -45,5 +45,8 @@ class TileLayerPainter extends LayerPainterBase {
     }
 
     canvas.drawPicture(layerPicture);
+    // layerPicture.toImage(size.width.floor(), size.height.floor()).then((value) => {
+    //   canvas.drawImage(value, Offset(0,0), Paint())
+    // });
   }
 }

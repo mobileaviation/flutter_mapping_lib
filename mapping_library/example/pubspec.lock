@@ -77,7 +77,7 @@ packages:
   geometric_utils:
     dependency: transitive
     description:
-      path: "..\\..\\geometric_utils"
+      path: "../../geometric_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -112,7 +112,7 @@ packages:
   mapping_library_extentions:
     dependency: "direct main"
     description:
-      path: "..\\..\\mapping_library_extentions"
+      path: "../../mapping_library_extentions"
       relative: true
     source: path
     version: "0.0.4"

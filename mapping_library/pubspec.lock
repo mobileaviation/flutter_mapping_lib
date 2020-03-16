@@ -70,7 +70,7 @@ packages:
   geometric_utils:
     dependency: "direct main"
     description:
-      path: "..\\geometric_utils"
+      path: "../geometric_utils"
       relative: true
     source: path
     version: "0.0.1"

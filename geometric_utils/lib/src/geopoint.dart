@@ -14,7 +14,7 @@ double longitudeDistance(int meters, double latitude) {
 }
 
 class GeoPoint {
-  final num serialVersionUID = 8965378345755560352;
+  final num serialVersionUID = 8965378345755559936;
   final double INVERSE_FLATTENING = 298.257223563;
   final double POLAR_RADIUS = 6356752.3142;
 
