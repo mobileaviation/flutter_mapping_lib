@@ -23,10 +23,12 @@ class MapViewGestures {
     _controller = controller;
     _controller
       ..addListener(() {
-        MapPosition newMapPosition =
-        _updateMapPosition(_offset.value);
-        newMapPosition = _updateScale(newMapPosition, _dragScale);
-        _mapview.mapPosition = newMapPosition;
+        if (_offset != null) {
+          MapPosition newMapPosition =
+          _updateMapPosition(_offset.value);
+          newMapPosition = _updateScale(newMapPosition, _dragScale);
+          _mapview.mapPosition = newMapPosition;
+        }
       });
   }
 
@@ -50,7 +52,7 @@ class MapViewGestures {
   }
 
   mapScaleStart(ScaleStartDetails scaleStartDetails) {
-    _controller.stop();
+    //_controller.stop();
     _startDragTime = DateTime.now();
     _touchedOffset = Offset(scaleStartDetails.localFocalPoint.dx,
         scaleStartDetails.localFocalPoint.dy);
@@ -59,7 +61,7 @@ class MapViewGestures {
   }
 
   mapScaleUpdate(ScaleUpdateDetails scaleUpdateDetails) {
-    _controller.stop();
+    //_controller.stop();
     _lastOffset = scaleUpdateDetails.localFocalPoint;
     MapPosition newMapPosition =
       _updateMapPosition(scaleUpdateDetails.localFocalPoint);
@@ -106,8 +108,7 @@ class MapViewGestures {
         _controller.forward();
       }
     }
-
-    log("ScaleEndDetails: ${clambedVelocity.toString()}");
+    //log("ScaleEndDetails: ${clambedVelocity.toString()}");
   }
 
   mapLongPressStart(LongPressStartDetails longPressStartDetails) {
