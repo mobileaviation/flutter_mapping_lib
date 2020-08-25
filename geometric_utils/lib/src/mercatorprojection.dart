@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'geopoint.dart';
 import 'dart:math' as math;
 import 'fastmath.dart' as FastMath;
@@ -369,10 +367,7 @@ double pixelYToLatitudeWithScale(double pixelY, double scale) {
 /// @throws IllegalArgumentException if the given pixelY coordinate is invalid.
 double pixelYToLatitude(double pixelY, int mapSize) {
   double y = 0.5 - (pixelY / mapSize);
-  //log("PixelY: ${pixelY.toString()} mapSize: ${mapSize.toString()}");
   return 90 - 360 * math.atan(math.exp(-y * (2 * math.pi))) / math.pi;
-  //log("pixelToLatitude: ${conv.toString()}");
-  //return conv;
 }
 
 /// Converts a pixel Y coordinate to the tile Y number.
