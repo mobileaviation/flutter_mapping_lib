@@ -14,6 +14,8 @@ class GeomBase {
 
   bool _visible = true;
 
+  Object data;
+
   set visible(bool value) {
     _visible = value;
     fireUpdatedVector();

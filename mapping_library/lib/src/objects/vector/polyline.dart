@@ -1,5 +1,8 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:mapping_library/src/objects/markers/buttonsmarker.dart';
+import 'package:mapping_library/src/objects/markers/renderers/buttonsmarkerrenderer.dart';
 import '../../objects/vector/markergeopoint.dart';
 import '../../objects/markers/renderers/pointmarkerrenderer.dart';
 import '../../objects/markers/pointmarker.dart';
@@ -19,6 +22,8 @@ class Polyline extends GeomBase {
     defaultPaint();
     _markerDrawer = PointMarkerRenderer();
     _markerDrawer.setup(_getPointMarkerData());
+    _buttonDrawer = ButtonsMarkerRenderer();
+    _buttonDrawer.setup(_getButtonsMarkerData());
     borderColor = geomPaint2.color;
     name = "Polyline";
   }
@@ -28,15 +33,20 @@ class Polyline extends GeomBase {
   Markers _pointMarkers;
   List<Offset> _drawPoints;
   PointMarkerRenderer _markerDrawer;
+  ButtonsMarkerRenderer _buttonDrawer;
 
   int _lineWidth = 5;
   int _borderWidth = 0;
   int _borderLineWidth = 5;
   Color _borderColor;
   bool _drawMarkers = true;
+  bool _editEnabled = true;
 
   bool get drawMarkers => _drawMarkers;
   set drawMarkers (bool value) { _drawMarkers = value; }
+
+  bool get editEnabled => _editEnabled;
+  set editEnabled (bool value) { _editEnabled = value; }
 
   Color get borderColor => _borderColor;
   set borderColor(Color value) {
@@ -68,17 +78,36 @@ class Polyline extends GeomBase {
   void addPoints(List<gp.GeoPoint> points) {
     for(gp.GeoPoint geoPoint in points)
     {
-      MarkerGeopoint p = _setupMarker(geoPoint);
+      MarkerGeopoint p = _setupMarker(geoPoint, null);
       _points.add(p);
     }
     fireUpdatedVector();
   }
 
-  MarkerGeopoint _setupMarker(gp.GeoPoint geoPoint)
+  void startEdit(gp.GeoPoint geoPoint, Object data){
+    if (_editEnabled) {
+      _setupButtonsMarker(geoPoint, data);
+    }
+  }
+
+  MarkerGeopoint _setupMarker(gp.GeoPoint geoPoint, Object data)
   {
     MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
+    p.data = data;
     p.marker = PointMarker(_markerDrawer, Size(20,20), geoPoint);
     p.marker.dragable = true;
+    p.marker.doDraw().then((value) {
+      fireUpdatedVector();
+    });
+    return p;
+  }
+
+  MarkerGeopoint _setupButtonsMarker(gp.GeoPoint geoPoint, Object data)
+  {
+    MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
+    p.data = data;
+    p.marker = ButtonsMarker(_markerDrawer, Size(20,20), geoPoint);
+    p.marker.dragable = false;
     p.marker.doDraw().then((value) {
       fireUpdatedVector();
     });
@@ -93,14 +122,22 @@ class Polyline extends GeomBase {
     return data;
   }
 
-  void addPoint(gp.GeoPoint point) {
-    MarkerGeopoint p = _setupMarker(point);
+  ButtonsMarkerRendererData _getButtonsMarkerData() {
+    ButtonsMarkerRendererData data = ButtonsMarkerRendererData();
+    ButtonMarker button = ButtonMarker();
+    button.text = '+';
+    data.buttons.add(button);
+    return data;
+  }
+
+  void addPoint(gp.GeoPoint point, Object data) {
+    MarkerGeopoint p = _setupMarker(point, data);
     _points.add(p);
     fireUpdatedVector();
   }
 
-  void insertPoint(gp.GeoPoint point, int index) {
-    MarkerGeopoint p = _setupMarker(point);
+  void insertPoint(gp.GeoPoint point, int index, Object data) {
+    MarkerGeopoint p = _setupMarker(point, data);
     _points.insert(index, p);
     fireUpdatedVector();
   }
@@ -166,13 +203,19 @@ class Polyline extends GeomBase {
   bool withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
     bool test = false;
     for (int i=1; i<_drawPoints.length; i++) {
-      var segmentTest = geomutils.interceptOnCircle(
-          math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+      // var segmentTest = geomutils.interceptOnCircle(
+      //     math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+      //     math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+      //     math.Point(screenPoint.dx, screenPoint.dy),
+      //     5);
+      test = (geomutils.findLineCircleIntersections(math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
           math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
-          math.Point(screenPoint.dx, screenPoint.dy),
-          15);
-      test = test || (segmentTest != null);
+          math.Point(screenPoint.dx, screenPoint.dy), 15))>0 ? true : false;
+
+      if (test) break;
+      //test = test || (segmentTest != null);
     }
+
     return test;
   }
 }

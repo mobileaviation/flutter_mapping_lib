@@ -4,6 +4,7 @@ import 'package:example/test_vectors.dart';
 import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
 import 'package:geometric_utils/geometric_utils.dart';
+import 'package:mapping_library/src/objects/vector/markergeopoint.dart';
 import 'package:mapping_library_extentions/extentions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:developer';
@@ -19,7 +20,28 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MappingHomePage(title: 'Mapping Library Test App'),
+      home: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          Container(
+            child: MappingHomePage(
+              title: 'Mapping Library Test App',
+            ),
+          ),
+
+          // Center(
+          //   child: Text(
+          //     'Dit is een test',
+          //     style: TextStyle(
+          //       fontSize: 100,
+          //       fontWeight: FontWeight.bold,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // )
+          Container(),
+        ]
+      )
     );
   }
 }
@@ -103,55 +125,66 @@ class _MappingPageState extends State<MappingHomePage> {
     );
   }
 
+
   Widget _retrieveMapContainer() {
-    return Container(
-        child: Mapview(
-            mapPosition: MapPosition.create(
-              // This is a location in the middle of the netherlands
-              geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
-              zoomLevel: 10,
+    return Mapview(
+        mapPosition: MapPosition.create(
+          // This is a location in the middle of the netherlands
+          geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
+          zoomLevel: 10,
+        ),
+        layers: Layers(
+          layers: <Layer>[
+//                TilesLayer(
+//                  tileSource: HttpTileSource("http://tile.openstreetmap.nl/osm/##Z##/##X##/##Y##.png"),
+//                  name: "Tiles Layer",
+//                ),
+            MultiTilesLayer(
+              tileSources: <TileSource>[
+                CachedHttpTileSource("https://snapshots.openflightmaps.org/live/2009/tiles/world/epsg3857/base/512/latest/##Z##/##X##/##Y##.jpg", "OpenFlightMapsBase1"),
+                CachedHttpTileSource("https://snapshots.openflightmaps.org/live/2009/tiles/world/epsg3857/aero/512/latest/##Z##/##X##/##Y##.png","OpenFlightMapsAero1"),
+                ],
+              name: "Multitile Layer",
             ),
-            layers: Layers(
-              layers: <Layer>[
-                TilesLayer(
-                  //tileSource: HttpTileSource("http://a.tile.openstreetmap.org/##Z##/##X##/##Y##.png"),
-                  tileSource: HttpTileSource("http://tile.openstreetmap.nl/osm/##Z##/##X##/##Y##.png"),
-                  //tileSource: HttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png"),
-                  //tileSource: CachedHttpTileSource("https://snapshots.openflightmaps.org/live/1912/tiles/world/noninteractive/epsg3857/merged/256/latest/##Z##/##X##/##Y##.png",
-                  //  "Openflightmaps1912"),
-                  //tileSource: OpenFlightMapsTileSource.create(),
-                  name: "Tiles Layer",
-                ),
-                OverlayLayer(
-                  overlayImages: getOverlayImages(OverlayImages()),
-                  name: "Overlay Layer",
-                ),
-                FixedObjectLayer(
-                  fixedObject: ScaleBar(FixedObjectPosition.lefttop,
-                      Offset(10,10)),
-                  name: "FixedObject Layer",
-                ),
-                MarkersLayer(
-                  markers: getMarkers(Markers()),
-                  name: "Markers Layer",
-                  markerSelected: _markerSelected,
-                ),
-                VectorLayer(
-                  vectors: getVectors(Vectors()),
-                  name: "Vectors Layer",
-                  vectorSelected: _vectorSelected,
-                )
-              ],
+            // OverlayLayer(
+            //   overlayImages: getOverlayImages(OverlayImages()),
+            //   name: "Overlay Layer",
+            // ),
+            // FixedObjectLayer(
+            //   fixedObject: ScaleBar(FixedObjectPosition.lefttop,
+            //       Offset(10,10)),
+            //   name: "FixedObject Layer",
+            // ),
+            // MarkersLayer(
+            //   markers: getMarkers(Markers()),
+            //   name: "Markers Layer",
+            //   markerSelected: _markerSelected,
+            // ),
+            VectorLayer(
+              vectors: getVectors(Vectors()),
+              name: "Vectors Layer",
+              vectorSelected: _vectorSelected,
+              pointDragStart: _dragVectorStart,
+              pointDragEnd: _dragVectorEnd,
             )
+          ],
         )
     );
   }
-
+              
   void _vectorSelected(GeomBase vector, GeoPoint clickedPosition) {
     log("Vector selected: ${vector.name}");
   }
 
   void _markerSelected(MarkerBase marker){
     log("Marker selected: ${marker.name}");
+  }
+
+  _dragVectorStart(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) {
+    log("Start Drag Vector: ${vector.name} at ${startPosition.toString()}");
+  }
+
+  _dragVectorEnd(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) {
+    log("End Drag Vector: ${vector.name} at ${endPosition.toString()}");
   }
 }

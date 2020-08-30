@@ -14,12 +14,18 @@ class VectorLayer extends Layer {
   VectorLayer({Key key,
     Vectors vectors,
     Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) pointDragStart,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition) pointDrag,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) pointDragEnd,
     String name}) //: super(key)
   {
     layerPainter = VectorLayerPainter();
     layerPainter.layer = this;
 
     this.vectorSelected = vectorSelected;
+    this.pointDragStart = pointDragStart;
+    this.pointDrag = pointDrag;
+    this.pointDragEnd = pointDragEnd;
 
     this.vectors = vectors;
     _setVectorsUpdateListener();
@@ -95,7 +101,7 @@ class VectorLayer extends Layer {
                       Offset(screenPos.dx - point.marker.drawingPoint.x,
                           screenPos.dy - point.marker.drawingPoint.y);
                   if (pointDragStart != null) pointDragStart(
-                      point, clickedPosition);
+                     _draggingVector, point, clickedPosition);
                   _fireVectorSelected(vector, clickedPosition);
                   notifyLayer(mapViewPort, true);
                   redrawPainter();
@@ -119,7 +125,7 @@ class VectorLayer extends Layer {
       _dragginPoint.marker.location = tp;
       _dragginPoint.copyFrom(tp);
       _draggingVector.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
-      if (pointDrag != null) pointDrag(_dragginPoint, tp);
+      if (pointDrag != null) pointDrag(_draggingVector, _dragginPoint, tp);
       notifyLayer(mapViewPort, true);
       redrawPainter();
     }
@@ -128,7 +134,7 @@ class VectorLayer extends Layer {
   @override
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
     if (_dragginPoint != null) {
-      if (pointDragEnd != null) pointDragEnd(_dragginPoint, clickedPosition);
+      if (pointDragEnd != null) pointDragEnd(_draggingVector, _dragginPoint, clickedPosition);
       _dragginPoint.marker.selected = false;
       _dragginOffset = null;
       _dragginPoint = null;
@@ -138,9 +144,9 @@ class VectorLayer extends Layer {
   }
 
   Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected;
-  Function(MarkerGeopoint marker_point, GeoPoint startPosition) pointDragStart;
-  Function(MarkerGeopoint marker_point, GeoPoint dragToPosition) pointDrag;
-  Function(MarkerGeopoint marker_point, GeoPoint endPosition) pointDragEnd;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) pointDragStart;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition) pointDrag;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) pointDragEnd;
 
   void _fireVectorSelected(GeomBase vector, GeoPoint clickedPosition) {
     if (vectorSelected != null) {

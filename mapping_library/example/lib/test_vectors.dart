@@ -36,10 +36,11 @@ GeomBase _testPolyLineUpdate() {
   l.borderWidth = 2;
   l.name = "Updating polyline";
   l.drawMarkers = true;
+  l.data = 'Test Data';
 
   // This will add a sections of the line every second
   Timer.periodic(new Duration(seconds: 1), (Timer t) {
-    l.addPoint(points[counter]);
+    l.addPoint(points[counter], 'Test');
     counter++;
     if (counter==points.length) {
       t.cancel();

@@ -5,6 +5,7 @@ export 'src/layers/layers.dart';
 export 'src/layers/markerslayer.dart';
 export 'src/layers/overlaylayer.dart';
 export 'src/layers/tilelayer.dart';
+export 'src/layers/multitileslayer.dart';
 export 'src/layers/vectorlayer.dart';
 export 'src/layers/fixedobjectlayer.dart';
 export 'src/objects/markers/defaultimagemarker.dart';
