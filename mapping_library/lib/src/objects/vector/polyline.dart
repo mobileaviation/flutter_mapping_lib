@@ -201,6 +201,15 @@ class Polyline extends GeomBase {
 
   @override
   bool withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
+    bool test;
+
+    test = _withinPolygon(geoPoint, screenPoint);
+    if (test) startEdit(geoPoint, this);
+
+    return test;
+  }
+
+  bool _withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
     bool test = false;
     for (int i=1; i<_drawPoints.length; i++) {
       // var segmentTest = geomutils.interceptOnCircle(

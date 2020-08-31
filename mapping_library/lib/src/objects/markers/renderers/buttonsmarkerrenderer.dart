@@ -56,10 +56,11 @@ class ButtonMarker {
     RRect drawrect = RRect.fromLTRBR(origin.x, origin.y, 
       origin.x + width, origin.y + height, r);
 
-    Paint paint = Paint();
-    paint.color = color;
-    paint.strokeWidth = 2;
-    paint.isAntiAlias = true;
+    Paint paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..isAntiAlias = true
+      ..style = PaintingStyle.fill;
 
     canvas.drawRRect(drawrect, paint);
   }

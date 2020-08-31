@@ -35,7 +35,7 @@ class CircleLineIntersect {
     return -(B * y + C) / A;
   }
 
-  // Prints the intersection points (if any) of a circle, center 'cp' with radius 'r',
+// Prints the intersection points (if any) of a circle, center 'cp' with radius 'r',
 // and either an infinite line containing the points 'p1' and 'p2'
 // or a segment drawn between those points.
 int intersects(math.Point p1, math.Point p2, math.Point cp, double r, bool segment) {

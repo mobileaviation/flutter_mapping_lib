@@ -80,37 +80,6 @@ List<math.Point> interceptOnCircle(
   }
 }
 
-List<math.Point> pointOnLine(math.Point p1, math.Point p2, math.Point c, double r) {
-  var dxc = c.x - p1.x;
-  var dyc = c.y - p1.y;
-
-  log("dxc: ${dxc.toString()} dyc: ${dyc.toString()}");
-
-  var dx1 = p2.x - p1.x;
-  var dy1 = p2.y - p1.y;
-
-  log("dx1: ${dx1.toString()} dy1: ${dy1.toString()}");
-
-  var cross = dxc * dy1 - dyc * dx1;
-
-  var thresh = r * 20;
-
-  if (abs(cross) < thresh) log("line hit!!!");
-
-  log("Cross value: ${cross.toString()}");
-
-  double d = hypot(dx1,dy1);
-
-  log("distance: ${d.toString()}");
-
-  double hitp = (d / cross) * 100;
-  int hitpercentage = abs(hitp).round();
-
-  log("hit percentage: ${hitpercentage.toString()}");
-
-  return null;
-}
-
 int findLineCircleIntersections(math.Point p1, math.Point p2, math.Point c, double r) {
   CircleLineIntersect circleLineIntersect = CircleLineIntersect();
   int res = circleLineIntersect.intersects(p1, p2, c, r, true);
