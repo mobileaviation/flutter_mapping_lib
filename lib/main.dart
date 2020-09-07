@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
 
     // This will add a sections of the line every second
     Timer.periodic(new Duration(seconds: 1), (Timer t) {
-      l.addPoint(points[counter]);
+      l.addPoint(points[counter], null);
       counter++;
       if (counter==points.length) {
         t.cancel();

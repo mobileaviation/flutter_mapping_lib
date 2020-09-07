@@ -8,15 +8,15 @@ class ButtonsMarker extends MarkerBase {
   ButtonsMarker(MarkerRenderer drawerBase, Size size, GeoPoint location)
       : super(drawerBase, size, location);
 
-  ButtonsMarkerRendererData buttonsSetupData;
+  ButtonsMarkerData buttonsSetupData;
 
   @override
   Future<Image> doDraw() async {
     if (markerImage == null) {
       if (markerDrawer != null) {
         markerDrawer.setup(buttonsSetupData);
-        Picture _pointMarkerPicture = markerDrawer.draw(markerSize);
-        markerImage = await _pointMarkerPicture.toImage(
+        Picture _buttonMarkerPicture = markerDrawer.draw(markerSize);
+        markerImage = await _buttonMarkerPicture.toImage(
             markerSize.width.floor(), markerSize.height.floor());
       }
 

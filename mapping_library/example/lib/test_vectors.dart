@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
 import 'package:geometric_utils/geometric_utils.dart';
@@ -36,7 +37,9 @@ GeomBase _testPolyLineUpdate() {
   l.borderWidth = 2;
   l.name = "Updating polyline";
   l.drawMarkers = true;
+  l.editEnabled = true;
   l.data = 'Test Data';
+  l.buttonClicked = editButtonPolylineClicked;
 
   // This will add a sections of the line every second
   Timer.periodic(new Duration(seconds: 1), (Timer t) {
@@ -49,6 +52,12 @@ GeomBase _testPolyLineUpdate() {
   });
 
   return l;
+}
+
+/// This is the buttonclick callback when editenabled on a Polyline is true
+void editButtonPolylineClicked(Polyline polyline, GeoPoint location, PolylineEditButton button){
+  log("Edit Button: ${button.text} clicked on lineindex: ${polyline.editIndex} Insert location: ${location.toString()}");
+  polyline.endEditing();
 }
 
 /// This example will show you some extra abilities we have using the Paint

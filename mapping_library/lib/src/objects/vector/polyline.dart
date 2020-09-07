@@ -34,13 +34,17 @@ class Polyline extends GeomBase {
   List<Offset> _drawPoints;
   PointMarkerRenderer _markerDrawer;
   ButtonsMarkerRenderer _buttonDrawer;
+  MarkerGeopoint _editButtonMarkerPoint;
+  ButtonsMarkerData _buttonsMarkerData;
+
 
   int _lineWidth = 5;
   int _borderWidth = 0;
   int _borderLineWidth = 5;
   Color _borderColor;
   bool _drawMarkers = true;
-  bool _editEnabled = true;
+  bool _editEnabled = false;
+  bool _editing = false;
 
   bool get drawMarkers => _drawMarkers;
   set drawMarkers (bool value) { _drawMarkers = value; }
@@ -84,9 +88,12 @@ class Polyline extends GeomBase {
     fireUpdatedVector();
   }
 
-  void startEdit(gp.GeoPoint geoPoint, Object data){
+  void startEdit(gp.GeoPoint geoPoint, int index){
     if (_editEnabled) {
-      _setupButtonsMarker(geoPoint, data);
+      _editButtonMarkerPoint = _setupButtonsMarker(geoPoint, index);
+      
+      _editing = true;
+      fireUpdatedVector();
     }
   }
 
@@ -102,11 +109,20 @@ class Polyline extends GeomBase {
     return p;
   }
 
+  int get editIndex { return (_editing) ? _editButtonMarkerPoint.data : -1; }
+
+  void endEditing() {
+    _editing = false;
+    fireUpdatedVector();
+  }
+
   MarkerGeopoint _setupButtonsMarker(gp.GeoPoint geoPoint, Object data)
   {
     MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
+
+    _buttonsMarkerData.location = geoPoint;
     p.data = data;
-    p.marker = ButtonsMarker(_markerDrawer, Size(20,20), geoPoint);
+    p.marker = ButtonsMarker(_buttonDrawer, _buttonDrawer.size, geoPoint);
     p.marker.dragable = false;
     p.marker.doDraw().then((value) {
       fireUpdatedVector();
@@ -122,12 +138,15 @@ class Polyline extends GeomBase {
     return data;
   }
 
-  ButtonsMarkerRendererData _getButtonsMarkerData() {
-    ButtonsMarkerRendererData data = ButtonsMarkerRendererData();
-    ButtonMarker button = ButtonMarker();
-    button.text = '+';
-    data.buttons.add(button);
-    return data;
+  ButtonsMarkerData _getButtonsMarkerData() {
+    _buttonsMarkerData = ButtonsMarkerData();
+    PolylineEditButton button1 = PolylineEditButton();
+    button1.text = 'Insert';
+    _buttonsMarkerData.buttons.add(button1);
+    PolylineEditButton button2 = PolylineEditButton();
+    button2.text = 'Cancel';
+    _buttonsMarkerData.buttons.add(button2);
+    return _buttonsMarkerData;
   }
 
   void addPoint(gp.GeoPoint point, Object data) {
@@ -163,6 +182,9 @@ class Polyline extends GeomBase {
         for (MarkerGeopoint geopoint in _points) {
           geopoint.marker.paint(canvas);
         }
+
+      if (_editing)
+        _editButtonMarkerPoint.marker.paint(canvas);
     }
   }
 
@@ -193,6 +215,16 @@ class Polyline extends GeomBase {
       _drawPoints.add(Offset(pp.x, pp.y));
       p.marker.drawingPoint = pp;
     }
+    if (_editButtonMarkerPoint != null) {
+      math.Point pix = _getPixelsPosition(_editButtonMarkerPoint, mapPosition.zoomLevel);
+      double x = pix.x - cx;
+      double y = pix.y - cy;
+      math.Point pp = viewport.projectScreenPositionByReferenceAndScale(
+          math.Point(x, y),
+          math.Point(sw2, sh2),
+          mapPosition.getZoomFraction() + 1);
+      _editButtonMarkerPoint.marker.drawingPoint = pp;
+    }
   }
 
   math.Point _getPixelsPosition(gp.GeoPoint location, int zoomLevel) {
@@ -201,30 +233,49 @@ class Polyline extends GeomBase {
 
   @override
   bool withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
-    bool test;
-
+    int test;
     test = _withinPolygon(geoPoint, screenPoint);
-    if (test) startEdit(geoPoint, this);
+    if ((test != -1) && !_editing) startEdit(geoPoint, test);
+    
 
-    return test;
+
+    return (test != -1);
   }
 
-  bool _withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
+  int _withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
     bool test = false;
-    for (int i=1; i<_drawPoints.length; i++) {
-      // var segmentTest = geomutils.interceptOnCircle(
-      //     math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
-      //     math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
-      //     math.Point(screenPoint.dx, screenPoint.dy),
-      //     5);
-      test = (geomutils.findLineCircleIntersections(math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
-          math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
-          math.Point(screenPoint.dx, screenPoint.dy), 15))>0 ? true : false;
-
-      if (test) break;
-      //test = test || (segmentTest != null);
+    int index = -1;
+    if (_editing) {
+      _testButtonClicked(screenPoint);
+    } else {
+      for (int i=1; i<_drawPoints.length; i++) {
+        // var segmentTest = geomutils.interceptOnCircle(
+        //     math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+        //     math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+        //     math.Point(screenPoint.dx, screenPoint.dy),
+        //     5);
+        test = (geomutils.findLineCircleIntersections(math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+            math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+            math.Point(screenPoint.dx, screenPoint.dy), 15))>0 ? true : false;
+        index = i;
+        if (test) break;
+        //test = test || (segmentTest != null);
+      }
     }
 
-    return test;
+    return index;
   }
+
+  PolylineEditButton _testButtonClicked(Offset screenPoint) {
+    math.Point org = math.Point(
+      _editButtonMarkerPoint.marker.drawingPoint.x - _editButtonMarkerPoint.marker.pivotPoint.x, 
+      _editButtonMarkerPoint.marker.drawingPoint.y - _editButtonMarkerPoint.marker.pivotPoint.y);
+    math.Point checkPoint = math.Point(screenPoint.dx - org.x, screenPoint.dy - org.y);
+    for (PolylineEditButton b in _buttonsMarkerData.buttons) {
+      if (b.hitTestP(checkPoint)) 
+        if (buttonClicked != null) buttonClicked(this, _buttonsMarkerData.location,  b);
+    }
+  }
+
+  Function(Polyline polyline, gp.GeoPoint location,  PolylineEditButton button) buttonClicked;
 }

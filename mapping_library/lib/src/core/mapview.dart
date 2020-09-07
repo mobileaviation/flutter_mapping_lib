@@ -5,7 +5,7 @@ import '../layers/layers.dart';
 import '../utils/mapposition.dart';
 
 class Mapview extends StatefulWidget {
-  Mapview({Key, key, Layers layers, MapPosition mapPosition})
+  Mapview({Key key, Layers layers, MapPosition mapPosition})
       : super(key: key) {
     _layers = layers;
     _mapPosition = mapPosition;

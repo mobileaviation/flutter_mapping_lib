@@ -1,16 +1,20 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:geometric_utils/geometric_utils.dart';
 
 import 'markerrenderer.dart';
 
 class ButtonsMarkerRenderer extends MarkerRenderer {
 
-  ButtonsMarkerRendererData _data;
+  ButtonsMarkerData _data;
+  Size get size => _data.size;
 
   @override
   void setup(dynamic data) {
-    if (data is ButtonsMarkerRendererData) _data = data;
+    if (data is ButtonsMarkerData) {
+      _data = data;
+    }
   }
 
   @override
@@ -18,30 +22,77 @@ class ButtonsMarkerRenderer extends MarkerRenderer {
     if (_data != null) {
       PictureRecorder drawerRec = PictureRecorder();
       Canvas drawerCanvas = Canvas(drawerRec);
-      Point p = Point(0, 0);
-      for(ButtonMarker buttonMarker : _data.buttons) {
-        buttonMarker.paint(drawerCanvas, p);
-        p.y = p.y + buttonMarker.height + buttonMarker.margin;
+      Point p = Point(0.0, 0.0);
+      for(PolylineEditButton buttonMarker in _data.buttons) {
+        _paintButton(drawerCanvas, p, buttonMarker);
+        p = Point(0.0, p.y + buttonMarker.height + buttonMarker.margin);
       }
 
       return drawerRec.endRecording();
     } else throw new Exception("No ButtonsMarkerRendererData data supplied!!");
   }
-}
 
-class ButtonsMarkerRendererData {
-  ButtonsMarkerRendererData() {
-    buttons = List<ButtonMarker>();
+    void _paintButton(Canvas canvas, Point origin, PolylineEditButton button) {
+    Radius r = Radius.circular(button.radius);
+    RRect drawrect = RRect.fromLTRBR(origin.x, origin.y, 
+      origin.x + button.width, origin.y + button.height, r);
+    button.rRect = drawrect;
+
+    Paint paint = Paint()
+      ..color = button.color
+      ..strokeWidth = 2
+      ..isAntiAlias = true
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(drawrect, paint);
+
+    paint = Paint()
+      ..color = Colors.blueGrey
+      ..strokeWidth = 2
+      ..isAntiAlias = true
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawRRect(drawrect, paint);
+
+    TextSpan span = new TextSpan(style: new TextStyle(color: Colors.blue[800], fontSize: 20), text: button.text);
+    TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.center, textDirection: TextDirection.ltr);
+    tp.layout(minWidth: button.width, maxWidth: button.width);
+    tp.paint(canvas, new Offset(origin.x, origin.y + 5.0));
   }
-  List<ButtonMarker> buttons;
 }
 
-class ButtonMarker {
-  ButtonMarker() {
-    width = 20.0;
-    height = 20.0;
-    margin = 5.0;
-    radius = 5.0;
+class ButtonsMarkerData {
+  ButtonsMarkerData() {
+    buttons = List<PolylineEditButton>();
+  }
+  List<PolylineEditButton> buttons;
+
+  GeoPoint location;
+
+  Size get size {
+    double h = 0;
+    double w = 0;
+    for (PolylineEditButton b in buttons) {
+      h = h + b.height + b.margin;
+      if (b.width>w) w = b.width;
+    }
+    return Size(w,h);
+  } 
+
+  PolylineEditButton checkButtonClicked(Point position) {
+    for (PolylineEditButton button in buttons)
+      if (button.hitTestP(position)) 
+        return button;
+    return null;
+  }
+}
+
+class PolylineEditButton {
+  PolylineEditButton() {
+    width = 70.0;
+    height = 50.0;
+    margin = 10.0;
+    radius = 10.0;
     color = Colors.amberAccent;
   }
   double width;
@@ -50,18 +101,17 @@ class ButtonMarker {
   double radius;
   Color color;
   String text;
+  Object tag;
+  RRect rRect;
 
-  void paint(Canvas canvas, Point origin) {
-    Radius r = Radius.circular(radius);
-    RRect drawrect = RRect.fromLTRBR(origin.x, origin.y, 
-      origin.x + width, origin.y + height, r);
+  bool hitTestP(Point p) {
+    return hitTestO(Offset(p.x, p.y));
+  }
 
-    Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = 2
-      ..isAntiAlias = true
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(drawrect, paint);
+  bool hitTestO(Offset p) {
+    if (rRect == null) 
+      return false; 
+    else
+      return rRect.contains(p);
   }
 }
