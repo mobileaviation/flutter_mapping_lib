@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geometric_utils/geometric_utils.dart';
+import 'package:mapping_library/mapping_library.dart';
 import '../../core/mapviewport.dart' as vp;
 import '../../utils/mapposition.dart';
 
@@ -15,6 +16,9 @@ class GeomBase {
   bool _visible = true;
 
   Object data;
+
+  MapWindow editWindow;
+  MapWindow infoWindow;
 
   set visible(bool value) {
     _visible = value;

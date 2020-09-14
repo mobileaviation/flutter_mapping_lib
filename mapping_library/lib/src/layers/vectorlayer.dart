@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
+import '../../mapping_library.dart';
 import '../core/mapviewport.dart';
 import '../objects/vector/geombase.dart';
 import '../objects/vector/markergeopoint.dart';
@@ -13,10 +14,10 @@ import 'painters/vectorlayerpainter.dart';
 class VectorLayer extends Layer {
   VectorLayer({Key key,
     Vectors vectors,
-    Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected,
-    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) pointDragStart,
-    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition) pointDrag,
-    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) pointDragEnd,
+    Function(GeomBase vector, GeoPoint clickedPosition, Offset screenPos) vectorSelected,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition, Offset screenPos) pointDragStart,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition, Offset screenPos) pointDrag,
+    Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition, Offset screenPos) pointDragEnd,
     String name}) //: super(key)
   {
     layerPainter = VectorLayerPainter();
@@ -71,7 +72,7 @@ class VectorLayer extends Layer {
   void doTabCheck(GeoPoint clickedPosition, Offset screenPos) {
     for (GeomBase vector in vectors) {
       if (_checkVector(vector, clickedPosition, screenPos)) {
-        _fireVectorSelected(vector, clickedPosition);
+        _fireVectorSelected(vector, clickedPosition, screenPos);
       }
     }
   }
@@ -101,8 +102,8 @@ class VectorLayer extends Layer {
                       Offset(screenPos.dx - point.marker.drawingPoint.x,
                           screenPos.dy - point.marker.drawingPoint.y);
                   if (pointDragStart != null) pointDragStart(
-                     _draggingVector, point, clickedPosition);
-                  _fireVectorSelected(vector, clickedPosition);
+                     _draggingVector, point, clickedPosition, screenPos);
+                  _fireVectorSelected(vector, clickedPosition, screenPos);
                   notifyLayer(mapViewPort, true);
                   redrawPainter();
                   break;
@@ -125,7 +126,7 @@ class VectorLayer extends Layer {
       _dragginPoint.marker.location = tp;
       _dragginPoint.copyFrom(tp);
       _draggingVector.calculatePixelPosition(mapViewPort, mapViewPort.mapPosition);
-      if (pointDrag != null) pointDrag(_draggingVector, _dragginPoint, tp);
+      if (pointDrag != null) pointDrag(_draggingVector, _dragginPoint, tp, screenPos);
       notifyLayer(mapViewPort, true);
       redrawPainter();
     }
@@ -134,7 +135,7 @@ class VectorLayer extends Layer {
   @override
   void dragEnd(GeoPoint clickedPosition, Offset screenPos) {
     if (_dragginPoint != null) {
-      if (pointDragEnd != null) pointDragEnd(_draggingVector, _dragginPoint, clickedPosition);
+      if (pointDragEnd != null) pointDragEnd(_draggingVector, _dragginPoint, clickedPosition, screenPos);
       _dragginPoint.marker.selected = false;
       _dragginOffset = null;
       _dragginPoint = null;
@@ -143,14 +144,14 @@ class VectorLayer extends Layer {
     }
   }
 
-  Function(GeomBase vector, GeoPoint clickedPosition) vectorSelected;
-  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) pointDragStart;
-  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition) pointDrag;
-  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) pointDragEnd;
+  Function(GeomBase vector, GeoPoint clickedPosition, Offset screenPos) vectorSelected;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition, Offset screenPos) pointDragStart;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint dragToPosition, Offset screenPos) pointDrag;
+  Function(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition, Offset screenPos) pointDragEnd;
 
-  void _fireVectorSelected(GeomBase vector, GeoPoint clickedPosition) {
+  void _fireVectorSelected(GeomBase vector, GeoPoint clickedPosition, Offset screenPos) {
     if (vectorSelected != null) {
-      vectorSelected(vector, clickedPosition);
+      vectorSelected(vector, clickedPosition, screenPos);
     }
   }
 }

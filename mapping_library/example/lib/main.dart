@@ -1,54 +1,44 @@
-import 'package:example/test_markers.dart';
-import 'package:example/test_overlay.dart';
-import 'package:example/test_vectors.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mapping_library/mapping_library.dart';
-import 'package:geometric_utils/geometric_utils.dart';
-import 'package:mapping_library/src/objects/vector/markergeopoint.dart';
-import 'package:mapping_library_extentions/extentions.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:developer';
+import 'package:geometric_utils/geometric_utils.dart';
+import 'map_widget.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  MyApp() {
+  }
+
+  Widget _map;
+
   @override
   Widget build(BuildContext context) {
+    _map = MapWidget();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          Container(
-            child: MappingHomePage(
+      home: MappingHomePage(
               title: 'Mapping Library Test App',
+              map: _map,
             ),
-          ),
-
-          // Center(
-          //   child: Text(
-          //     'Dit is een test',
-          //     style: TextStyle(
-          //       fontSize: 100,
-          //       fontWeight: FontWeight.bold,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // )
-          Container(),
-        ]
-      )
     );
   }
 }
 
 class MappingHomePage extends StatefulWidget {
-  MappingHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  MappingHomePage({Key key, String title, MapWidget map}) : super(key: key) {
+    this._title = title;
+    this._map = map;
+    
+  }
+  String _title;
+  MapWidget _map;
 
   @override
   _MappingPageState createState() => _MappingPageState();
@@ -64,18 +54,25 @@ class MappingHomePage extends StatefulWidget {
 /// directory to your device in the /sdcard/Download directory
 class _MappingPageState extends State<MappingHomePage> {
   _MappingPageState() {
+    
   }
 
   @override
   initState() {
     super.initState();
     storagePermissionGranded = false;
+    editWindowVisible = false;
+    editWindowPosition = Offset(0,0);
   }
 
   bool storagePermissionGranded;
 
   // Some operations needs permission from the user to run
   PermissionStatus _storagePermStatus;
+
+
+  bool editWindowVisible;
+  Offset editWindowPosition;
 
   /// Do a security check to see if access to localstorage is granded
   /// This is probably only necessary for Android devices
@@ -94,13 +91,20 @@ class _MappingPageState extends State<MappingHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _checkStoragePermissions();
+    widget._map.vectorSelected = _vectorSelected;
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        _checkStoragePermissions(),
+        _getTestMapWindow(),
+      ],
+    );
   }
 
   Widget _checkStoragePermissions()
   {
     if (storagePermissionGranded) {
-      return _retrieveMapContainer();
+      return widget._map;
     } else {
       // We do a check to see, or ask for storage access permissions ( probably
       // only applicable for andriod devices)
@@ -125,66 +129,29 @@ class _MappingPageState extends State<MappingHomePage> {
     );
   }
 
-
-  Widget _retrieveMapContainer() {
-    return Mapview(
-        mapPosition: MapPosition.create(
-          // This is a location in the middle of the netherlands
-          geoPoint: new GeoPoint(52.45657243868931, 5.52041338863477),
-          zoomLevel: 10,
+  MapWindow _getTestMapWindow() {
+    return MapWindow(
+      visible: editWindowVisible,
+      position: editWindowPosition,
+      children: [
+        RaisedButton(
+          onPressed: () {},
+          child: Text('Enabled Button1', style: TextStyle(fontSize: 20)),
         ),
-        layers: Layers(
-          layers: <Layer>[
-//                TilesLayer(
-//                  tileSource: HttpTileSource("http://tile.openstreetmap.nl/osm/##Z##/##X##/##Y##.png"),
-//                  name: "Tiles Layer",
-//                ),
-            MultiTilesLayer(
-              tileSources: <TileSource>[
-                CachedHttpTileSource("https://snapshots.openflightmaps.org/live/2009/tiles/world/epsg3857/base/512/latest/##Z##/##X##/##Y##.jpg", "OpenFlightMapsBase1"),
-                CachedHttpTileSource("https://snapshots.openflightmaps.org/live/2009/tiles/world/epsg3857/aero/512/latest/##Z##/##X##/##Y##.png","OpenFlightMapsAero1"),
-                ],
-              name: "Multitile Layer",
-            ),
-            // OverlayLayer(
-            //   overlayImages: getOverlayImages(OverlayImages()),
-            //   name: "Overlay Layer",
-            // ),
-            // FixedObjectLayer(
-            //   fixedObject: ScaleBar(FixedObjectPosition.lefttop,
-            //       Offset(10,10)),
-            //   name: "FixedObject Layer",
-            // ),
-            // MarkersLayer(
-            //   markers: getMarkers(Markers()),
-            //   name: "Markers Layer",
-            //   markerSelected: _markerSelected,
-            // ),
-            VectorLayer(
-              vectors: getVectors(Vectors()),
-              name: "Vectors Layer",
-              vectorSelected: _vectorSelected,
-              pointDragStart: _dragVectorStart,
-              pointDragEnd: _dragVectorEnd,
-            )
-          ],
+        RaisedButton(
+          onPressed: () {},
+          child: Text('Enabled Button2', style: TextStyle(fontSize: 20)),
         )
+      ],
     );
-  }
-              
-  void _vectorSelected(GeomBase vector, GeoPoint clickedPosition) {
+  }  
+
+  void _vectorSelected(GeomBase vector, GeoPoint clickedPosition, Offset screenPos) {
     log("Vector selected: ${vector.name}");
-  }
-
-  void _markerSelected(MarkerBase marker){
-    log("Marker selected: ${marker.name}");
-  }
-
-  _dragVectorStart(GeomBase vector, MarkerGeopoint marker_point, GeoPoint startPosition) {
-    log("Start Drag Vector: ${vector.name} at ${startPosition.toString()}");
-  }
-
-  _dragVectorEnd(GeomBase vector, MarkerGeopoint marker_point, GeoPoint endPosition) {
-    log("End Drag Vector: ${vector.name} at ${endPosition.toString()}");
+    if (vector is Polyline) log("Polyline Part selected index: ${(vector as Polyline).selectedIndex}");
+    setState(() {
+      editWindowVisible = true;
+      editWindowPosition = screenPos;
+    });
   }
 }

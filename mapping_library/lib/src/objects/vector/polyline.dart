@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:mapping_library/src/objects/markers/buttonsmarker.dart';
-import 'package:mapping_library/src/objects/markers/renderers/buttonsmarkerrenderer.dart';
 import '../../objects/vector/markergeopoint.dart';
 import '../../objects/markers/renderers/pointmarkerrenderer.dart';
 import '../../objects/markers/pointmarker.dart';
@@ -22,8 +20,6 @@ class Polyline extends GeomBase {
     defaultPaint();
     _markerDrawer = PointMarkerRenderer();
     _markerDrawer.setup(_getPointMarkerData());
-    _buttonDrawer = ButtonsMarkerRenderer();
-    _buttonDrawer.setup(_getButtonsMarkerData());
     borderColor = geomPaint2.color;
     name = "Polyline";
   }
@@ -33,24 +29,17 @@ class Polyline extends GeomBase {
   Markers _pointMarkers;
   List<Offset> _drawPoints;
   PointMarkerRenderer _markerDrawer;
-  ButtonsMarkerRenderer _buttonDrawer;
-  MarkerGeopoint _editButtonMarkerPoint;
-  ButtonsMarkerData _buttonsMarkerData;
-
 
   int _lineWidth = 5;
   int _borderWidth = 0;
   int _borderLineWidth = 5;
   Color _borderColor;
   bool _drawMarkers = true;
-  bool _editEnabled = false;
-  bool _editing = false;
+  int _selectedIndex;
+  int get selectedIndex => _selectedIndex;
 
   bool get drawMarkers => _drawMarkers;
   set drawMarkers (bool value) { _drawMarkers = value; }
-
-  bool get editEnabled => _editEnabled;
-  set editEnabled (bool value) { _editEnabled = value; }
 
   Color get borderColor => _borderColor;
   set borderColor(Color value) {
@@ -88,15 +77,6 @@ class Polyline extends GeomBase {
     fireUpdatedVector();
   }
 
-  void startEdit(gp.GeoPoint geoPoint, int index){
-    if (_editEnabled) {
-      _editButtonMarkerPoint = _setupButtonsMarker(geoPoint, index);
-      
-      _editing = true;
-      fireUpdatedVector();
-    }
-  }
-
   MarkerGeopoint _setupMarker(gp.GeoPoint geoPoint, Object data)
   {
     MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
@@ -109,44 +89,12 @@ class Polyline extends GeomBase {
     return p;
   }
 
-  int get editIndex { return (_editing) ? _editButtonMarkerPoint.data : -1; }
-
-  void endEditing() {
-    _editing = false;
-    fireUpdatedVector();
-  }
-
-  MarkerGeopoint _setupButtonsMarker(gp.GeoPoint geoPoint, Object data)
-  {
-    MarkerGeopoint p = MarkerGeopoint.fromGeopoint(geoPoint);
-
-    _buttonsMarkerData.location = geoPoint;
-    p.data = data;
-    p.marker = ButtonsMarker(_buttonDrawer, _buttonDrawer.size, geoPoint);
-    p.marker.dragable = false;
-    p.marker.doDraw().then((value) {
-      fireUpdatedVector();
-    });
-    return p;
-  }
-
   PointMarkerRendererData _getPointMarkerData() {
     PointMarkerRendererData data = PointMarkerRendererData();
     data.borderWidth = 3;
     data.borderColor = Colors.red;
     data.backgroundColor = Colors.greenAccent;
     return data;
-  }
-
-  ButtonsMarkerData _getButtonsMarkerData() {
-    _buttonsMarkerData = ButtonsMarkerData();
-    PolylineEditButton button1 = PolylineEditButton();
-    button1.text = 'Insert';
-    _buttonsMarkerData.buttons.add(button1);
-    PolylineEditButton button2 = PolylineEditButton();
-    button2.text = 'Cancel';
-    _buttonsMarkerData.buttons.add(button2);
-    return _buttonsMarkerData;
   }
 
   void addPoint(gp.GeoPoint point, Object data) {
@@ -182,9 +130,6 @@ class Polyline extends GeomBase {
         for (MarkerGeopoint geopoint in _points) {
           geopoint.marker.paint(canvas);
         }
-
-      if (_editing)
-        _editButtonMarkerPoint.marker.paint(canvas);
     }
   }
 
@@ -215,16 +160,6 @@ class Polyline extends GeomBase {
       _drawPoints.add(Offset(pp.x, pp.y));
       p.marker.drawingPoint = pp;
     }
-    if (_editButtonMarkerPoint != null) {
-      math.Point pix = _getPixelsPosition(_editButtonMarkerPoint, mapPosition.zoomLevel);
-      double x = pix.x - cx;
-      double y = pix.y - cy;
-      math.Point pp = viewport.projectScreenPositionByReferenceAndScale(
-          math.Point(x, y),
-          math.Point(sw2, sh2),
-          mapPosition.getZoomFraction() + 1);
-      _editButtonMarkerPoint.marker.drawingPoint = pp;
-    }
   }
 
   math.Point _getPixelsPosition(gp.GeoPoint location, int zoomLevel) {
@@ -233,49 +168,27 @@ class Polyline extends GeomBase {
 
   @override
   bool withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
-    int test;
-    test = _withinPolygon(geoPoint, screenPoint);
-    if ((test != -1) && !_editing) startEdit(geoPoint, test);
-    
-
-
-    return (test != -1);
+    _selectedIndex = _withinPolygon(geoPoint, screenPoint);
+    return (_selectedIndex != -1);
   }
 
   int _withinPolygon(gp.GeoPoint geoPoint, Offset screenPoint) {
     bool test = false;
     int index = -1;
-    if (_editing) {
-      _testButtonClicked(screenPoint);
-    } else {
-      for (int i=1; i<_drawPoints.length; i++) {
-        // var segmentTest = geomutils.interceptOnCircle(
-        //     math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
-        //     math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
-        //     math.Point(screenPoint.dx, screenPoint.dy),
-        //     5);
-        test = (geomutils.findLineCircleIntersections(math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
-            math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
-            math.Point(screenPoint.dx, screenPoint.dy), 15))>0 ? true : false;
-        index = i;
-        if (test) break;
-        //test = test || (segmentTest != null);
-      }
+
+    for (int i=1; i<_drawPoints.length; i++) {
+      // var segmentTest = geomutils.interceptOnCircle(
+      //     math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+      //     math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+      //     math.Point(screenPoint.dx, screenPoint.dy),
+      //     5);
+      test = (geomutils.findLineCircleIntersections(math.Point(_drawPoints[i-1].dx, _drawPoints[i-1].dy),
+          math.Point(_drawPoints[i].dx, _drawPoints[i].dy),
+          math.Point(screenPoint.dx, screenPoint.dy), 15))>0 ? true : false;
+      index = i;
+      if (test) break;
     }
 
     return index;
   }
-
-  PolylineEditButton _testButtonClicked(Offset screenPoint) {
-    math.Point org = math.Point(
-      _editButtonMarkerPoint.marker.drawingPoint.x - _editButtonMarkerPoint.marker.pivotPoint.x, 
-      _editButtonMarkerPoint.marker.drawingPoint.y - _editButtonMarkerPoint.marker.pivotPoint.y);
-    math.Point checkPoint = math.Point(screenPoint.dx - org.x, screenPoint.dy - org.y);
-    for (PolylineEditButton b in _buttonsMarkerData.buttons) {
-      if (b.hitTestP(checkPoint)) 
-        if (buttonClicked != null) buttonClicked(this, _buttonsMarkerData.location,  b);
-    }
-  }
-
-  Function(Polyline polyline, gp.GeoPoint location,  PolylineEditButton button) buttonClicked;
 }

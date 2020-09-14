@@ -37,9 +37,8 @@ GeomBase _testPolyLineUpdate() {
   l.borderWidth = 2;
   l.name = "Updating polyline";
   l.drawMarkers = true;
-  l.editEnabled = true;
   l.data = 'Test Data';
-  l.buttonClicked = editButtonPolylineClicked;
+  //l.buttonClicked = editButtonPolylineClicked;
 
   // This will add a sections of the line every second
   Timer.periodic(new Duration(seconds: 1), (Timer t) {
@@ -55,10 +54,10 @@ GeomBase _testPolyLineUpdate() {
 }
 
 /// This is the buttonclick callback when editenabled on a Polyline is true
-void editButtonPolylineClicked(Polyline polyline, GeoPoint location, PolylineEditButton button){
-  log("Edit Button: ${button.text} clicked on lineindex: ${polyline.editIndex} Insert location: ${location.toString()}");
-  polyline.endEditing();
-}
+// void editButtonPolylineClicked(Polyline polyline, GeoPoint location, PolylineEditButton button){
+//   log("Edit Button: ${button.text} clicked on lineindex: ${polyline.editIndex} Insert location: ${location.toString()}");
+//   polyline.endEditing();
+// }
 
 /// This example will show you some extra abilities we have using the Paint
 /// object.

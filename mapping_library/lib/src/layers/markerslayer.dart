@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
+import '../../mapping_library.dart';
 import '../core/mapviewport.dart';
 import '../objects/markers/markerbase.dart';
 import '../objects/markers/markers.dart';

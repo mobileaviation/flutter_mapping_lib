@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'mapviewgestures.dart';
 import 'mapviewport.dart';
@@ -5,8 +8,7 @@ import '../layers/layers.dart';
 import '../utils/mapposition.dart';
 
 class Mapview extends StatefulWidget {
-  Mapview({Key key, Layers layers, MapPosition mapPosition})
-      : super(key: key) {
+  Mapview({Key key, Layers layers, MapPosition mapPosition}) : super(key: key) {
     _layers = layers;
     _mapPosition = mapPosition;
     _size = Size.square(1000);
@@ -40,7 +42,7 @@ class Mapview extends StatefulWidget {
   MapViewGestures _gestures;
 }
 
-class _MapviewState extends State<Mapview> with TickerProviderStateMixin  {
+class _MapviewState extends State<Mapview> with TickerProviderStateMixin {
 //  @override
 //  void initState() {
 //    // TODO: implement initState
@@ -55,21 +57,25 @@ class _MapviewState extends State<Mapview> with TickerProviderStateMixin  {
 
   @override
   Widget build(BuildContext context) {
-    widget._gestures.controller = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 500));
-    return Container(
-      child: GestureDetector (
-        child: widget._layers,
-        behavior: HitTestBehavior.translucent,
-        onTapUp: widget._gestures.mapTap,
-        onScaleStart: widget._gestures.mapScaleStart,
-        onScaleUpdate: widget._gestures.mapScaleUpdate,
-        onScaleEnd: widget._gestures.mapScaleEnd,
-        onLongPressStart: widget._gestures.mapLongPressStart,
-        onLongPressMoveUpdate: widget._gestures.mapLongPressMoveUpdate,
-        onLongPressEnd: widget._gestures.mapLongPressEnd,
-      ),
+    widget._gestures.controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        Container(
+          child: GestureDetector(
+            child: widget._layers,
+            behavior: HitTestBehavior.translucent,
+            onTapUp: widget._gestures.mapTap,
+            onScaleStart: widget._gestures.mapScaleStart,
+            onScaleUpdate: widget._gestures.mapScaleUpdate,
+            onScaleEnd: widget._gestures.mapScaleEnd,
+            onLongPressStart: widget._gestures.mapLongPressStart,
+            onLongPressMoveUpdate: widget._gestures.mapLongPressMoveUpdate,
+            onLongPressEnd: widget._gestures.mapLongPressEnd,
+          ),
+        ),
+      ],
     );
   }
 }
