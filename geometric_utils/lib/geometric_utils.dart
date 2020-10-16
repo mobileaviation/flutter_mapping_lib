@@ -5,3 +5,4 @@ export 'src/fastmath.dart';
 export 'src/geomutils.dart';
 export 'src/geopoint.dart';
 export 'src/geopoints.dart';
+export 'src/mapposition.dart';

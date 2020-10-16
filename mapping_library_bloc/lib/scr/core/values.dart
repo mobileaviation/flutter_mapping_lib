@@ -21,10 +21,10 @@ final double longitudeMin = -longitudeMax;
 
 final double equatorialRadius = 6378137.0;
 
-class Tile {
-  static final int defaultTileSize = 256;
+class TileValues {
+  static final int DEFAULT_TILE_SIZE = 256;
 
-  static final int size = 256;
+  static final int SIZE = 256;
 
-  static final int tileSizeMultiple = 64;
+  static final int TILE_SIZE_MULTIPLE = 64;
 }

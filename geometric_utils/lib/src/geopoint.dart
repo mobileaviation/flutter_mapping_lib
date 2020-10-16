@@ -5,18 +5,18 @@ import 'geomutils.dart';
 import 'values.dart';
 
 double latitudeDistance(int meters) {
-  return (meters * 360) / (2 * math.pi * EQUATORIAL_RADIUS);
+  return (meters * 360) / (2 * math.pi * equatorialRadius);
 }
 
 double longitudeDistance(int meters, double latitude) {
   return (meters * 360) /
-      (2 * math.pi * EQUATORIAL_RADIUS * math.cos(angles.toRadians(latitude)));
+      (2 * math.pi * equatorialRadius * math.cos(angles.toRadians(latitude)));
 }
 
 class GeoPoint {
   final num serialVersionUID = 8965378345755559936;
-  final double INVERSE_FLATTENING = 298.257223563;
-  final double POLAR_RADIUS = 6356752.3142;
+  final double inverseFlattening = 298.257223563;
+  final double polarRadius = 6356752.3142;
 
   int hashCodeValue = 0;
 
@@ -48,9 +48,9 @@ class GeoPoint {
   }
 
   _initGeopoint(double lat, double lon) {
-    lat = FastMath.clamp(lat, LATITUDE_MIN, LATITUDE_MAX);
+    lat = FastMath.clamp(lat, latitudeMin, latitudeMax);
     this.latitudeE6 = (lat * CONVERSION_FACTOR).round();
-    lon = FastMath.clamp(lon, LONGITUDE_MIN, LONGITUDE_MAX);
+    lon = FastMath.clamp(lon, longitudeMin, longitudeMax);
     this.longitudeE6 = (lon * CONVERSION_FACTOR).round();
   }
 
@@ -84,7 +84,7 @@ class GeoPoint {
 
   GeoPoint destinationPoint(final double distance, final double bearing) {
     double theta = angles.toRadians(bearing);
-    double delta = distance / EQUATORIAL_RADIUS; // angular distance in radians
+    double delta = distance / equatorialRadius; // angular distance in radians
 
     double phi1 = angles.toRadians(getLatitude());
     double lambda1 = angles.toRadians(getLongitude());
@@ -112,11 +112,11 @@ class GeoPoint {
             math.sin(dLon / 2) *
             math.sin(dLon / 2);
     double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-    return c * EQUATORIAL_RADIUS;
+    return c * equatorialRadius;
   }
 
   double vincentyDistance(GeoPoint other) {
-    double f = 1 / INVERSE_FLATTENING;
+    double f = 1 / inverseFlattening;
     double L = angles.toRadians(other.getLongitude() - getLongitude());
     double u1 = math.atan((1 - f) * math.tan(angles.toRadians(getLatitude())));
     double u2 =
@@ -166,8 +166,8 @@ class GeoPoint {
     if (iterLimit == 0) return 0; // formula failed to converge
 
     double uSq = cosSqAlpha *
-        (math.pow(EQUATORIAL_RADIUS, 2) - math.pow(POLAR_RADIUS, 2)) /
-        math.pow(POLAR_RADIUS, 2);
+        (math.pow(equatorialRadius, 2) - math.pow(polarRadius, 2)) /
+        math.pow(polarRadius, 2);
     double A =
         1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
     double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
@@ -182,7 +182,7 @@ class GeoPoint {
                         cos2SigmaM *
                         (-3 + 4 * sinSigma * sinSigma) *
                         (-3 + 4 * cos2SigmaM * cos2SigmaM)));
-    double s = POLAR_RADIUS * A * (sigma - deltaSigma);
+    double s = polarRadius * A * (sigma - deltaSigma);
 
     return s;
   }

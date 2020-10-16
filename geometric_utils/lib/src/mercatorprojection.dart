@@ -36,7 +36,7 @@ GeoPoint fromPixels(double pixelX, double pixelY, int mapSize) {
 /// * @throws IllegalArgumentException if the given scale factor is < 1
 /// */
 int getMapSizeWithScale(double scale) {
-  return (Tile.SIZE.toDouble() * (math.pow(2, scaleToZoomLevel(scale))))
+  return (Tile.size.toDouble() * (math.pow(2, scaleToZoomLevel(scale))))
       .floor();
 }
 
@@ -46,7 +46,7 @@ int getMapSizeWithScale(double scale) {
 /// * @throws IllegalArgumentException if the given zoom level is negative.
 /// */
 int getMapSize(int zoomLevel) {
-  return Tile.SIZE << zoomLevel;
+  return Tile.size << zoomLevel;
 }
 
 math.Point getPixelWithScale(GeoPoint geoPoint, double scale) {
@@ -110,8 +110,8 @@ math.Point getPixelRelativeByPoint(
 /// */
 double groundResolutionWithScale(double latitude, double scale) {
   return math.cos(latitude * (math.pi / 180)) *
-      EARTH_CIRCUMFERENCE /
-      (Tile.SIZE * scale);
+      earthCircumference /
+      (Tile.size * scale);
 }
 
 ///**
@@ -122,7 +122,7 @@ double groundResolutionWithScale(double latitude, double scale) {
 /// * @return the ground resolution at the given latitude and map size.
 /// */
 double groundResolution(double latitude, int mapSize) {
-  return math.cos(latitude * (math.pi / 180)) * EARTH_CIRCUMFERENCE / mapSize;
+  return math.cos(latitude * (math.pi / 180)) * earthCircumference / mapSize;
 }
 
 ///**
@@ -218,7 +218,7 @@ double latitudeToY(double latitude) {
 /// * @return the given latitude value, limited to the possible latitude range.
 /// */
 double limitLatitude(double latitude) {
-  return math.max(math.min(latitude, LATITUDE_MAX), LATITUDE_MIN);
+  return math.max(math.min(latitude, latitudeMax), latitudeMin);
 }
 
 ///**
@@ -227,7 +227,7 @@ double limitLatitude(double latitude) {
 /// * range.
 /// */
 double limitLongitude(double longitude) {
-  return math.max(math.min(longitude, LONGITUDE_MAX), LONGITUDE_MIN);
+  return math.max(math.min(longitude, longitudeMax), longitudeMin);
 }
 
 /// Converts a longitude coordinate (in degrees) to a pixel X coordinate at a certain scale factor.
@@ -334,7 +334,7 @@ double pixelXToLongitude(double pixelX, int mapSize) {
 /// @param scale  the scale factor at which the coordinate should be converted.
 /// @return the tile X number.
 int pixelXToTileXWithScale(double pixelX, double scale) {
-  return math.min(math.max(pixelX / Tile.SIZE, 0), scale - 1).floor();
+  return math.min(math.max(pixelX / Tile.size, 0), scale - 1).floor();
 }
 
 /// Converts a pixel X coordinate to the tile X number.
@@ -344,7 +344,7 @@ int pixelXToTileXWithScale(double pixelX, double scale) {
 /// @return the tile X number.
 int pixelXToTileX(double pixelX, int zoomLevel) {
   return math.min(
-      math.max(pixelX / Tile.SIZE, 0).floor(), math.pow(2, zoomLevel) - 1);
+      math.max(pixelX / Tile.size, 0).floor(), math.pow(2, zoomLevel) - 1);
 }
 
 /// Converts a pixel Y coordinate at a certain scale to a latitude coordinate.
@@ -376,7 +376,7 @@ double pixelYToLatitude(double pixelY, int mapSize) {
 /// @param scale  the scale factor at which the coordinate should be converted.
 /// @return the tile Y number.
 int pixelYToTileYWithScale(double pixelY, double scale) {
-  return math.min(math.max(pixelY / Tile.SIZE, 0), scale - 1).floor();
+  return math.min(math.max(pixelY / Tile.size, 0), scale - 1).floor();
 }
 
 /// Converts a pixel Y coordinate to the tile Y number.
@@ -386,7 +386,7 @@ int pixelYToTileYWithScale(double pixelY, double scale) {
 /// @return the tile Y number.
 int pixelYToTileY(double pixelY, int zoomLevel) {
   return math.min(
-      math.max(pixelY / Tile.SIZE, 0).floor(), math.pow(2, zoomLevel) - 1);
+      math.max(pixelY / Tile.size, 0).floor(), math.pow(2, zoomLevel) - 1);
 }
 
 math.Point getPixelsPosition(GeoPoint location, int zoomLevel) {
@@ -408,7 +408,7 @@ double scaleToZoomLevel(double scale) {
 /// @param tileNumber the tile number that should be converted.
 /// @return the pixel coordinate for the given tile number.
 int tileToPixel(int tileNumber) {
-  return tileNumber * Tile.SIZE;
+  return tileNumber * Tile.size;
 }
 
 /// Converts a tile X number at a certain scale to a longitude coordinate.
@@ -417,7 +417,7 @@ int tileToPixel(int tileNumber) {
 /// @param scale the scale factor at which the number should be converted.
 /// @return the longitude value of the tile X number.
 double tileXToLongitudeWithScale(int tileX, double scale) {
-  return pixelXToLongitudeWithScale((tileX * Tile.SIZE).toDouble(), scale);
+  return pixelXToLongitudeWithScale((tileX * Tile.size).toDouble(), scale);
 }
 
 /// Converts a tile X number at a certain zoom level to a longitude coordinate.
@@ -427,7 +427,7 @@ double tileXToLongitudeWithScale(int tileX, double scale) {
 /// @return the longitude value of the tile X number.
 double tileXToLongitude(int tileX, int zoomLevel) {
   return pixelXToLongitude(
-      (tileX * Tile.SIZE).toDouble(), getMapSize(zoomLevel));
+      (tileX * Tile.size).toDouble(), getMapSize(zoomLevel));
 }
 
 /// Converts a tile Y number at a certain scale to a latitude coordinate.
@@ -436,7 +436,7 @@ double tileXToLongitude(int tileX, int zoomLevel) {
 /// @param scale the scale factor at which the number should be converted.
 /// @return the latitude value of the tile Y number.
 double tileYToLatitudeWithScale(int tileY, double scale) {
-  return pixelYToLatitudeWithScale((tileY * Tile.SIZE).toDouble(), scale);
+  return pixelYToLatitudeWithScale((tileY * Tile.size).toDouble(), scale);
 }
 
 /// Converts a tile Y number at a certain zoom level to a latitude coordinate.
@@ -446,7 +446,7 @@ double tileYToLatitudeWithScale(int tileY, double scale) {
 /// @return the latitude value of the tile Y number.
 double tileYToLatitude(int tileY, int zoomLevel) {
   return pixelYToLatitude(
-      (tileY * Tile.SIZE).toDouble(), getMapSize(zoomLevel));
+      (tileY * Tile.size).toDouble(), getMapSize(zoomLevel));
 }
 
 /// Converts a tile Y number at a certain zoom level to TMS notation.
@@ -480,9 +480,9 @@ double toLongitude(double x) {
 /// @return the wrapped longitude in degrees
 double wrapLongitude(double longitude) {
   if (longitude < -180)
-    return math.max(math.min(360 + longitude, LONGITUDE_MAX), LONGITUDE_MIN);
+    return math.max(math.min(360 + longitude, longitudeMax), longitudeMin);
   else if (longitude > 180)
-    return math.max(math.min(longitude - 360, LONGITUDE_MAX), LONGITUDE_MIN);
+    return math.max(math.min(longitude - 360, longitudeMax), longitudeMin);
 
   return longitude;
 }
