@@ -31,18 +31,19 @@ class MultiTilesLayer extends Layer {
         MercatorProjection.pixelYToTileY(
             viewport.bottomRightAbsPixels.y, viewport.mapPosition.zoomLevel));
 
-    for (int x = _tilesBoundingBox.minTileX;
-    x <= _tilesBoundingBox.maxTileX;
-    x++) {
-      for (int y = _tilesBoundingBox.minTileY;
-      y <= _tilesBoundingBox.maxTileY;
-      y++) {
+    // for (int x = _tilesBoundingBox.minTileX;
+    // x <= _tilesBoundingBox.maxTileX;
+    // x++) {
+    //   for (int y = _tilesBoundingBox.minTileY;
+    //   y <= _tilesBoundingBox.maxTileY;
+    //   y++) {
+      for (TileXY e in _tilesBoundingBox.getBoxedTiles()) {
         int sourceIndex = 0;
         for (TileSource source in sources) {
           sourceIndex++;
-          String tileId = MercatorProjection.getTileId(x, y, viewport.mapPosition.zoomLevel) + "-" + sourceIndex.toString();
+          String tileId = MercatorProjection.getTileId(e.x, e.y, viewport.mapPosition.zoomLevel) + "-" + sourceIndex.toString();
           ScreenTile t = _tiles[tileId];
-          if (t == null) t = ScreenTile(x, y, viewport.mapPosition);
+          if (t == null) t = ScreenTile(e.x, e.y, viewport.mapPosition);
           t.calcScreenPosition(viewport, viewport.mapPosition);
           t.retrieveImage(source).then((i) {
             layerPainter.doRedraw = true;
@@ -51,7 +52,8 @@ class MultiTilesLayer extends Layer {
           _tiles[t.tileId  + "-" + sourceIndex.toString()] = t;
         }
       }
-    }
+    //   }
+    // }
   }
 
   @override

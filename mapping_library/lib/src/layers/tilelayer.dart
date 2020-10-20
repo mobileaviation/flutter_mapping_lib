@@ -31,16 +31,11 @@ class TilesLayer extends Layer {
         MercatorProjection.pixelYToTileY(
             viewport.bottomRightAbsPixels.y, viewport.mapPosition.zoomLevel));
 
-    for (int x = _tilesBoundingBox.minTileX;
-    x <= _tilesBoundingBox.maxTileX;
-    x++) {
-      for (int y = _tilesBoundingBox.minTileY;
-      y <= _tilesBoundingBox.maxTileY;
-      y++) {
+    for (TileXY e in _tilesBoundingBox.getBoxedTiles()) {
         String tileId =
-        MercatorProjection.getTileId(x, y, viewport.mapPosition.zoomLevel);
+        MercatorProjection.getTileId(e.x, e.y, viewport.mapPosition.zoomLevel);
         ScreenTile t = _tiles[tileId];
-        if (t == null) t = ScreenTile(x, y, viewport.mapPosition);
+        if (t == null) t = ScreenTile(e.x, e.y, viewport.mapPosition);
         t.calcScreenPosition(viewport, viewport.mapPosition);
         t.retrieveImage(source).then((i) {
           layerPainter.doRedraw = true;
@@ -49,7 +44,6 @@ class TilesLayer extends Layer {
         });
         _tiles[t.tileId] = t;
       }
-    }
   }
 
   @override
