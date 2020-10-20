@@ -3,11 +3,7 @@ import 'sw_data.dart';
 import 'sw_map.dart';
 
 class SkywaysHomePage extends StatefulWidget {
-  SkywaysHomePage({Key key, String title}): super(key: key) {
-    _title = title;
-  }
-
-  String _title;
+  SkywaysHomePage({Key key}): super(key: key);
 
   @override
   _SkywaysHomePageState createState() => _SkywaysHomePageState();

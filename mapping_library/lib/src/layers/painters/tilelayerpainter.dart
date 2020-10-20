@@ -66,7 +66,7 @@ class TileLayerPainter extends LayerPainterBase {
   }
 
   double getTilesize(var tilesLayer) {
-    double tilesize = values.Tile.SIZE.toDouble() *
+    double tilesize = values.Tile.size.toDouble() *
         (1 + tilesLayer.mapViewPort.mapPosition.getZoomFraction());
     tilesize = tilesize.roundToDouble() + 1;
     return tilesize;

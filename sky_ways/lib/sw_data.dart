@@ -4,7 +4,6 @@ import 'sw_map.dart';
 class SkywaysProvider extends InheritedWidget {
   final Widget child;
   final MapWidget mapview;
-  String data;
 
   SkywaysProvider({this.child, this.mapview}) : super(child: child);
 

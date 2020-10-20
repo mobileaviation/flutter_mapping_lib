@@ -19,7 +19,7 @@ class SkyWaysApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SkywaysProvider(
-          child: SkywaysHomePage(title: 'Flutter Demo Home Page'),
+          child: SkywaysHomePage(),
           mapview: mapWidget,
         ),
   

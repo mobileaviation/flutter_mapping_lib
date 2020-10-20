@@ -82,11 +82,11 @@ class Tile {
 
   BoundingBox getBoundingBox() {
     if (this.boundingBox == null) {
-      double minLatitude = math.max(LATITUDE_MIN,
+      double minLatitude = math.max(latitudeMin,
           MercatorProjection.tileYToLatitude(tileY + 1, zoomLevel.floor()));
       double minLongitude = math.max(-180,
           MercatorProjection.tileXToLongitude(this.tileX, zoomLevel.floor()));
-      double maxLatitude = math.min(LATITUDE_MAX,
+      double maxLatitude = math.min(latitudeMax,
           MercatorProjection.tileYToLatitude(this.tileY, zoomLevel.floor()));
       double maxLongitude = math.min(180,
           MercatorProjection.tileXToLongitude(tileX + 1, zoomLevel.floor()));

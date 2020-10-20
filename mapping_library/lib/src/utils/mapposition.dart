@@ -219,8 +219,8 @@ class MapPosition {
         (MercatorProjection.longitudeToX(bbox.getMaxLongitude()) - minx).abs();
     double dy =
         (MercatorProjection.latitudeToY(bbox.getMinLatitude()) - miny).abs();
-    double zx = viewWidth / (dx * Tile.SIZE);
-    double zy = viewHeight / (dy * Tile.SIZE);
+    double zx = viewWidth / (dx * Tile.size);
+    double zy = viewHeight / (dy * Tile.size);
 
     _scale = math.min(zx, zy);
     zoomLevel = FastMath.log2(_scale.floor());
