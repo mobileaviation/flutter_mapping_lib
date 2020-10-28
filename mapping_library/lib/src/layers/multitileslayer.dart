@@ -31,12 +31,7 @@ class MultiTilesLayer extends Layer {
         MercatorProjection.pixelYToTileY(
             viewport.bottomRightAbsPixels.y, viewport.mapPosition.zoomLevel));
 
-    // for (int x = _tilesBoundingBox.minTileX;
-    // x <= _tilesBoundingBox.maxTileX;
-    // x++) {
-    //   for (int y = _tilesBoundingBox.minTileY;
-    //   y <= _tilesBoundingBox.maxTileY;
-    //   y++) {
+
       for (TileXY e in _tilesBoundingBox.getBoxedTiles()) {
         int sourceIndex = 0;
         for (TileSource source in sources) {
@@ -52,8 +47,7 @@ class MultiTilesLayer extends Layer {
           _tiles[t.tileId  + "-" + sourceIndex.toString()] = t;
         }
       }
-    //   }
-    // }
+  
   }
 
   @override

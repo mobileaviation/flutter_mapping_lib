@@ -164,7 +164,7 @@ class MyApp extends StatelessWidget {
                     VectorLayer(
                       vectors: _getVectors(),
                       name: "VectorsLayer",
-                      vectorSelected: _vectorSelected,
+                      //vectorSelected: _vectorSelected,
                     )
                   ],
                 ))));

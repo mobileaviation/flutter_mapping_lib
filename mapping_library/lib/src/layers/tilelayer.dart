@@ -42,7 +42,7 @@ class TilesLayer extends Layer {
           redrawPainter();
 
         });
-        _tiles[t.tileId] = t;
+        _tiles[t.tileId] = t; 
       }
   }
 
