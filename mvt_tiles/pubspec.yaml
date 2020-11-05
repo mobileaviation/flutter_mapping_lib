@@ -24,7 +24,13 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - styles/osm-bright-gl-style.json
+    - styles/osm_bright/
+    - styles/maptiler_basic/
+    - styles/maptiler_toner/
+    - styles/dark_matter/
+    - styles/fiord_color/
+    - styles/osm_liberty_gh_pages/
+    - styles/positron/
 
   # To add assets to your package, add an assets section, like this:
   # assets:

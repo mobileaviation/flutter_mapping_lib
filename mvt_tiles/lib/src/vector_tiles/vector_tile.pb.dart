@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
+import 'package:mvt_tiles/src/vector_tiles/utils/geometry_encoder.dart';
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'vector_tile.pbenum.dart';
@@ -152,6 +153,8 @@ class Tile_Feature extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $core.List<$core.int> get geometry => $_getList(3);
+
+  Features encodedFeature;
 }
 
 class Tile_Layer extends $pb.GeneratedMessage {

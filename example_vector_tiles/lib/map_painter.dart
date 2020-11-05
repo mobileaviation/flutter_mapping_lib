@@ -5,7 +5,7 @@ import 'dart:ui';
 class MapPainter extends CustomPainter {
   MapPainter({Key key, this.tile, this.styles});
 
-  mvt.Tile tile;
+  mvt.VectorTile tile;
   mvt.Styles styles;
 
   @override
@@ -18,10 +18,8 @@ class MapPainter extends CustomPainter {
       canvas.drawRect(Rect.fromLTWH(0,0,size.width,size.height), paint);
       print("Size: ${size.toString()}");
 
-      paint.color = Colors.blue;
-      //canvas.drawRect(Rect.fromLTWH(20,20,255, 255), paint);
-      Picture p = mvt.getTestTile(tile, styles);
-      if (p!=null) canvas.drawPicture(p);
+      if (tile != null)
+        tile.paint(canvas, Rect.fromLTWH(10, 10, mvt.tileSize, mvt.tileSize));
     }
   
     @override

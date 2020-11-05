@@ -6,19 +6,31 @@ import 'package:flutter/services.dart' show rootBundle;
 
 
 Future<Styles> loadStyles(String styleName) async {
-  String value = await rootBundle.loadString('packages/mvt_tiles/styles/' + styleName + '.json');
-  Styles s = Styles.fromJson(value);  
+  String assetsBasePath = 'packages/mvt_tiles/styles/' + styleName + '/';
+  String value = await rootBundle.loadString(assetsBasePath + 'style.json');
+  Styles s = Styles.fromJson(value, assetsBasePath);  
+  await s.loadSVGsFromAssets(assetsBasePath);
   return s;
 }
 
 
 class Styles extends ListBase<TileStyle> {
-  Styles.fromJson(String json) {
+  Styles.fromJson(String json, String assetsBasePath) {
     Map<String, dynamic> style = jsonDecode(json);
     var layers = style['layers'];
     for (var layer in layers) {
       TileStyle style = TileStyle.fromJson(layer);
       add(style);
+    }
+  }
+
+  Future loadSVGsFromAssets(String assetsBasePath) async {
+    String iconsPath = assetsBasePath + 'icons/';
+    Iterable<TileStyle> svgStyles = this.where((element) {
+      return (element.paint.fillPattern.pattern != 'none');
+    });
+    for (TileStyle ts in svgStyles) {
+
     }
   }
 
@@ -56,9 +68,6 @@ class Styles extends ListBase<TileStyle> {
 
     var all = name.where((element) {
       return ((element.filter.indexWhere((element) => (element.type=='all')))>-1);
-        // && ((element.filter.indexWhere((element) => ((element.type==intermittentType) 
-        // && (element.key=='intermittent') 
-        // && (element.values.contains("1")))))>-1);
     });
 
     return all.toList();
@@ -168,46 +177,61 @@ class StylePaint {
     if (paint != null) {
       //fillColor = ColorValue.fromString((paint['fill-color'] != null) ? paint['fill-color'].toString() : 'none');
       fillColor = ColorValue.fromJson(paint, 'fill-color');
-      fillOpacity = (paint['fill-opacity'] != null) ? double.tryParse(paint['fill-opacity'].toString()) : 1.0;
-      lineColor = ColorValue.fromString((paint['line-color'] != null) ? paint['line-color'].toString() : 'none');
-      lineOpacity = (paint['line-opacity'] != null) ? double.tryParse(paint['line-opacity'].toString()) : 1.0;
-      fillOutlineColor = ColorValue.fromString((paint['fill-outline-color'] != null) ? paint['fill-outline-color'].toString() : 'none');
-      lineWidth = PaintValue.fromJson(paint, 'line-width');
-      backgroundColor = ColorValue.fromString((paint['background-color'] != null) ? paint['background-color'].toString() : 'none');
+      fillOpacity = PaintValue.fromJson(paint, 'fill-opacity', 1.0);
+      lineColor = ColorValue.fromJson(paint, 'line-color');
+      lineOpacity = PaintValue.fromJson(paint, 'line-opacity', 1.0);
+      fillOutlineColor = ColorValue.fromJson(paint, 'fill-outline-color');
+      lineWidth = PaintValue.fromJson(paint, 'line-width', 1.0);
+      backgroundColor = ColorValue.fromJson(paint, 'background-color');
+      fillPattern = FillValue.fromJson(paint, 'fill-pattern', 'none');
     }
   }
 
   ColorValue fillColor;
-  double fillOpacity; 
+  PaintValue fillOpacity; 
   ColorValue lineColor;
-  double lineOpacity;
+  PaintValue lineOpacity;
   ColorValue fillOutlineColor;
   List<double> lineDasharray;
   PaintValue lineWidth;
   ColorValue backgroundColor;
+  FillValue fillPattern;
 
 }
 
+class FillValue {
+  FillValue.fromJson(dynamic json, String field, String defaultValue) {
+    pattern = (json['fill-pattern'] != null) ? json['fill-pattern'].toString() : defaultValue;
+  }
+
+  String pattern;
+}
+
 class PaintValue {
-  PaintValue.fromJson(dynamic json, String field) {
+  PaintValue.fromJson(dynamic json, String field, double defaultValue) {
+    _defaultValue = defaultValue;
     if (json[field] != null)
       if (json[field] is Map) {
         stops = List();
-        base = (json[field]['base'] != null) ? double.tryParse(json[field]['base'].toString()) : 1.0;
+        base = (json[field]['base'] != null) ? double.tryParse(json[field]['base'].toString()) : defaultValue;
         for(var i in json[field]['stops']) {
           Stop stop = Stop();
           stop.zoom = double.tryParse(i[0].toString());
           stop.value = i[1];
           stops.add(stop);
         }
+        value = stops[0].value;
       } else {
         value = json[field];
       }
+    else value = defaultValue;
   }
 
+  double _defaultValue;
   double base;
   List<Stop> stops;
   dynamic value;
+  double get doubleValue  { return (value is double) ? value : _defaultValue; }
 }
 
 class Stop {
@@ -221,7 +245,7 @@ class ColorValue {
   }
 
   ColorValue.fromJson(dynamic json, String field) {
-    colorValue = PaintValue.fromJson(json, field);
+    colorValue = PaintValue.fromJson(json, field, 1.0);
     if (colorValue.stops != null) {
       _parseColor(colorValue.stops[0].value.toString());
     }
