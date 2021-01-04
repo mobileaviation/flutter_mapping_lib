@@ -7,6 +7,7 @@ import 'package:mvt_tiles/mvt_tiles.dart' as mvt;
 import 'map_painter.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,7 +38,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String styleName = 'maptiler_basic';
+  //final String styleName = 'test_style'; 
+  //final String styleName = 'osm_bright'; 
+  final String styleName = 'maptiler_basic'; 
+  //final String styleName = 'fiord_color'; 
 
   Future<Uint8List> loadMvtTile(String filename, BuildContext context) async {
     ByteData data = await DefaultAssetBundle.of(context).load(filename);
@@ -54,12 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
         log("database opened");
         styles = await mvt.loadStyles(styleName);
         log("Styles ${styleName} loaded");
-        List<Map> tiles = await value.rawQuery('SELECT * FROM images WHERE tile_id=?', ['8/131/171']);
+        String tile_id = '13/4202/5504';
+        //String tile_id = '14/8419/10993';
+        //String tile_id = '8/131/171';
+        //String tile_id = '9/263/344';
+        List<Map> tiles = await value.rawQuery('SELECT * FROM images WHERE tile_id=?', [tile_id]);
         if (tiles.length>0) {
           if (tiles[0]['tile_data'] is Uint8List) log("Found image tile blob");
           Uint8List tile = tiles[0]['tile_data'];
           Uint8List unzippedTileData = GZipCodec().decode(tile);
-          testTile(this.context, unzippedTileData);
+          testTile(this.context, unzippedTileData, 131, 171, 8);
         }
       });
       
@@ -71,25 +79,31 @@ class _MyHomePageState extends State<MyHomePage> {
   int _updateCount = 0;
 
   Future<String> loadMBTilesFile() async {
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, "2017-07-03_netherlands_amsterdam.mbtiles");
-    try {
-      await Directory(dirname(path)).create(recursive: true);
-    } catch(_) {
-      print("Error creating directory ${path}");
-    }
-    ByteData data = await rootBundle.load(join("tiles", "2017-07-03_netherlands_amsterdam.mbtiles"));
-    List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    //var databasesPath = await getDatabasesPath();
+    Directory databasesPath = await getApplicationSupportDirectory();
 
-    await File(path).writeAsBytes(bytes, flush: true);
+    String path = join(databasesPath.path, "2017-07-03_netherlands_amsterdam.mbtiles");
+
+    if (!Directory(path).existsSync()) {
+      print("${path} not found!");
+      try {
+        await Directory(dirname(path)).create(recursive: true);
+      } catch(_) {
+        print("Error creating directory ${path}");
+      }
+      ByteData data = await rootBundle.load(join("tiles", "2017-07-03_netherlands_amsterdam.mbtiles"));
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      await File(path).writeAsBytes(bytes, flush: true);
+    }
 
     return path;
   }
 
-  void testTile(BuildContext context, Uint8List dbTile) async {
+  void testTile(BuildContext context, Uint8List dbTile, int x, y, double zoom) async {
     Uint8List value = dbTile;
     log("Tile loaded: ${value.length}", time: DateTime.now());
-    tile = mvt.VectorTile(dbTile);
+    tile = mvt.VectorTile(dbTile, x, y, zoom);
     log("Start rendering tile: ", time: DateTime.now());
     tile.renderTile(styles).then((value) {
       this.setState(() {

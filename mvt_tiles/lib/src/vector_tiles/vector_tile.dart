@@ -9,8 +9,11 @@ import 'vector_tile.pb.dart';
 final double tileSize = 512.0;
 
 class VectorTile {
-  VectorTile(Uint8List bytes) {
+  VectorTile(Uint8List bytes, int x, y,  double zoom) {
     _tile = Tile.fromBuffer(bytes);
+    _x = x;
+    _y = y;
+    _zoom = zoom;
     for (Tile_Layer layer in _tile.layers) {
       for (Tile_Feature feature in layer.features) {
         feature.encodedFeature = GeometryEncoder.DecodeFeatures(feature);
@@ -19,6 +22,10 @@ class VectorTile {
     }
   }
 
+
+  int _x;
+  int _y;
+  double _zoom;
 
   Tile _tile;
   Picture _tilePicture;
@@ -53,21 +60,29 @@ class VectorTile {
   void _renderForeground(Canvas c, Styles styles) {
     LayerStyle layerStyle = LayerStyle(_tile.layers);
     for (TileStyle style in styles) {
-      if (style.layout.visibility=='visible') {
-        List<Tile_Feature> features = layerStyle.getFeaturesByStyle(style);
-        if (style != null) {
-          if ((features != null) && (features.length>0)){
-            log(DateTime.now().toString() + " : start drawing ${features.length} for layer ${style.id}");
-            //print(" : start drawing for layer ");
-            for (Tile_Feature tf in features) {
-              if (tf != null) {
-                _drawFeature(c, tf.encodedFeature, _tile.layers[0].extent.roundToDouble(), style);
-              }
+      _renderLayer(layerStyle, style, c);
+    }
+  }
+
+  bool _renderLayer(LayerStyle layerStyle, TileStyle style, Canvas canvas) {
+    bool rendered = false;
+    if (style.layout.visibility=='visible') {
+      List<Tile_Feature> features = layerStyle.getFeaturesByStyle(style, _x, _y, _zoom);
+      int features_length = (features == null) ? -1 : features.length;
+      //log(DateTime.now().toString() + " : found ${features_length} features for layer ${style.id}");
+      if (style != null) {
+        if ((features != null) && (features.length>0)){
+          log(DateTime.now().toString() + " : start drawing ${features_length} for layer ${style.id}");
+          for (Tile_Feature tf in features) {
+            if (tf != null) {
+              _drawFeature(canvas, tf.encodedFeature, _tile.layers[0].extent.roundToDouble(), style);
+              rendered = true;
             }
           }
         }
       }
     }
+    return rendered;
   }
 
   void _drawFeature(Canvas canvas, Features feature, double extents, TileStyle style) {
@@ -81,12 +96,12 @@ class VectorTile {
         return;
     
       Color color = (feature.Type == Tile_GeomType.POLYGON) ? style.paint.fillColor.color : style.paint.lineColor.color;
-      double opacity = ((feature.Type == Tile_GeomType.POLYGON) ? style.paint.fillOpacity.doubleValue : style.paint.lineOpacity.doubleValue);
+      double opacity = ((feature.Type == Tile_GeomType.POLYGON) ? style.paint.fillOpacity.doubleValue(_zoom) : style.paint.lineOpacity.doubleValue(_zoom));
       color = Color.fromARGB((opacity*255).floor(), color.red, color.green, color.blue);
       Paint paint = Paint()
         ..color = color
         ..style =  (feature.Type == Tile_GeomType.POLYGON) ? PaintingStyle.fill : PaintingStyle.stroke
-        ..strokeWidth = (style.paint.lineWidth.doubleValue) * 2;
+        ..strokeWidth = (style.paint.lineWidth.doubleValue(_zoom));
 
       Path p = Path();
       for (Vector v in feature) {

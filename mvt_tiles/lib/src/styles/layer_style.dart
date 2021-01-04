@@ -7,11 +7,10 @@ class LayerStyle {
 
   List<Tile_Layer> layers;
 
-  List<Tile_Feature> getFeaturesByStyle(TileStyle style) {
+  List<Tile_Feature> getFeaturesByStyle(TileStyle style, int x, y, double zoom) {
     var l = _getLayerByName(style.sourceLayer);
     if (l.isNotEmpty) {
-      return _getFeaturesByFilter(l.first, style);
-      //return l.first.features;
+      return _getFeaturesByFilter(l.first, style, x, y, zoom);
     } else
     return null;
   }
@@ -22,45 +21,62 @@ class LayerStyle {
     });
   }
 
-  List<Tile_Feature> _getFeaturesByFilter(Tile_Layer layer, TileStyle style) {
+  List<Tile_Feature> _getFeaturesByFilter(Tile_Layer layer, TileStyle style, int x,y, double zoom) {
     return layer.features.where((element) {
       if (style.type != _getStyleType(element.encodedFeature)) return false;
+      if ((style.minzoom==null) ? false : (style.minzoom>=zoom)) return false;
       bool ret = true;
+      bool all = false;
+      bool any = false;
+      bool check = false;
+
+      //print (element.encodedFeature.tags);
+      if (style.filter == null) return false;
       for (StyleFilter filter in style.filter) {
         String key = filter.key;
         String type = filter.type;
+        if (type=='all') { all = true; any = false; }
+        if (type=='any') { all = false; any = true; }
+
 
         if (type == '==') {
-          if (element.encodedFeature.tags[key] != null) 
-            ret  = ret && (element.encodedFeature.tags[key].stringValue == _getCheckValue(element.encodedFeature, key, filter));
+          check = true;
+          ret  = ret && _getCheckValue(element.encodedFeature, key, type, filter);
         }
 
         if (type == 'in') {
+          check = true;
           if (element.encodedFeature.tags[key] != null) 
             ret  = ret && ( filter.values.contains(element.encodedFeature.tags[key].stringValue));
         }
 
         if (type == '!in') {
+          check = true;
           if (element.encodedFeature.tags[key] != null) 
             ret  = ret && ( !filter.values.contains(element.encodedFeature.tags[key].stringValue));
+          else ret = ret && true;
         }
 
         if (type == '!=') {
-          if (element.encodedFeature.tags[key] != null) 
-            ret = ret && (element.encodedFeature.tags[key].stringValue != _getCheckValue(element.encodedFeature, key, filter));
+          check = true;
+          ret = ret && _getCheckValue(element.encodedFeature, key, type, filter);
         }
       }
-      return ret;
+      return ret && check;
     
     }).toList();
   }
 
-  String _getCheckValue(Features feature, String key, StyleFilter filter) {
+
+
+  bool _getCheckValue(Features feature, String key, String type, StyleFilter filter) {
     List<String> checkKeys = ["\$type"];
     if (checkKeys.contains(key)) {
-      if (key=='\$type') return _getFeatureType(feature.Type);
+      if (key=='\$type') return (_getFeatureType(feature) == filter.values[0]);
     }
-    else return filter.values[0];
+    else {
+      return (feature.tags[key]==null) ? ['!='].contains(type) : (filter.values[0] == feature.tags[key].stringValue);
+    }
   }
 
   String _getFeatureType(Features feature) {

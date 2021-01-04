@@ -80,6 +80,8 @@ class TileStyle {
     id = json['id'],
     type = json['type'],
     source = json['source'],
+    minzoom = double.tryParse(json['minzoom'].toString()),
+    maxzoom = double.tryParse(json['maxzoom'].toString()),
     sourceLayer = json['source-layer'] {
       var f = json['filter'];
       if (f != null)
@@ -89,7 +91,7 @@ class TileStyle {
 
       var l = json['layout'];
       layout.visibility = (l!=null) ? (l['visibility']!=null) ? 
-        l['visibility'] : 'none' : 'none';
+        l['visibility'] : 'visible' : 'visible';
 
       paint = StylePaint.fromList(json['paint']);
     }
@@ -99,6 +101,8 @@ class TileStyle {
   String type;
   String source;
   String sourceLayer;
+  double minzoom;
+  double maxzoom;
   StyleFilters filter;
   StyleLayout layout;
   StylePaint paint;
@@ -231,7 +235,35 @@ class PaintValue {
   double base;
   List<Stop> stops;
   dynamic value;
-  double get doubleValue  { return (value is double) ? value : _defaultValue; }
+  double doubleValue(double zoom)  { 
+    // "line-width": {"base": 1.2, "stops": [[6.5, 0], [7, 0.5], [20, 18]]}
+
+    double retValue = (value is double) ? value : _defaultValue; 
+    if (stops != null) {
+      Stop s1;
+      Stop s2;
+      var varS1 = stops.where((element) {
+        return (element.zoom <= zoom);
+      });
+      if (varS1.length>0) {
+        s1 = varS1.last;
+        retValue = s1.value * base;
+
+
+        var varS2 = stops.where((element) {
+          return (element.zoom>zoom);
+        });
+        if (varS2.length>0)  {
+          s2=varS2.first;
+          double zFactor = (s2.zoom-s1.zoom) / (s2.value - s1.value);
+          double z = s1.zoom - zoom;
+          retValue = (s1.value + (zFactor * z)) * base;
+        }
+      }
+    }
+  
+    return retValue;
+  }
 }
 
 class Stop {

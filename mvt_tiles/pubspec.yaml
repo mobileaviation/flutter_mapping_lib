@@ -31,6 +31,7 @@ flutter:
     - styles/fiord_color/
     - styles/osm_liberty_gh_pages/
     - styles/positron/
+    - styles/test_style/
 
   # To add assets to your package, add an assets section, like this:
   # assets:
